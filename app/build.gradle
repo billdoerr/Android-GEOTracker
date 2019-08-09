@@ -1,13 +1,27 @@
 apply plugin: 'com.android.application'
 
+
+def static getVersionCodeTimestamp() {
+    def date = new Date()
+    def formattedDate = date.format('yyMMddHHmm')
+    def code = formattedDate.toInteger()
+    return code
+}
+
+def static getDate() {
+    def date = new Date()
+    def formattedDate = date.format('ddMMMYYYY')
+    return formattedDate
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.billdoerr.android.geotracker"
         minSdkVersion 25
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode getVersionCodeTimestamp()
+        versionName "v1.0 (IN DEVELOPMENT)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,10 +34,17 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.preference:preference:1.1.0-rc01'
+    implementation "androidx.fragment:fragment:1.2.0-alpha01"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha01'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

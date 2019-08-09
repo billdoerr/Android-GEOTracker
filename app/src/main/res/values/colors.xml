@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorNavIcon">#dae9f6</color>
+    <color name="colorNavText">#01294b</color>
+
+    <color name="colorButtonSaveBackground">#3D5AFE</color>
+    <color name="colorButtonSaveText">#FFFFFF</color>
+
+    <color name="colorButtonCancelBackground">#FFFFFF</color>
+    <color name="colorButtonCancelText">#3D5AFE</color>
+
+    <!-- <color name="colorButtonActionBackground">#3D5AFE</color> -->
+    <color name="colorButtonActionBackground">#1C76BB</color>
+    <color name="colorButtonActionText">#FFFFFF</color>
+
+    <color name="button_pressed">@color/colorAccent</color>
+    <color name="button_focused">@color/colorAccent</color>
+    <color name="button_default">@color/colorButtonActionBackground</color>
+
 </resources>

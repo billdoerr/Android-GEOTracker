@@ -1,6 +1,128 @@
 <resources>
     <string name="app_name">GEO Tracker</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+    <!--  Activity Titles -->
+    <string name="activity_title_geotracker">GEO Tracker</string>
+    <string name="activity_title_settings">Settings</string>
+    <string name="activity_title_about">About</string>
+
+    <!--  Fragment Titles -->
+    <string name="fragment_title_trip_list">Trips</string>
+    <string name="fragment_title_trip_detail">Trip Details</string>
+    <string name="fragment_title_activity_type_list">Activities</string>
+    <string name="fragment_title_activity_type_detail">Activity Details</string>
+    <string name="fragment_title_route_list">Routes</string>
+    <string name="fragment_title_route_detail">Route Details</string>
+    <string name="fragment_title_about">About GEOTracker</string>
+    <string name="fragment_title_trip_data_logging">Trip Data Logging</string>
+
+    <!--  Dialog -->
+    <string name="dialog_title_activity_type_new">New Activity</string>
+    <string name="dialog_message_activity_type_new">Please enter a name and description of your new activity.</string>
+    <string name="dialog_title_route_new">New Route</string>
+    <string name="dialog_message_route_new">Please enter a name and description of your new route.</string>
+
+    <string name="dialog_title_trip_new">New Trip</string>
+    <string name="dialog_message_trip_new">Please enter a name and description of your new trip.</string>
+
+    <string name="dialog_title_please_grant_permissions">Please grant these permission(s)</string>
+    <string name="dialog_msg_location_permissions_required">Location permissions are required to do the task.</string>
+    <string name="dialog_msg_grant_permissions">GEOTracker requires permissions be granted for Location. Please permit the permission through "
+                + "Settings screen.\n\nSelect Permissions -> Enable permission</string>
+
+    <!--  Draw Layout -->
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
+
+    <!--  Toolbar -->
+    <string name="action_activity_types">Activities</string>
+    <string name="action_routes">Routes</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
+
+    <!--  Navigation -->
+    <string name="navigation_trips">Trips</string>
+    <string name="navigation_maps">Maps</string>
+
+    <!--  Menu -->
+    <string name="menu_search">Search</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
+    <string name="menu_activity_mgmt">Activity Mgmt</string>
+    <string name="menu_route_mgmt">Route Mgmt</string>
+
+    <!--  Tab Layout Titles -->
+    <string name="tab_camera_file_explorer">Snapshots</string>
+
+    <!-- Widgets -->
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_permit_manually">Permit Manually</string>
+
+    <string name="lbl_camera_details">Camera Details</string>
+
+    <string name="check_active">Active</string>
+
+    <string name="hint_activity_name">Enter name of activity</string>
+    <string name="hint_activity_desc">Enter description of activity</string>
+    <string name="hint_active">Click to enable</string>
+
+    <string name="hint_route_name">Enter name of route</string>
+    <string name="hint_route_desc">Enter description of route</string>
+
+    <!-- Trip Data Logging Fragment -->
+    <string name="btn_start_logging">Start Logging</string>
+    <string name="btn_stop_logging">Stop Logging</string>
+    <string name="btn_pause_logging">Pause Logging</string>
+
+    <string name="textTripTitle">Trip Name: </string>
+    <string name="textLatitude">Latitude</string>
+    <string name="textLongitude">Longitude</string>
+    <string name="textLatitudeLongitude"></string>
+    <string name="textElevation">Elevation</string>
+    <string name="textBearing">Bearing</string>
+    <string name="textSpeed">Speed</string>
+    <string name="textAccuracy">Accuracy</string>
+    <string name="textCurrentTime">Current Time</string>
+    <string name="textStartTime">Start Time</string>
+    <string name="textEndTime">End Time</string>
+    <string name="textTripTime">Trip Time</string>
+    <string name="textTotalTime">Total Time</string>
+
+
+    <!-- Shared Preference Settings -->
+    <!--  Preference Category -->
+    <string name="pref_category_network_settings">Network Settings</string>
+    <string name="pref_category_misc_settings">Misc</string>
+
+    <!--  Preference Titles -->
+    <string name="pref_title_activity_settings">Settings</string>
+
+    <!--  Default Shared Preference Values -->
+    <string name="pref_default_camera_name">Front</string>
+
+    <!--  Logging messages -->
+    <string name="msg_application_starting">Application starting&#8230;</string>
+    <string name="msg_creating_db_tables">Creating database tables.</string>
+    <string name="msg_has_location_permissions">Has Location permissions.</string>
+    <string name="msg_no_location_permissions">No Location permissions.</string>
+    <string name="msg_location_permissions__already_granted">Location permissions have already been granted.</string>
+
+    <!--  About -->
+    <string name="version">Version</string>
+
+    <!--  Exceptions -->
+    <string name="exception_tag">Exception</string>
+    <string name="exception_no_free_space">The path has no free space available.</string>
+    <string name="exception_file_write_failed">File write failed:</string>
+    <string name="exception_file_not_found">File not found:</string>
+    <string name="exception_cannot_read_file">Cannot read file:</string>
+    <string name="exception_error_hiding_keyboard">Error hiding keyboard.</string>
+    <string name="exception_register_gnns_status_callback">Unable to register Gnss Status Callback</string>
+
+    <!--  Toast messages -->
+    <string name="toast_image_saved">Image has been saved.</string>
+    <string name="toast_permissions_request_access_fine_location_denied">This functionality has been disabled. \nYou must enabled Location permissions for this app.</string>
+
 </resources>

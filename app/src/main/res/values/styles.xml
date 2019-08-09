@@ -1,11 +1,53 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Divider" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="ButtonPrefSave" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@drawable/button_save</item>
+        <item name="android:textColor">@color/colorButtonSaveText</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ButtonPrefCancel" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:borderlessButtonStyle">?android:attr/borderlessButtonStyle</item>
+        <item name="android:textColor">@color/colorButtonCancelText</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="EditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="ButtonAction" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@drawable/button_action</item>
+        <item name="android:borderlessButtonStyle">?android:attr/borderlessButtonStyle</item>
+        <item name="android:textColor">@color/colorButtonActionText</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>
