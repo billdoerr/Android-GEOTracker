@@ -15,8 +15,7 @@ public class TripDetails {
     public static final String KEY_TRIP_DETAILS_LATITUDE = "latitude";
     public static final String KEY_TRIP_DETAILS_LONGITUDE = "longitude";
     public static final String KEY_TRIP_DETAILS_ALTITUDE = "altitude";
-
-
+    
     public static final String KEY_TRIP_DETAILS_TIME_STAMP = "time_stamp";
     public static final String KEY_TRIP_DETAILS_RAW_GPS_DATA = "raw_gps_data";
 

@@ -1,6 +1,8 @@
 <?xml version = "1.0" encoding = "utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="300dp"
+    android:minHeight="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#dde4dd"
     android:orientation="vertical"
@@ -34,11 +36,13 @@
         app:hintTextAppearance="@android:style/TextAppearance.Medium">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width = "match_parent"
-            android:layout_height = "wrap_content"
-            android:id = "@+id/textDesc"
-            android:hint = "@string/hint_activity_desc"
-            android:inputType = "textCapSentences|textAutoCorrect"/>
+            android:id="@+id/textDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_activity_desc"
+            android:inputType="textAutoCorrect|textMultiLine|textCapSentences"
+            android:minLines="4"
+            android:singleLine="false" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,7 +56,36 @@
             android:id="@+id/checkBoxActive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:text="@string/check_active" />
+
+    </LinearLayout>
+
+    <!-- Save/Cancel/Delete buttons -->
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd" >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/ButtonPrefCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="@string/btn_cancel" />
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/ButtonPrefSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save" />
 
     </LinearLayout>
 

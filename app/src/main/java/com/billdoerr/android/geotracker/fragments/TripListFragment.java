@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.TripRepo;
-import com.billdoerr.android.geotracker.utils.GlobalVariables;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -28,14 +27,19 @@ public class TripListFragment extends Fragment {
 
     private static final String TAG = "TripListFragment";
 
+    private static final String ARGS_TRIP = "Trip";
+
     private List<Trip> mTrips;
     private RecyclerView mTripRecyclerView;
     private TripAdapter mTripAdapter;
     private FloatingActionButton mFab;
 
 
+    /**
+     * Required empty public constructor
+     */
     public TripListFragment() {
-        // Required empty public constructor
+        // Pass
     }
 
     public static TripListFragment newInstance() {
@@ -47,7 +51,7 @@ public class TripListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // TODO:  enable options menu??
-//       setHasOptionsMenu(true);
+       setHasOptionsMenu(true);
     }
 
     @Override
@@ -62,12 +66,12 @@ public class TripListFragment extends Fragment {
             // Pass selected Trip to fragment
 //                    Bundle bundle = new Bundle();
 //                    bundle.putSerializable(GlobalVariables.ARGS_TRIP, mTrips.get(mCurrentPosition));
-            TripDataLoggingFragment tripDataLoggingFragment = new TripDataLoggingFragment();
-//                    tripDataLoggingFragment.setArguments(bundle);
+            TrackingFragment trackingFragment = new TrackingFragment();
+//                    trackingFragment.setArguments(bundle);
 
             // Display fragment
             getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, tripDataLoggingFragment )
+                    .replace(R.id.fragment_container, trackingFragment)
                     .addToBackStack(null)
                     .commit();
         }
@@ -180,7 +184,7 @@ public class TripListFragment extends Fragment {
 
             // Pass selected Trip to fragment
             Bundle bundle = new Bundle();
-            bundle.putSerializable(GlobalVariables.ARGS_TRIP, mTrips.get(mCurrentPosition));
+            bundle.putSerializable(ARGS_TRIP, mTrips.get(mCurrentPosition));
             TripDetailFragment tripDetailFragment = new TripDetailFragment();
             tripDetailFragment.setArguments(bundle);
 

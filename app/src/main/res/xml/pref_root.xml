@@ -2,7 +2,65 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        app:title="@string/pref_category_network_settings"  >
+        app:title="@string/pref_category_units" >
+
+        <SwitchPreference
+            app:enabled="true"
+            app:defaultValue="false"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_METRIC"
+            app:title="@string/pref_title_units_metric"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:enabled="true"
+            app:defaultValue="false"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_NAUTICAL"
+            app:title="@string/pref_title_units_nautical"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:enabled="true"
+            app:defaultValue="0"
+            app:entries="@array/listArrayCoordinateType"
+            app:entryValues="@array/listValuesCoordinateType"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_COORDINATE_TYPE"
+            app:title="@string/pref_title_units_coordinate_type"
+            app:useSimpleSummaryProvider="true" />
+
+        <!-- Feature supporting this has not been implemented -->
+        <ListPreference
+            app:enabled="false"
+            app:isPreferenceVisible="false"
+            app:defaultValue="0"
+            app:entries="@array/listArrayCoordinateDatum"
+            app:entryValues="@array/listValuesCoordinateDatum"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_COORDINATE_DATUM"
+            app:title="@string/pref_title_units_coordinate_datum"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_category_location_services" >
+
+        <ListPreference
+            app:enabled="true"
+            app:defaultValue="2"
+            app:entries="@array/listArrayLocationServicesUpdateInterval"
+            app:entryValues="@array/listValuesLocationServicesUpdateInterval"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL"
+            app:title="@string/pref_title_location_services_update_interval"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:enabled="true"
+            app:defaultValue="1"
+            app:entries="@array/listArrayLocationServicesUpdateDistance"
+            app:entryValues="@array/listValuesLocationServicesUpdateDistance"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE"
+            app:title="@string/pref_title_location_services_update_distance"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

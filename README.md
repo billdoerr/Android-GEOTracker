@@ -24,5 +24,17 @@
     - Analytics. 
 5. **STRETCH GOAL** 
     - Sync data.  Upload data to cloud.
-
     
+    <https://medium.com/@hinchman_amanda/the-singlefragmentactivity-pattern-in-android-kotlin-ce93385252e5>
+
+   slf4j-android-1.5.8.jar 
+   osmdroid-android-4.1.jar 
+   
+       <org.osmdroid.views.MapView
+        android:id="@+id/mapz"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"  />

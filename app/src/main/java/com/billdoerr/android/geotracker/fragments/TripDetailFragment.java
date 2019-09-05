@@ -4,21 +4,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
-import com.billdoerr.android.geotracker.utils.GlobalVariables;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
 
-public class TripDetailFragment extends Fragment {
+public class TripDetailFragment extends DialogFragment {
 
     private static final String TAG = "TripDetailFragment";
 
+    private static final String ARGS_TRIP = "Trip";
+
     private Trip mTrip;
+
+    public interface DialogListener {
+        void onFinishDialog(boolean save);
+    }
 
     public TripDetailFragment() {
         // Required empty public constructor
@@ -32,12 +38,10 @@ public class TripDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//       setHasOptionsMenu(true);
-
         // Get args
         Bundle args = getArguments();
         if (args != null) {
-            mTrip = (Trip) args.getSerializable(GlobalVariables.ARGS_TRIP);
+            mTrip = (Trip) args.getSerializable(ARGS_TRIP);
         }
 
     }
@@ -50,6 +54,24 @@ public class TripDetailFragment extends Fragment {
         final EditText textName = (EditText) view.findViewById(R.id.textName);
         final EditText textDesc = (EditText) view.findViewById(R.id.textDesc);
         final CheckBox checkActive = (CheckBox) view.findViewById(R.id.checkBoxActive);
+        final Button btnSave = (Button) view.findViewById(R.id.btn_save);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogListener dialogListener = (DialogListener) getTargetFragment();
+                dialogListener.onFinishDialog(true);
+                dismiss();
+            }
+        });
+        final Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogListener dialogListener = (DialogListener) getTargetFragment();
+                dialogListener.onFinishDialog(false);
+                dismiss();
+            }
+        });
 
         if (mTrip != null) {
             textName.setText(mTrip.getTripName());
@@ -58,6 +80,11 @@ public class TripDetailFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
 }

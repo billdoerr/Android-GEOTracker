@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">GEO Tracker</string>
+    <string name="app_name">GEOTracker</string>
 
     <!--  Activity Titles -->
     <string name="activity_title_geotracker">GEO Tracker</string>
+    <string name="activity_title_trips">Trips</string>
+    <string name="activity_title_track">Track</string>
+    <string name="activity_title_maps">Maps</string>
     <string name="activity_title_settings">Settings</string>
     <string name="activity_title_about">About</string>
 
@@ -14,7 +17,7 @@
     <string name="fragment_title_route_list">Routes</string>
     <string name="fragment_title_route_detail">Route Details</string>
     <string name="fragment_title_about">About GEOTracker</string>
-    <string name="fragment_title_trip_data_logging">Trip Data Logging</string>
+    <string name="fragment_title_tracking">Tracking</string>
 
     <!--  Dialog -->
     <string name="dialog_title_activity_type_new">New Activity</string>
@@ -27,7 +30,8 @@
 
     <string name="dialog_title_please_grant_permissions">Please grant these permission(s)</string>
     <string name="dialog_msg_location_permissions_required">Location permissions are required to do the task.</string>
-    <string name="dialog_msg_grant_permissions">GEOTracker requires permissions be granted for Location. Please permit the permission through "
+    <string name="dialog_msg_storage_permissions_required">Location permissions are required to do the task.</string>
+    <string name="dialog_msg_grant_permissions">GEOTracker requires permissions be granted. Please permit the permission through "
                 + "Settings screen.\n\nSelect Permissions -> Enable permission</string>
 
     <!--  Draw Layout -->
@@ -35,14 +39,16 @@
     <string name="drawer_close">drawer close</string>
 
     <!--  Toolbar -->
+    <string name="action_trips">Trips</string>
     <string name="action_activity_types">Activities</string>
     <string name="action_routes">Routes</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
 
-    <!--  Navigation -->
+    <!--  Bottom Navigation -->
     <string name="navigation_trips">Trips</string>
-    <string name="navigation_maps">Maps</string>
+    <string name="navigation_track">Track</string>
+    <string name="navigation_map">Map</string>
 
     <!--  Menu -->
     <string name="menu_search">Search</string>
@@ -72,14 +78,14 @@
     <string name="hint_route_desc">Enter description of route</string>
 
     <!-- Trip Data Logging Fragment -->
-    <string name="btn_start_logging">Start Logging</string>
-    <string name="btn_stop_logging">Stop Logging</string>
-    <string name="btn_pause_logging">Pause Logging</string>
+    <string name="btn_start_tracking">Start Tracking</string>
+    <string name="btn_stop_tracking">Stop Tracking</string>
+    <string name="btn_pause_tracking">Pause Tracking</string>
 
     <string name="textTripTitle">Trip Name: </string>
     <string name="textLatitude">Latitude</string>
     <string name="textLongitude">Longitude</string>
-    <string name="textLatitudeLongitude"></string>
+    <string name="textLatitudeLongitude"> </string>
     <string name="textElevation">Elevation</string>
     <string name="textBearing">Bearing</string>
     <string name="textSpeed">Speed</string>
@@ -87,17 +93,64 @@
     <string name="textCurrentTime">Current Time</string>
     <string name="textStartTime">Start Time</string>
     <string name="textEndTime">End Time</string>
-    <string name="textTripTime">Trip Time</string>
+    <string name="textMovingTime">Moving Time</string>
+    <string name="textPausedTime">Paused Time</string>
     <string name="textTotalTime">Total Time</string>
+
+    <string name="textBearingUnits">d</string>
+    <string name="textElevationUnits_Metric">m</string>
+    <string name="textSpeedUnits_Metric">km/hr</string>
+    <string name="textAccuracyUnits_Metric">m</string>
+    <string name="textElevationUnits_English">ft</string>
+    <string name="textSpeedUnits_English">mi/hr</string>
+    <string name="textAccuracyUnits_English">ft</string>
+    <string name="textSpeedUnits_Nautical">kt</string>
+
+    <!-- ******************************** -->
+    <!-- Maps Activity -->
+    <!-- ******************************** -->
+
+    <!-- Maps Menu -->
+    <string name="action_map_types">Set map type</string>
+    <string name="action_map_type_normal">Normal</string>
+    <string name="action_map_type_hybrid">Hybrid</string>
+    <string name="action_map_type_satellite">Satellite</string>
+    <string name="action_map_type_terrain">Terrain</string>
+
+    <string name="action_todo">TODO</string>
+
+    <!--  Maps Mesages-->
+    <string name="maps_you_are_here">You are here</string>
+    <string name="maps_current_location">You are here</string>
+    <string name="maps_destination">Destination</string>
+
+    <!-- Notifications -->
+    <string name="notification_gps_service_title">GEOTracker</string>
+    <string name="notification_gps_service_text">Now recording a new track.</string>
+
+    <!-- Permissions related -->
+    <string name="permissions_go_to_settings_button">Go to Settings.</string>
+    <string name="permissions_go_to_settings_msg">You have denied some permissions.  Allow all permissions at {[Setting] -> [Permissions]</string>
+    <string name="permissions_required">This app needs Location and Storage permissions.</string>
+    <string name="permissions_button_yes">Yes, Grant Permissions</string>
+    <string name="permissions_button_no">No, Exit app</string>
 
 
     <!-- Shared Preference Settings -->
     <!--  Preference Category -->
+    <string name="pref_category_units">Units</string>
     <string name="pref_category_network_settings">Network Settings</string>
+    <string name="pref_category_location_services">Location Services</string>
     <string name="pref_category_misc_settings">Misc</string>
 
     <!--  Preference Titles -->
     <string name="pref_title_activity_settings">Settings</string>
+    <string name="pref_title_units_metric">Metric</string>
+    <string name="pref_title_units_nautical">Nautical</string>
+    <string name="pref_title_units_coordinate_type">Coordinate Type</string>
+    <string name="pref_title_units_coordinate_datum">Coordinate Datum</string>
+    <string name="pref_title_location_services_update_interval">Update Interval (in seconds)</string>
+    <string name="pref_title_location_services_update_distance">Update Distance (in meters)</string>
 
     <!--  Default Shared Preference Values -->
     <string name="pref_default_camera_name">Front</string>
@@ -105,12 +158,22 @@
     <!--  Logging messages -->
     <string name="msg_application_starting">Application starting&#8230;</string>
     <string name="msg_creating_db_tables">Creating database tables.</string>
+
     <string name="msg_has_location_permissions">Has Location permissions.</string>
     <string name="msg_no_location_permissions">No Location permissions.</string>
-    <string name="msg_location_permissions__already_granted">Location permissions have already been granted.</string>
+    <string name="msg_location_permissions_already_granted">Location permissions have already been granted.</string>
+
+    <string name="msg_has_storage_permissions">Has Storage permissions.</string>
+    <string name="msg_no_storage_permissions">No Storage permissions.</string>
+    <string name="msg_storage_permissions_already_granted">Storage permissions have already been granted.</string>
+
+    <string name="msg_gps_service_starting">GPS service is starting.</string>
+    <string name="msg_gps_service_restart">GPS restart.</string>
+    <string name="msg_gps_service_stop">GPS service stopped.</string>
 
     <!--  About -->
-    <string name="version">Version</string>
+    <string name="text_version">Version</string>
+    <string name="text_app_version">%1$s (%2$s)</string>
 
     <!--  Exceptions -->
     <string name="exception_tag">Exception</string>
@@ -124,5 +187,6 @@
     <!--  Toast messages -->
     <string name="toast_image_saved">Image has been saved.</string>
     <string name="toast_permissions_request_access_fine_location_denied">This functionality has been disabled. \nYou must enabled Location permissions for this app.</string>
+    <string name="toast_new_track">Press Track to reset.</string>
 
 </resources>

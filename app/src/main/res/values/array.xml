@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="listArrayCoordinateType">
+        <item>Decimal Degrees</item>
+        <item>Degrees, Minutes, Seconds</item>
+        <item>Degrees, Decimal Minutes</item>
+        <item>UTM Coordinates</item>
+        <item>MGRS Coordinates</item>
+    </string-array>
+
+    <string-array name="listValuesCoordinateType">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="listArrayCoordinateDatum">
+        <item>WGS84</item>
+        <item>NAD27</item>
+    </string-array>
+
+    <string-array name="listValuesCoordinateDatum">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="listArrayLocationServicesUpdateInterval">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60 (1 minute)</item>
+        <item>300 (5 minutes)</item>
+        <item>900 (15 minutes)</item>
+        <item>1800 (30 minutes)</item>
+        <item>3600 (1 hour)</item>
+    </string-array>
+
+    <string-array name="listValuesLocationServicesUpdateInterval">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>300</item>
+        <item>900</item>
+        <item>1800</item>
+        <item>3600</item>
+    </string-array>
+
+    <string-array name="listArrayLocationServicesUpdateDistance">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>50</item>
+        <item>100</item>
+    </string-array>
+
+    <string-array name="listValuesLocationServicesUpdateDistance">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>50</item>
+        <item>100</item>
+    </string-array>
+
+
+</resources>

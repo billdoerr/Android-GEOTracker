@@ -15,8 +15,6 @@ import androidx.fragment.app.Fragment;
 
 /**
  *  Fragment that displays information about this application.  Application name and version #.
- *  // TODO:  Remove below comment when AboutActivity is deleted.
- *  Created by the AboutActivity class.
  */
 public class AboutFragment extends Fragment {
 
@@ -44,7 +42,7 @@ public class AboutFragment extends Fragment {
         String versionName = BuildConfig.VERSION_NAME;
 
         TextView txtVersion = v.findViewById(R.id.txtVersion);
-        txtVersion.setText(versionName + " (" + versionCode + ")");
+        txtVersion.setText(String.format(getString(R.string.text_app_version), versionName, versionCode));
 
         return v;
     }

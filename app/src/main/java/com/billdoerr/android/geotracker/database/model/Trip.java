@@ -10,7 +10,7 @@ public class Trip implements Serializable {
 
     private static final String TAG = "Trip";
 
-    // Table name
+    // Table mName
     public static final String TABLE = "Trip";
 
     // Columns
@@ -25,68 +25,114 @@ public class Trip implements Serializable {
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
 
-    private int id;
-    private String name;
-    private String desc;
-    private Date startTime;
-    private Date endTime;
-    private int activityTypeId;
-    private int activeFlag;
+    public @interface TripState {
+        int NO_PERMISSIONS = -99;
+        int NOT_STARTED = -1;
+        int RUNNING = 0;
+        int PAUSED =  1;
+        int STOPPED = 2;
+    }
+
+    private int mId;
+    private String mName;
+    private String mDesc;
+    private Date mStartTime;
+    private Date mEndTime;
+    private int mActivityTypeId;
+    private int mActiveFlag;
+
+    //  TODO:  Should I add these here???
+    private int mState;
+    private Date mPausedTime;
+    private long mTotalTimeInMillis;
+    private long mPausedTimeInMillis;
+
+    public int getState() {
+        return mState;
+    }
+
+    public void setState(int state) {
+        mState = state;
+    }
+
+    public Date getPausedTime() {
+        return mPausedTime;
+    }
+
+    public void setPausedTime(Date pausedTime) {
+        mPausedTime = pausedTime;
+    }
+
+    public long getTotalTimeInMillis() {
+        return mTotalTimeInMillis;
+    }
+
+    public void setTotalTimeInMillis(long totalTimeInMillis) {
+        mTotalTimeInMillis = totalTimeInMillis;
+    }
+
+    public long getPausedTimeInMillis() {
+        return mPausedTimeInMillis;
+    }
+
+    public void setPausedTimeInMillis(long pausedTimeInMillis) {
+        mPausedTimeInMillis = pausedTimeInMillis;
+    }
 
     public int getTripId() {
-        return id;
+        return mId;
     }
 
     public void setTripId(int id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public String getTripName() {
-        return name;
+        return mName;
     }
 
     public void setTripName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public String getTripDesc() {
-        return desc;
+        return mDesc;
     }
 
     public void setTripDesc(String desc) {
-        this.desc = desc;
+        this.mDesc = desc;
     }
 
     public Date getTripStartTime() {
-        return startTime;
+        return mStartTime;
     }
 
     public void setTripStartTime(Date startTime) {
-        this.startTime = startTime;
+        this.mStartTime = startTime;
     }
 
     public Date getTripEndTime() {
-        return endTime;
+        return mEndTime;
     }
 
     public void setTripEndTime(Date endTime) {
-        this.endTime = endTime;
+        this.mEndTime = endTime;
     }
 
     public int getTripActivityTypeId() {
-        return activityTypeId;
+        return mActivityTypeId;
     }
 
     public void setTripActivityTypeId(int activityTypeId) {
-        this.activityTypeId = activityTypeId;
+        this.mActivityTypeId = activityTypeId;
     }
 
     public int getTripActiveFlag() {
-        return activeFlag;
+        return mActiveFlag;
     }
 
     public void setTripActiveFlag(int activeFlag) {
-        this.activeFlag = activeFlag;
+        this.mActiveFlag = activeFlag;
     }
 
 }

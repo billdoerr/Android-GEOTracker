@@ -17,7 +17,10 @@ import com.billdoerr.android.geotracker.database.DatabaseHelper;
 import com.billdoerr.android.geotracker.database.DatabaseManager;
 import com.billdoerr.android.geotracker.fragments.ActivityTypeListFragment;
 import com.billdoerr.android.geotracker.fragments.AboutFragment;
+import com.billdoerr.android.geotracker.fragments.MapsFragment;
 import com.billdoerr.android.geotracker.fragments.RouteListFragment;
+import com.billdoerr.android.geotracker.fragments.TrackingFragment;
+import com.billdoerr.android.geotracker.fragments.TripListFragment;
 import com.billdoerr.android.geotracker.settings.SettingsActivity;
 import com.billdoerr.android.geotracker.utils.FileStorageUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -147,11 +150,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_trips:
-                        startActivity(new Intent(BaseActivity.this, TripsActivity.class));
+//                        startActivity(new Intent(BaseActivity.this, TripsActivity.class));
+                        fragment = new TripListFragment();
+                        loadFragmentReplace(fragment);
+                        return true;
+                    case R.id.navigation_track:
+//                        startActivity(new Intent(BaseActivity.this, TrackingActivity.class));
+                        fragment = new TrackingFragment();
+                        loadFragmentReplace(fragment);
                         return true;
                     case R.id.navigation_maps:
+//                        startActivity(new Intent(BaseActivity.this, MapsActivity.class));
+                        fragment = new MapsFragment();
+                        loadFragmentReplace(fragment);
                         return true;
                 }
                 return false;
@@ -181,19 +195,19 @@ public abstract class BaseActivity extends AppCompatActivity {
                             // Fragment:  Activities
                             case R.id.drawer_activities:
                                 fragment = new ActivityTypeListFragment();
-                                return loadFragmentAdd(fragment);
+                                return loadFragmentReplace(fragment);
                             // Fragment:  Routes
                             case R.id.drawer_routes:
                                 fragment = new RouteListFragment();
 //                               fr.setArguments(args);
-                                return loadFragmentAdd(fragment);
+                                return loadFragmentReplace(fragment);
                             // Activity:  Settings
                             case R.id.drawer_settings:
                                 startActivity(new Intent(BaseActivity.this, SettingsActivity.class));
                                 return true;
                             // Fragment:  About
                             case R.id.drawer_about:
-//                               startActivity(new Intent(BaseActivity.this, AboutActivity.class));
+//                               startActivity(new Intent(BaseActivity.this, MainActivity.class));
                                 fragment = new AboutFragment();
                                 return loadFragmentReplace(fragment);
                             default:
@@ -209,7 +223,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return  boolean:  Returns true if fragment created
      */
     private boolean loadFragmentAdd(Fragment fragment) {
-        //switching fragment
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -226,7 +239,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return  boolean:  Returns true if fragment created
      */
     private boolean loadFragmentReplace(Fragment fragment) {
-        //switching fragment
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
