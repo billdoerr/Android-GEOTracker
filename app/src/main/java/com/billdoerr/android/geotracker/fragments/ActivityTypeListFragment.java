@@ -18,6 +18,7 @@ import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -34,9 +35,7 @@ public class ActivityTypeListFragment extends Fragment {
     private static final String TAG = "ActivityTypeListFragment";
 
     private List<ActivityType> mActivityTypes;
-    private RecyclerView mActivityTypeRecyclerView;
     private ActivityTypeAdapter mActivityTypeAdapter;
-    private FloatingActionButton mFab;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +49,8 @@ public class ActivityTypeListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_activity_type_list, container, false);
 
-        mFab = (FloatingActionButton) view.findViewById(R.id.fabAdd);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = view.findViewById(R.id.fabAdd);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogActivityDetails(null);
@@ -61,11 +60,11 @@ public class ActivityTypeListFragment extends Fragment {
         // Get data
         mActivityTypes = new ActivityTypeRepo().getActivities();
 
-        mActivityTypeRecyclerView = (RecyclerView) view.findViewById(R.id.activityTypeList);
-        mActivityTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerView activityTypeRecyclerView = view.findViewById(R.id.activityTypeList);
+        activityTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mActivityTypeAdapter = new ActivityTypeAdapter(mActivityTypes);
-        mActivityTypeRecyclerView.setAdapter(mActivityTypeAdapter);
+        activityTypeRecyclerView.setAdapter(mActivityTypeAdapter);
 
         mActivityTypeAdapter.setActivityTypes(mActivityTypes);
         mActivityTypeAdapter.notifyDataSetChanged();
@@ -89,7 +88,7 @@ public class ActivityTypeListFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
@@ -101,17 +100,17 @@ public class ActivityTypeListFragment extends Fragment {
     // We are disabling the options menu in this fragment.  Must also set
     // setHasOptionsMenu(true); in onCreate()
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         // Pass
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
@@ -133,9 +132,9 @@ public class ActivityTypeListFragment extends Fragment {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            cv = (CardView) itemView.findViewById(R.id.cv);
-            mTextName = (TextView) itemView.findViewById(R.id.textName);
-            mTextDesc = (TextView) itemView.findViewById(R.id.textDesc);
+            cv = itemView.findViewById(R.id.cv);
+            mTextName = itemView.findViewById(R.id.textName);
+            mTextDesc = itemView.findViewById(R.id.textDesc);
         }
 
         public void bind(ActivityType activityType) {
@@ -163,18 +162,16 @@ public class ActivityTypeListFragment extends Fragment {
                 mActivityTypes = activityTypes;
             }
 
+            @NonNull
             @Override
-            public ActivityTypeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            public ActivityTypeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
                 View listItem = layoutInflater.inflate(R.layout.fragment_activity_type_list_item, parent, false);
-
-                ActivityTypeHolder viewHolder = new ActivityTypeHolder(listItem);
-
-                return viewHolder;
+                return new ActivityTypeHolder(listItem);
             }
 
             @Override
-            public void onBindViewHolder(ActivityTypeHolder holder, int position) {
+            public void onBindViewHolder(@NonNull ActivityTypeHolder holder, int position) {
                 ActivityType activityType = mActivityTypes.get(position);
                 holder.bind(activityType);
             }
@@ -202,14 +199,13 @@ public class ActivityTypeListFragment extends Fragment {
      */
         private void dialogActivityDetails(final ActivityType activityType) {
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.fragment_activity_type_detail, null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        final View dialogView = View.inflate(getContext(), R.layout.fragment_activity_type_detail, null);
         dialogBuilder.setView(dialogView);
 
-        final EditText textName = (EditText) dialogView.findViewById(R.id.textName);
-        final EditText textDesc = (EditText) dialogView.findViewById(R.id.textDesc);
-        final CheckBox checkActive = (CheckBox) dialogView.findViewById(R.id.checkBoxActive);
+        final EditText textName = dialogView.findViewById(R.id.textName);
+        final EditText textDesc = dialogView.findViewById(R.id.textDesc);
+        final CheckBox checkActive = dialogView.findViewById(R.id.checkBoxActive);
 
         if (activityType != null) {
             textName.setText(activityType.getActivityTypeName());

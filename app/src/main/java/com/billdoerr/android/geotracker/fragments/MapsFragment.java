@@ -34,6 +34,8 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
+import java.util.Objects;
+
 
 public class MapsFragment extends Fragment
 {
@@ -65,7 +67,7 @@ public class MapsFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Register event bus
         EventBus.getDefault().register(this);
@@ -93,9 +95,9 @@ public class MapsFragment extends Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        Configuration.getInstance().setUserAgentValue(getActivity().getPackageName());
+        Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
-        mMapView = (MapView) view.findViewById(R.id.mapview);
+        mMapView = view.findViewById(R.id.mapview);
         mMapView.setTileSource(TileSourceFactory.USGS_TOPO);
 
         // Add multi-touch capability
@@ -135,7 +137,7 @@ public class MapsFragment extends Fragment
         checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
         // Get current location
-        GPSUtils.getCurrentLocation(getContext());
+        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
     }
 
     @Override
@@ -164,21 +166,21 @@ public class MapsFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 //        outState.putInt(SAVED_MAP_TYPE, mMapType);
         outState.putFloat(SAVED_ZOOM, mZoom);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_maps, menu);
 //        initMapType(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 //            case R.id.action_map_type_hybrid:
 //                item.setChecked(true);
@@ -205,11 +207,12 @@ public class MapsFragment extends Fragment
         }
     }
 
-    public static Marker addMarker(Context context, MapView map, double latitude, double longitude) {
-        if (map == null || context == null) return null;
+    private static void addMarker(Context context, MapView map, double latitude, double longitude) {
+        if (map == null || context == null) return;
         Marker marker = new Marker(map);
         marker.setPosition(new GeoPoint(latitude, longitude));
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        //  TODO:  Need icon
 //        marker.setIcon(context.getResources().getDrawable(R.drawable.ic_map_marker_p));
         marker.setInfoWindow(null);
         map.getOverlays().add(marker);
@@ -217,8 +220,6 @@ public class MapsFragment extends Fragment
 
         GeoPoint newGeoPoint = new GeoPoint(latitude, longitude);
         map.getController().animateTo(newGeoPoint);
-
-        return marker;
     }
 
     /*
@@ -246,7 +247,7 @@ public class MapsFragment extends Fragment
      */
 
     private void checkPermissions(final String permission, final int resultCode) {
-        PermissionUtils.checkPermission(getActivity(), permission,
+        PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {
                     @Override
                     public void onNeedPermission() {
@@ -277,7 +278,7 @@ public class MapsFragment extends Fragment
      * Google Maps
      * ******************************************************************
      */
-    /**
+    /*
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -294,7 +295,6 @@ public class MapsFragment extends Fragment
 //        //  Update the map type
 //        updateMapType();
 //
-//        //  TODO
 //        updateMapCurrentLocation(new LatLng(47.3159d, -121.5040d));
 //
 //        //  Add a marker for the destination
@@ -350,7 +350,6 @@ public class MapsFragment extends Fragment
 //    }
 //
 //    private void setDestination(LatLng location) {
-//        //  TODO
 //        //  47°31′59″N 121°50′40″W
 //        mDestination = location;
 //    }
@@ -370,7 +369,6 @@ public class MapsFragment extends Fragment
 //            }
 //
 //            if (savedInstanceState.containsKey(SAVED_ZOOM)) {
-//                //  TODO : implement save zoom value
 ////                mZoom = savedInstanceState.getFloat(SAVED_ZOOM);
 //            }
 //        }

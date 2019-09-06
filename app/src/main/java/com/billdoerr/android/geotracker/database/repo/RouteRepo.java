@@ -58,7 +58,7 @@ public class RouteRepo {
             rowId = (int)db.insert(Route.TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -86,7 +86,7 @@ public class RouteRepo {
             recordsDeleted = db.delete(Route.TABLE, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -119,7 +119,7 @@ public class RouteRepo {
             recordsUpdated = db.update(Route.TABLE, values, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -133,7 +133,7 @@ public class RouteRepo {
      * @return List<ActivityType>
      */
     public List<Route> getRoutes() {
-        List<Route> routes = new ArrayList<Route>();
+        List<Route> routes = new ArrayList<>();
         Route route;
 
         String selectQuery = "SELECT "
@@ -167,7 +167,7 @@ public class RouteRepo {
             cursor.close();
 
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             DatabaseManager.getInstance().closeDatabase();
         }

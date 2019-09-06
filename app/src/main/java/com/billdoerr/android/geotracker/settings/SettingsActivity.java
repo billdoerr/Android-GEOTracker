@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import java.util.Objects;
+
 /**
  * Main preference settings activity.
  */
@@ -29,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity implements
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
-        actionbar.setTitle(getString(R.string.pref_title_activity_settings));
+        Objects.requireNonNull(actionbar).setTitle(getString(R.string.pref_title_activity_settings));
         actionbar.setDisplayHomeAsUpEnabled(true);
 
         getSupportFragmentManager()

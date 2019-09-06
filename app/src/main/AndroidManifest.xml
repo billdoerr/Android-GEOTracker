@@ -60,9 +60,8 @@
         <receiver
             android:name=".services.GPSServiceRestartBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"
-            android:label="RestartServiceWhenStopped"
-            android:permission="">
+            android:exported="false"
+            android:label="RestartServiceWhenStopped">
         </receiver>
 
     </application>

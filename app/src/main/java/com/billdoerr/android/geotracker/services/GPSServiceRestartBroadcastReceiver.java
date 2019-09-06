@@ -18,7 +18,7 @@ public class GPSServiceRestartBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, context.getString(R.string.msg_gps_service_restart));
-        context.startService(new Intent(context, GPSService.class));;
+        context.startService(new Intent(context, GPSService.class));
     }
 
 }

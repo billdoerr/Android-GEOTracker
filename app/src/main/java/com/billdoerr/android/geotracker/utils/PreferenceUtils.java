@@ -9,6 +9,8 @@ import com.billdoerr.android.geotracker.database.model.Trip;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.Objects;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class PreferenceUtils {
@@ -66,16 +68,16 @@ public class PreferenceUtils {
         prefs.setNautical(appSharedPrefs.getBoolean(PREF_KEY_UNITS_NAUTICAL, false));
 
         // Convert to Integer
-        prefs.setCoordinateType(Integer.valueOf(appSharedPrefs.getString(PREF_KEY_UNITS_COORDINATE_TYPE, "0")));
+        prefs.setCoordinateType(Integer.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_UNITS_COORDINATE_TYPE, "0"))));
 //
 //        // Feature supporting this has not been implemented
 ////        prefs.setCoordinateDatum(Integer.valueOf(appSharedPrefs.getString(PREF_KEY_UNITS_COORDINATE_DATUM, "0")));
 //
         // Convert to long and multiply my 1000 to convert from integer seconds to long milliseconds
-        prefs.setLocationServicesUpdateInterval( Long.valueOf(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL, "2")) * 1000 );
+        prefs.setLocationServicesUpdateInterval( Long.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL, "2"))) * 1000 );
 //
 //        // Convert value to float.  Preference is stored as string representative of meters.
-        prefs.setLocationServicesUpdateDistance(Float.valueOf(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE, "2")));
+        prefs.setLocationServicesUpdateDistance(Float.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE, "2"))));
 
         return prefs;
 
@@ -83,15 +85,14 @@ public class PreferenceUtils {
 
     /**
      * Read active tracking to GeoTrackerSharedPreferences as a JSON string.
-     * @param context
-     * @return
+     * @param context Context
+     * @return Trip
      */
     public static Trip getActiveTripFromSharedPrefs(Context context) {
         SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         Gson gson = new Gson();
         String json = appSharedPrefs.getString(PREF_KEY_ACTIVE_TRIP, "");
-        Trip trip = gson.fromJson(json, new TypeToken<Trip>(){}.getType());
-        return trip;
+        return gson.fromJson(json, new TypeToken<Trip>(){}.getType());
     }
 
 

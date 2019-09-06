@@ -14,6 +14,8 @@ import com.billdoerr.android.geotracker.database.model.Trip;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 public class TripDetailFragment extends DialogFragment {
 
     private static final String TAG = "TripDetailFragment";
@@ -51,24 +53,24 @@ public class TripDetailFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_trip_detail, container, false);
 
-        final EditText textName = (EditText) view.findViewById(R.id.textName);
-        final EditText textDesc = (EditText) view.findViewById(R.id.textDesc);
-        final CheckBox checkActive = (CheckBox) view.findViewById(R.id.checkBoxActive);
-        final Button btnSave = (Button) view.findViewById(R.id.btn_save);
+        final EditText textName = view.findViewById(R.id.textName);
+        final EditText textDesc = view.findViewById(R.id.textDesc);
+        final CheckBox checkActive = view.findViewById(R.id.checkBoxActive);
+        final Button btnSave = view.findViewById(R.id.btn_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogListener dialogListener = (DialogListener) getTargetFragment();
-                dialogListener.onFinishDialog(true);
+                Objects.requireNonNull(dialogListener).onFinishDialog(true);
                 dismiss();
             }
         });
-        final Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        final Button btnCancel = view.findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogListener dialogListener = (DialogListener) getTargetFragment();
-                dialogListener.onFinishDialog(false);
+                Objects.requireNonNull(dialogListener).onFinishDialog(false);
                 dismiss();
             }
         });

@@ -39,7 +39,7 @@ public class TripDetailsRepo {
      * @param TripDetails  TripDetails:
      * @return Returns -1 if error else returns row id of inserted record.
      */
-    public int insert(TripDetails TripDetails) {
+    public static int insert(TripDetails TripDetails) {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
@@ -57,7 +57,7 @@ public class TripDetailsRepo {
             rowId = (int)db.insert(TripDetails.TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -71,7 +71,7 @@ public class TripDetailsRepo {
      * @param rowId  int:  Index for the TripDetails.
      * @return int:  Number of records deleted.
      */
-    public int delete(int rowId) {
+    public static int delete(int rowId) {
         int recordsDeleted = 0;
 
         // TODO:  Should we delete or even mark as inactive for this the TripDetails table?
@@ -100,7 +100,7 @@ public class TripDetailsRepo {
      * @param TripDetails  TripDetails:
      * @return  int:  Number of rows updated.
      */
-    public int update(TripDetails TripDetails){
+    public static int update(TripDetails TripDetails){
         int recordsUpdated = 0;
 
         // TODO:  Would we really have an update?

@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -61,7 +62,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
 //        int NAD27 =  1;
 //    }
 
-    private GPSService mGPSService;
     private Intent mGPSServiceIntent;
     private Trip mTrip;
     private Date mCurrentTime;
@@ -153,7 +153,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Register event bus
         EventBus.getDefault().register(this);
@@ -168,7 +168,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         // Get Shared Preferences
         getSharedPreferences();
 
-       // TODO:  Added this since getting intermittent crashes with mCurrentTime.getDate().
         // Get current time
         mCurrentTime = Calendar.getInstance().getTime();
 
@@ -180,7 +179,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
         // Trip name/detail
-        mTextTripTitle = (TextView) view.findViewById(R.id.textTripTitle);
+        mTextTripTitle = view.findViewById(R.id.textTripTitle);
         mTextTripTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,54 +192,54 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         });
 
         //  Data grid
-        mTextLatitudeLongitude = (TextView) view.findViewById(R.id.textLatitudeLongitude);
+        mTextLatitudeLongitude = view.findViewById(R.id.textLatitudeLongitude);
 
-        final TextView textLatitudeLabel = (TextView) view.findViewById(R.id.textLatitudeLabel);
-        mTextLatitudeUnits = (TextView) view.findViewById(R.id.textLatitudeUnits);
-        mTextLatitudeData = (TextView) view.findViewById(R.id.textLatitudeData);
+        final TextView textLatitudeLabel = view.findViewById(R.id.textLatitudeLabel);
+        mTextLatitudeUnits = view.findViewById(R.id.textLatitudeUnits);
+        mTextLatitudeData = view.findViewById(R.id.textLatitudeData);
 
-        final TextView textLongitudeLabel = (TextView) view.findViewById(R.id.textLongitudeLabel);
-        mTextLongitudeUnits = (TextView) view.findViewById(R.id.textLongitudeUnits);
-        mTextLongitudeData = (TextView) view.findViewById(R.id.textLongitudeData);
+        final TextView textLongitudeLabel = view.findViewById(R.id.textLongitudeLabel);
+        mTextLongitudeUnits = view.findViewById(R.id.textLongitudeUnits);
+        mTextLongitudeData = view.findViewById(R.id.textLongitudeData);
 
-        final TextView textElevationLabel = (TextView) view.findViewById(R.id.textElevationLabel);
-        mTextElevationUnits = (TextView) view.findViewById(R.id.textElevationUnits);
-        mTextElevationData = (TextView) view.findViewById(R.id.textElevationData);
+        final TextView textElevationLabel = view.findViewById(R.id.textElevationLabel);
+        mTextElevationUnits = view.findViewById(R.id.textElevationUnits);
+        mTextElevationData = view.findViewById(R.id.textElevationData);
 
-        final TextView textBearingLabel = (TextView) view.findViewById(R.id.textBearingLabel);
-        mTextBearingUnits = (TextView) view.findViewById(R.id.textBearingUnits);
-        mTextBearingData = (TextView) view.findViewById(R.id.textBearingData);
+        final TextView textBearingLabel = view.findViewById(R.id.textBearingLabel);
+        mTextBearingUnits = view.findViewById(R.id.textBearingUnits);
+        mTextBearingData = view.findViewById(R.id.textBearingData);
 
-        final TextView textSpeedLabel = (TextView) view.findViewById(R.id.textSpeedLabel);
-        mTextSpeedUnits = (TextView) view.findViewById(R.id.textSpeedUnits);
-        mTextSpeedData = (TextView) view.findViewById(R.id.textSpeedData);
+        final TextView textSpeedLabel = view.findViewById(R.id.textSpeedLabel);
+        mTextSpeedUnits = view.findViewById(R.id.textSpeedUnits);
+        mTextSpeedData = view.findViewById(R.id.textSpeedData);
 
-        final TextView textAccuracyLabel = (TextView) view.findViewById(R.id.textAccuracyLabel);
-        mTextAccuracyUnits = (TextView) view.findViewById(R.id.textAccuracyUnits);
-        mTextAccuracyData = (TextView) view.findViewById(R.id.textAccuracyData);
+        final TextView textAccuracyLabel = view.findViewById(R.id.textAccuracyLabel);
+        mTextAccuracyUnits = view.findViewById(R.id.textAccuracyUnits);
+        mTextAccuracyData = view.findViewById(R.id.textAccuracyData);
 
-        final TextView textCurrentTimeLabel = (TextView) view.findViewById(R.id.textCurrentTimeLabel);
-        mTextCurrentTimeData = (TextView) view.findViewById(R.id.textCurrentTimeData);
+        final TextView textCurrentTimeLabel = view.findViewById(R.id.textCurrentTimeLabel);
+        mTextCurrentTimeData = view.findViewById(R.id.textCurrentTimeData);
 
-        final TextView textStartTimeLabel = (TextView) view.findViewById(R.id.textStartTimeLabel);
-        mTextStartTimeData = (TextView) view.findViewById(R.id.textStartTimeData);
+        final TextView textStartTimeLabel = view.findViewById(R.id.textStartTimeLabel);
+        mTextStartTimeData = view.findViewById(R.id.textStartTimeData);
 
-        final TextView textEndTimeLabel = (TextView) view.findViewById(R.id.textEndTimeLabel);
-        mTextEndTimeData = (TextView) view.findViewById(R.id.textEndTimeData);
+        final TextView textEndTimeLabel = view.findViewById(R.id.textEndTimeLabel);
+        mTextEndTimeData = view.findViewById(R.id.textEndTimeData);
 
-        final TextView textTrackingTimeLabel = (TextView) view.findViewById(R.id.textTrackingTimeLabel);
-        mTextMovingTimeData = (TextView) view.findViewById(R.id.textTrackingTimeData);
+        final TextView textTrackingTimeLabel = view.findViewById(R.id.textTrackingTimeLabel);
+        mTextMovingTimeData = view.findViewById(R.id.textTrackingTimeData);
 
-        final TextView textPausedTimeLabel = (TextView) view.findViewById(R.id.textPausedTimeLabel);
-        mTextPausedTimeData = (TextView) view.findViewById(R.id.textPausedTimeData);
+        final TextView textPausedTimeLabel = view.findViewById(R.id.textPausedTimeLabel);
+        mTextPausedTimeData = view.findViewById(R.id.textPausedTimeData);
 
-        final TextView textTotalTimeLabel = (TextView) view.findViewById(R.id.textTotalTimeLabel);
-        mTextTotalTimeData = (TextView) view.findViewById(R.id.textTotalTimeData);
+        final TextView textTotalTimeLabel = view.findViewById(R.id.textTotalTimeLabel);
+        mTextTotalTimeData = view.findViewById(R.id.textTotalTimeData);
 
         //  Data logging buttons
-        mBtnStartTracking = (ImageButton) view.findViewById(R.id.btnStartTracking);
-        mBtnPauseTracking = (ImageButton) view.findViewById(R.id.btnPauseTracking);
-        mBtnStopTracking = (ImageButton) view.findViewById(R.id.btnStopTracking);
+        mBtnStartTracking = view.findViewById(R.id.btnStartTracking);
+        mBtnPauseTracking = view.findViewById(R.id.btnPauseTracking);
+        mBtnStopTracking = view.findViewById(R.id.btnStopTracking);
 
         // Disable all buttons
         setImageButtonState(mBtnStartTracking, false);
@@ -285,7 +284,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
             }
         });
 
-        //  TODO:  This is #$%^ up!
         mBtnStopTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -301,7 +299,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         updateUnits();
 
         // Let's try to get current location
-        GPSUtils.getCurrentLocation(getContext());
+        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
 
         return view;
     }
@@ -331,7 +329,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
     @Override
     public void onPause() {
         super.onPause();
-        PreferenceUtils.saveActiveTripToSharedPrefs(getContext(), mTrip);
+        PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
     }
 
     @Override
@@ -350,9 +348,9 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         // We don't use savedInstanceState but store state in preference
-        PreferenceUtils.saveActiveTripToSharedPrefs(getContext(), mTrip);
+        PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
         super.onSaveInstanceState(outState);
     }
 
@@ -361,17 +359,11 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      * Initialize app stuff goes here
      */
     private void initApp() {
-        Log.i(TAG, "initApp");
-//        if (mTrip.getState() == Trip.TripState.NO_PERMISSIONS) {
-//            //  TODO:  How to handle this.  If permissions previously denied??
-//            setState(Trip.TripState.NOT_STARTED);
-//        }
-
         // Initialize GPS location services
         initializeLocationServices();
 
         // We don't use savedInstanceState but store state in preference
-        mTrip = PreferenceUtils.getActiveTripFromSharedPrefs(getContext());
+        mTrip = PreferenceUtils.getActiveTripFromSharedPrefs(Objects.requireNonNull(getContext()));
         if (mTrip == null) {
             // Create fragment state container
             mTrip = new Trip();
@@ -403,7 +395,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
             saveTrip();
 
             // Clear active trip from shared preferences
-            PreferenceUtils.clearActiveTripFromSharedPrefs(getContext());
+            PreferenceUtils.clearActiveTripFromSharedPrefs(Objects.requireNonNull(getContext()));
         }
     }
 
@@ -424,7 +416,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         setState(Trip.TripState.NOT_STARTED);
 //        mTrip.setState(Trip.TripState.STOPPED);
         mTrip.setPausedTimeInMillis(0);
-        PreferenceUtils.saveActiveTripToSharedPrefs(getContext(), mTrip);
+        PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
 
         // Enable/Disable image buttons
         updateImageButtons();
@@ -443,7 +435,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      */
     private void startLocationUpdates() {
         if (mGPSServiceIntent != null) {
-            getActivity().startService(mGPSServiceIntent);
+            Objects.requireNonNull(getActivity()).startService(mGPSServiceIntent);
         }
     }
 
@@ -452,30 +444,30 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      */
     private void stopLocationUpdates() {
         if (mGPSServiceIntent != null) {
-            getActivity().stopService(mGPSServiceIntent);
+            Objects.requireNonNull(getActivity()).stopService(mGPSServiceIntent);
         }
     }
 
     /**
      * This method will be called when a MessageEvent is posted
-     * @param locationMessageEvent
+     * @param locationMessageEvent LocationMessageEvent
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
         // Get location data
         Location location = locationMessageEvent.getLocation();
         // Update screen data
-        updateLocation(location);
+        updateLocationUI(location);
     }
 
     /**
      * Update screen data
      * @param location  Location
      */
-    @SuppressLint("SetTextI18n")
-    private void updateLocation(Location location) {
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+    private void updateLocationUI(Location location) {
 
-        Log.i(TAG, "updateLocation: " + location.toString());
+        Log.i(TAG, "updateLocationUI: " + location.toString());
 
         double latitude = location.getLatitude();       // In decimal degrees
         double longitude = location.getLongitude();     // In decimal degrees
@@ -594,7 +586,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("trip_detail_dialog");
         if (prev != null) {
             ft.remove(prev);
@@ -676,20 +668,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      * ******************************************************************
      */
 
-//    /**
-//     * Get required Shared Preferences
-//     */
-//    private void getSharedPreferences() {
-//        final GlobalVariables globalVariables = (GlobalVariables) getContext().getApplicationContext();
-//        globalVariables.getSharedPreferences(getContext());
-//        mIsMetric = globalVariables.isMetric();
-//        mIsNautical = globalVariables.isNautical();
-//        mCoordinateType = globalVariables.getCoordinateType();
-//
-//        // Feature supporting this has not been implemented
-////        mCoordinateDatum = globalVariables.getCoordinateDatum();
-//    }
-
     /**
      * Get required Shared Preferences
      */
@@ -713,7 +691,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      */
 
     private void checkPermissions(final String permission, final int resultCode) {
-        PermissionUtils.checkPermission(getActivity(), permission,
+        PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {
                     @Override
                     public void onNeedPermission() {

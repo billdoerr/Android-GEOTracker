@@ -114,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             rowId = (int)db.insert(table, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
         }

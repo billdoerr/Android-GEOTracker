@@ -24,7 +24,7 @@ public class FileStorageUtils {
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String TABS = "\t\t";
 
-    private static Context mContext;
+    private Context mContext;
     private static String mFilename;
 
     /**
@@ -74,7 +74,7 @@ public class FileStorageUtils {
             if ( inputStream != null ) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
+                String receiveString;
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ( (receiveString = bufferedReader.readLine()) != null ) {

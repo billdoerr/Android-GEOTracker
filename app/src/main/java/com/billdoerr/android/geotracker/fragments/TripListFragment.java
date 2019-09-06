@@ -15,6 +15,7 @@ import com.billdoerr.android.geotracker.database.repo.TripRepo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -30,10 +31,6 @@ public class TripListFragment extends Fragment {
     private static final String ARGS_TRIP = "Trip";
 
     private List<Trip> mTrips;
-    private RecyclerView mTripRecyclerView;
-    private TripAdapter mTripAdapter;
-    private FloatingActionButton mFab;
-
 
     /**
      * Required empty public constructor
@@ -59,8 +56,8 @@ public class TripListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_trip_list, container, false);
 
-        mFab = (FloatingActionButton) view.findViewById(R.id.fabAdd);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = view.findViewById(R.id.fabAdd);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             // Pass selected Trip to fragment
@@ -70,7 +67,7 @@ public class TripListFragment extends Fragment {
 //                    trackingFragment.setArguments(bundle);
 
             // Display fragment
-            getFragmentManager().beginTransaction()
+            Objects.requireNonNull(getFragmentManager()).beginTransaction()
                     .replace(R.id.fragment_container, trackingFragment)
                     .addToBackStack(null)
                     .commit();
@@ -80,14 +77,14 @@ public class TripListFragment extends Fragment {
         // Get data
         mTrips = new TripRepo().getTrips();
 
-        mTripRecyclerView = (RecyclerView) view.findViewById(R.id.tripList);
-        mTripRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerView tripRecyclerView = view.findViewById(R.id.tripList);
+        tripRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mTripAdapter = new TripAdapter(mTrips);
-        mTripRecyclerView.setAdapter(mTripAdapter);
+        TripAdapter tripAdapter = new TripAdapter(mTrips);
+        tripRecyclerView.setAdapter(tripAdapter);
 
-        mTripAdapter.setTrips(mTrips);
-        mTripAdapter.notifyDataSetChanged();
+        tripAdapter.setTrips(mTrips);
+        tripAdapter.notifyDataSetChanged();
 
         return view;
     }
@@ -108,7 +105,7 @@ public class TripListFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
@@ -119,7 +116,7 @@ public class TripListFragment extends Fragment {
 
     // TODO:  onCreateOptionsMenu
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //       inflater.inflate(R.menu.fragment_crime_list, menu);
 //
@@ -133,7 +130,7 @@ public class TripListFragment extends Fragment {
 
     // TODO:  onOptionsItemSelected
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 //           case R.id.new_crime:
 //               addCrime();
@@ -166,9 +163,9 @@ public class TripListFragment extends Fragment {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            cv = (CardView) itemView.findViewById(R.id.cv);
-            mTextName = (TextView) itemView.findViewById(R.id.textName);
-            mTextDesc = (TextView) itemView.findViewById(R.id.textDesc);
+            cv = itemView.findViewById(R.id.cv);
+            mTextName = itemView.findViewById(R.id.textName);
+            mTextDesc = itemView.findViewById(R.id.textDesc);
         }
 
         public void bind(Trip trip) {
@@ -189,7 +186,7 @@ public class TripListFragment extends Fragment {
             tripDetailFragment.setArguments(bundle);
 
             // Display fragment
-            getFragmentManager().beginTransaction()
+            Objects.requireNonNull(getFragmentManager()).beginTransaction()
                     .add(R.id.fragment_container, tripDetailFragment )
                     .addToBackStack(null)
                     .commit();
@@ -208,18 +205,16 @@ public class TripListFragment extends Fragment {
             mTrips = trips;
         }
 
+        @NonNull
         @Override
-        public TripHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public TripHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View listItem = layoutInflater.inflate(R.layout.fragment_activity_type_list_item, parent, false);
-
-            TripHolder viewHolder = new TripHolder(listItem);
-
-            return viewHolder;
+            return new TripHolder(listItem);
         }
 
         @Override
-        public void onBindViewHolder(TripHolder holder, int position) {
+        public void onBindViewHolder(@NonNull TripHolder holder, int position) {
             Trip trip = mTrips.get(position);
             holder.bind(trip);
         }

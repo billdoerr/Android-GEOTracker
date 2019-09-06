@@ -24,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -40,9 +41,7 @@ public class RouteListFragment extends Fragment {
     private static final String TAG = "RouteListFragment";
 
     private List<Route> mRoutes;
-    private RecyclerView mRouteRecyclerView;
     private RouteAdapter mRouteAdapter;
-    private FloatingActionButton mFab;
     private int mSelectedActivityType;      // Need to declare as instance variable since assigned in inner class
 
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +56,8 @@ public class RouteListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_route_list, container, false);
 
-        mFab = (FloatingActionButton) view.findViewById(R.id.fabAdd);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = view.findViewById(R.id.fabAdd);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogRouteDetails(null);
@@ -68,11 +67,11 @@ public class RouteListFragment extends Fragment {
         // Get data
         mRoutes = new RouteRepo().getRoutes();
 
-        mRouteRecyclerView = (RecyclerView) view.findViewById(R.id.routeList);
-        mRouteRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerView routeRecyclerView = view.findViewById(R.id.routeList);
+        routeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mRouteAdapter = new RouteAdapter(mRoutes);
-        mRouteRecyclerView.setAdapter(mRouteAdapter);
+        routeRecyclerView.setAdapter(mRouteAdapter);
 
         mRouteAdapter.setRoutes(mRoutes);
         mRouteAdapter.notifyDataSetChanged();
@@ -96,7 +95,7 @@ public class RouteListFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
@@ -108,17 +107,17 @@ public class RouteListFragment extends Fragment {
     // We are disabling the options menu in this fragment.  Must also set
     // setHasOptionsMenu(true); in onCreate()
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         // Pass
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
@@ -140,9 +139,9 @@ public class RouteListFragment extends Fragment {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            cv = (CardView) itemView.findViewById(R.id.cv);
-            mTextName = (TextView) itemView.findViewById(R.id.textName);
-            mTextDesc = (TextView) itemView.findViewById(R.id.textDesc);
+            cv = itemView.findViewById(R.id.cv);
+            mTextName = itemView.findViewById(R.id.textName);
+            mTextDesc = itemView.findViewById(R.id.textDesc);
         }
 
         public void bind(Route route) {
@@ -170,18 +169,16 @@ public class RouteListFragment extends Fragment {
             mRoutes = routes;
         }
 
+        @NonNull
         @Override
-        public RouteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RouteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-                View listItem = layoutInflater.inflate(R.layout.fragment_route_list_item, parent, false);
-
-            RouteHolder viewHolder = new RouteHolder(listItem);
-
-            return viewHolder;
+            View listItem = layoutInflater.inflate(R.layout.fragment_route_list_item, parent, false);
+            return new RouteHolder(listItem);
         }
 
         @Override
-        public void onBindViewHolder(RouteHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RouteHolder holder, int position) {
             Route route = mRoutes.get(position);
             holder.bind(route);
         }
@@ -211,15 +208,14 @@ public class RouteListFragment extends Fragment {
         // Create list of ActivityType
         final List<ActivityType> activityTypes = new ActivityTypeRepo().getActivities();
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.fragment_route_detail, null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        final View dialogView = View.inflate(getContext(), R.layout.fragment_route_detail, null);
         dialogBuilder.setView(dialogView);
 
-        final EditText textName = (EditText) dialogView.findViewById(R.id.textName);
-        final EditText textDesc = (EditText) dialogView.findViewById(R.id.textDesc);
-        final CheckBox checkActive = (CheckBox) dialogView.findViewById(R.id.checkBoxActive);
-        final Spinner spinnerActivity = (Spinner) dialogView.findViewById(R.id.spinnerActivity);
+        final EditText textName = dialogView.findViewById(R.id.textName);
+        final EditText textDesc = dialogView.findViewById(R.id.textDesc);
+        final CheckBox checkActive = dialogView.findViewById(R.id.checkBoxActive);
+        final Spinner spinnerActivity = dialogView.findViewById(R.id.spinnerActivity);
 
         spinnerActivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -240,7 +236,7 @@ public class RouteListFragment extends Fragment {
         }
 
         // Assign adapter to spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, items);
         spinnerActivity.setAdapter(adapter);
 
         // If data exists populate widget values

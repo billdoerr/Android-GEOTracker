@@ -104,7 +104,7 @@ public class GeoTrackerSharedPreferences  implements Serializable {
 //    }
 
     // Feature supporting this has not been implemented
-//    public void setmCoordinateDatum(int coordinateDatum) {
+//    public void setCoordinateDatum(int coordinateDatum) {
 //        mCoordinateDatum = coordinateDatum;
 //    }
 

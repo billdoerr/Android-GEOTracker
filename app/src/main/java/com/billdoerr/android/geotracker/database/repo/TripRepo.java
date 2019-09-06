@@ -42,7 +42,7 @@ public class TripRepo {
      * @param Trip  Trip:
      * @return Returns -1 if error else returns row id of inserted record.
      */
-    public int insert(Trip Trip) {
+    public static int insert(Trip Trip) {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
@@ -58,7 +58,7 @@ public class TripRepo {
             rowId = (int)db.insert(Trip.TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -73,7 +73,7 @@ public class TripRepo {
      * @param rowId  int:  Index for the Trip.
      * @return int:  Number of records deleted.
      */
-    public int delete(int rowId) {
+    public static int delete(int rowId) {
         int recordsDeleted = 0;
 
         String whereClause = Trip.KEY_TRIP_ID + " = ?";
@@ -86,7 +86,7 @@ public class TripRepo {
             recordsDeleted = db.delete(Trip.TABLE, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -100,7 +100,7 @@ public class TripRepo {
      * @param trip  Trip:
      * @return  int:  Number of rows updated.
      */
-    public int update(Trip trip){
+    public static int update(Trip trip){
         int recordsUpdated = 0;
 
         ContentValues values = new ContentValues();
@@ -119,7 +119,7 @@ public class TripRepo {
             recordsUpdated = db.update(Trip.TABLE, values, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -129,11 +129,11 @@ public class TripRepo {
     }
 
     /**
-     * Returns list of activities.
+     * Returns list of trips.
      * @return List<ActivityType>
      */
-    public List<Trip> getTrips() {
-        List<Trip> trips = new ArrayList<Trip>();
+    public static List<Trip> getTrips() {
+        List<Trip> trips = new ArrayList<>();
         Trip trip;
 
         String selectQuery = "SELECT "
@@ -167,7 +167,7 @@ public class TripRepo {
             cursor.close();
 
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             DatabaseManager.getInstance().closeDatabase();
         }

@@ -43,6 +43,8 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 /**
  * Main activity which other activities extend from.
  */
@@ -56,8 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
-
-    private static DatabaseHelper sDb;
 
     protected abstract Fragment createFragment();
 
@@ -90,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         createBottomNavigationView();
 
         // Initialize database instance
-        sDb = initDatabase();
+        initDatabase();
 
 
     }
@@ -146,11 +146,11 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Creates the Bottom Navigation View
      */
     protected void createBottomNavigationView() {
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
+                Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.navigation_trips:
 //                        startActivity(new Intent(BaseActivity.this, TripsActivity.class));
@@ -269,7 +269,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
 //           actionbar.setDisplayHomeAsUpEnabled(true);
             showBackArrow();
-            actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
+            Objects.requireNonNull(actionbar).setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }

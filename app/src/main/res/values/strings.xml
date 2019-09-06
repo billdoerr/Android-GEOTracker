@@ -119,7 +119,7 @@
 
     <string name="action_todo">TODO</string>
 
-    <!--  Maps Mesages-->
+    <!--  Maps Messages-->
     <string name="maps_you_are_here">You are here</string>
     <string name="maps_current_location">You are here</string>
     <string name="maps_destination">Destination</string>

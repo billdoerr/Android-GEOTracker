@@ -56,7 +56,7 @@ public class ActivityTypeRepo {
             rowId = (int)db.insert(ActivityType.TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -83,7 +83,7 @@ public class ActivityTypeRepo {
             recordsDeleted = db.delete(ActivityType.TABLE, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -115,7 +115,7 @@ public class ActivityTypeRepo {
             recordsUpdated = db.update(ActivityType.TABLE, values, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             db.endTransaction();
             DatabaseManager.getInstance().closeDatabase();
@@ -129,7 +129,7 @@ public class ActivityTypeRepo {
      * @return List<ActivityType>
      */
     public List<ActivityType> getActivities() {
-        List<ActivityType> activities = new ArrayList<ActivityType>();
+        List<ActivityType> activities = new ArrayList<>();
         ActivityType activityType;
 
         String selectQuery = "SELECT "
@@ -161,7 +161,7 @@ public class ActivityTypeRepo {
             cursor.close();
 
         } catch (Exception e) {
-            Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
         } finally {
             DatabaseManager.getInstance().closeDatabase();
         }

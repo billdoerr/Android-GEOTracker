@@ -16,20 +16,19 @@ public class GPSUtils {
      * Returns last known location and also posts to EventBus
      * @return Location
      */
-    public static Location getCurrentLocation(Context context) {
+    public static void getCurrentLocation(Context context) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Location location = null;
 
         try {
             location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         } catch (SecurityException e) {
-            Log.e(TAG,e.getMessage());;
+            Log.e(TAG,e.getMessage());
         }
 
         // Post to event bus
         EventBus.getDefault().post(new LocationMessageEvent(location));
 
-        return location;
     }
 
     //  TODO:  What to do with this???

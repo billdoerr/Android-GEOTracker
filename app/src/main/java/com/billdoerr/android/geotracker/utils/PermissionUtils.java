@@ -1,5 +1,6 @@
 package com.billdoerr.android.geotracker.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +28,7 @@ public class PermissionUtils {
      * Check if version is marshmallow and above.
      * Used in deciding to ask runtime permission
      * */
+    @SuppressLint("ObsoleteSdkInt")
     public static boolean shouldAskPermission() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
     }
@@ -34,9 +36,7 @@ public class PermissionUtils {
     private static boolean shouldAskPermission(Context context, String permission){
         if (shouldAskPermission()) {
             int permissionResult = ActivityCompat.checkSelfPermission(context, permission);
-            if (permissionResult != PackageManager.PERMISSION_GRANTED) {
-                return true;
-            }
+            return (permissionResult != PackageManager.PERMISSION_GRANTED);
         }
         return false;
     }
