@@ -14,7 +14,6 @@ public class GPSUtils {
 
     /**
      * Returns last known location and also posts to EventBus
-     * @return Location
      */
     public static void getCurrentLocation(Context context) {
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);

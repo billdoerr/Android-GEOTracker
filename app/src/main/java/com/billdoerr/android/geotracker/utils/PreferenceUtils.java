@@ -92,7 +92,11 @@ public class PreferenceUtils {
         SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         Gson gson = new Gson();
         String json = appSharedPrefs.getString(PREF_KEY_ACTIVE_TRIP, "");
-        return gson.fromJson(json, new TypeToken<Trip>(){}.getType());
+        if (json.length() == 0) {
+            return null;
+        } else {
+            return gson.fromJson(json, new TypeToken<Trip>(){}.getType());
+        }
     }
 
 

@@ -3,7 +3,8 @@ package com.billdoerr.android.geotracker.utils;
 import android.app.Application;
 import android.content.res.Configuration;
 
-/**
+//  TODO:  Remove if not used
+/*
 * Define global variables is by extending the Application class.
 * This is the base class for maintaining global application state.
  *

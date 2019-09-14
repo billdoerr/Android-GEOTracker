@@ -10,6 +10,7 @@ import com.billdoerr.android.geotracker.BuildConfig;
 import com.billdoerr.android.geotracker.R;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 
@@ -45,6 +46,13 @@ public class AboutFragment extends Fragment {
         txtVersion.setText(String.format(getString(R.string.text_app_version), versionName, versionCode));
 
         return v;
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_about);
     }
 
 }

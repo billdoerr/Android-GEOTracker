@@ -2,6 +2,7 @@ package com.billdoerr.android.geotracker.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.icu.util.Calendar;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
+import com.billdoerr.android.geotracker.database.repo.TripRepo;
 import com.billdoerr.android.geotracker.services.GPSService;
 import com.billdoerr.android.geotracker.services.GPSUtils;
 import com.billdoerr.android.geotracker.services.LocationMessageEvent;
@@ -37,13 +39,19 @@ import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class TrackingFragment extends Fragment implements TripDetailFragment.DialogListener {
+public class TrackingFragment extends Fragment {
 
     private static final String TAG = "TrackingFragment";
+
+    private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
+    private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
+
+    public static final String ARGS_TRIP = "Trip";
 
     private static final long TIME_DELAY = 1000;
     private static final SimpleDateFormat sDateFormat = new SimpleDateFormat( "hh:mm:ss a" , Locale.US);
@@ -171,6 +179,9 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         // Get current time
         mCurrentTime = Calendar.getInstance().getTime();
 
+        // Initialize Trip object
+        initTrip();
+
     }
 
     @Override
@@ -178,13 +189,14 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
+        // TODO: I don't know about this
         // Trip name/detail
         mTextTripTitle = view.findViewById(R.id.textTripTitle);
         mTextTripTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mTrip.getState() != Trip.TripState.STOPPED ) {
-                    showTripDetailDialog();
+                    showTripDetailDialog(REQUEST_CODE_TRIP_DIALOG_CONTINUE);
                 } else {
                     Toast.makeText(getContext(), R.string.toast_new_track, Toast.LENGTH_SHORT).show();
                 }
@@ -291,7 +303,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
                 stopLocationUpdates();
 
                 // Display dialog to save trip details
-                showTripDetailDialog();
+                showTripDetailDialog(REQUEST_CODE_TRIP_DIALOG_SAVE);
             }
         });
 
@@ -307,6 +319,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_track);
     }
 
     @Override
@@ -324,6 +337,10 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         getSharedPreferences();
         // Update UI, if unit preferences have changed
         updateUnits();
+        if (mTrip != null) {
+            mTextTripTitle.setText(mTrip.getTripName());
+        }
+
     }
 
     @Override
@@ -354,6 +371,29 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if( resultCode != Activity.RESULT_OK ) {
+            return;
+        }
+
+        Trip trip = (Trip) data.getSerializableExtra(ARGS_TRIP);
+
+        // Save trip to database
+        if( requestCode == REQUEST_CODE_TRIP_DIALOG_SAVE) {
+            if (trip != null) {
+                mTrip = trip;
+            }
+            saveTrip();
+        }
+        // Just get update trip details
+        else if( requestCode == REQUEST_CODE_TRIP_DIALOG_CONTINUE) {
+            if (trip != null) {
+                mTrip = trip;
+                mTextTripTitle.setText(mTrip.getTripName());
+            }
+        }
+    }
 
     /**
      * Initialize app stuff goes here
@@ -366,11 +406,9 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         mTrip = PreferenceUtils.getActiveTripFromSharedPrefs(Objects.requireNonNull(getContext()));
         if (mTrip == null) {
             // Create fragment state container
-            mTrip = new Trip();
-            mTrip.setState(Trip.TripState.NOT_STARTED);
+            initTrip();
         } else {
-            if ((mTrip.getState() == Trip.TripState.RUNNING)
-                    || (mTrip.getState() == Trip.TripState.PAUSED)) {
+            if ((mTrip.getState() == Trip.TripState.RUNNING) || (mTrip.getState() == Trip.TripState.PAUSED)) {
                 startLocationUpdates();
             }
         }
@@ -385,41 +423,47 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
     }
 
     /**
-     * Get return state from DialogFragment
-     * @param save boolean
+     * Initialize Trip object
      */
-    @Override
-    public void onFinishDialog(boolean save) {
-        if (save) {
-            // Save data
-            saveTrip();
-
-            // Clear active trip from shared preferences
-            PreferenceUtils.clearActiveTripFromSharedPrefs(Objects.requireNonNull(getContext()));
-        }
+    private void initTrip() {
+        mTrip = new Trip();
+        mTrip.setState(Trip.TripState.NOT_STARTED);
+        mTrip.setTripActiveFlag(1);
     }
 
+    /**
+     * Save trip to database and clear trip state.
+     */
     private void saveTrip() {
         // Set trip end time
         mTrip.setTripEndTime(Calendar.getInstance().getTime());
 
         // Write to database
         //  TODO:  Write to database
+        int ret = TripRepo.insert(mTrip);
+        // Returns -1 if error
+        if (ret == -1) {
+            Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
+        }
+        Log.i(TAG, getString(R.string.msg_trip_save) + ": " + ret);
+        Log.i(TAG, getString(R.string.msg_trip_save) + ": " + mTrip.toString());
 
         // Update UI
         mTextEndTimeData.setText(sDateFormat.format(mTrip.getTripEndTime()));
 
-        // Create empty trip, initialize, and save to shared preferences.  This
+        // Create empty trip, clear state, initialize, and save to shared preferences.  This
         // has the effect of clearing the preference.
         mTrip = new Trip();
-        // Clear state
         setState(Trip.TripState.NOT_STARTED);
-//        mTrip.setState(Trip.TripState.STOPPED);
         mTrip.setPausedTimeInMillis(0);
+        mTrip.setTripActiveFlag(1);
         PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
 
         // Enable/Disable image buttons
         updateImageButtons();
+
+        // Update UI
+        updateUI();
 
     }
 
@@ -458,6 +502,7 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         Location location = locationMessageEvent.getLocation();
         // Update screen data
         updateLocationUI(location);
+        //  TODO:  Insert into database
     }
 
     /**
@@ -466,8 +511,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      */
     @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void updateLocationUI(Location location) {
-
-        Log.i(TAG, "updateLocationUI: " + location.toString());
 
         double latitude = location.getLatitude();       // In decimal degrees
         double longitude = location.getLongitude();     // In decimal degrees
@@ -534,7 +577,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         }
 
 
-
         //  If Coordinate Type is UTM or MGRS then only display full lat/lon string
         if ( (mCoordinateType == CoordinateType.UTM_COORDINATES)
             || (mCoordinateType == CoordinateType.MGRS_COORDINATES) ) {
@@ -554,7 +596,6 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
         mTextAccuracyData.setText(String.format("%.0f", accuracy));
 
     }
-
 
     /*
      * ******************************************************************
@@ -582,21 +623,29 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
 
     }
 
-    private void showTripDetailDialog() {
+    /**
+     * FragmentDialog that allows the editing of the trip's details
+     * @param requestCode int
+     */
+    private void showTripDetailDialog(int requestCode) {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
         FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("trip_detail_dialog");
+        Fragment prev = getFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
+        Bundle args = new Bundle();
+        args.putSerializable(ARGS_TRIP, mTrip);
+
         // Create and show the dialog.
-        DialogFragment fragment = TripDetailFragment.newInstance();
-        fragment.setTargetFragment(this, 1);
-        fragment.show(ft, "trip_detail_dialog");
+        DialogFragment dialogFragment = TripDetailFragment.newInstance();
+        dialogFragment.setArguments(args);
+        dialogFragment.setTargetFragment(this, requestCode);
+        dialogFragment.show(ft, TripDetailFragment.TAG);
     }
 
     /**
@@ -622,25 +671,36 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
                 setImageButtonState(mBtnStopTracking, true);
                 break;
             }
-            case Trip.TripState.STOPPED: {
-                setImageButtonState(mBtnStartTracking, false);
-                setImageButtonState(mBtnPauseTracking, false);
-                setImageButtonState(mBtnStopTracking, false);
-                break;
-            }
+            case Trip.TripState.STOPPED:
             case Trip.TripState.NO_PERMISSIONS: {
                 setImageButtonState(mBtnStartTracking, false);
                 setImageButtonState(mBtnPauseTracking, false);
                 setImageButtonState(mBtnStopTracking, false);
                 break;
             }
-            default: {
-                setImageButtonState(mBtnStartTracking, false);
-                setImageButtonState(mBtnPauseTracking, false);
-                setImageButtonState(mBtnStopTracking, false);
-                break;
-            }
         }
+    }
+
+    /**
+     * This clears screen of data
+     */
+    private void updateUI() {
+        mTextTripTitle.setText("");
+//        mTextLatitudeLongitude.setText("");
+//        mTextLatitudeData.setText("");
+//        mTextLongitudeData.setText("");
+//        mTextElevationData.setText("");
+        mTextBearingData.setText("");
+        mTextSpeedData.setText("");
+        mTextAccuracyData.setText("");
+//        mTextCurrentTimeData.setText("");
+        mTextStartTimeData.setText("");
+        mTextEndTimeData.setText("");
+        mTextMovingTimeData.setText("");
+        mTextPausedTimeData.setText("");
+        mTextTotalTimeData.setText("");
+
+        updateUnits();
     }
 
     /**
@@ -672,14 +732,10 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      * Get required Shared Preferences
      */
     private void getSharedPreferences() {
-
-
         mSharedPrefs = PreferenceUtils.getSharedPreferences(getContext());
-
         mIsMetric = mSharedPrefs.isMetric();
         mIsNautical = mSharedPrefs.isNautical();
         mCoordinateType = mSharedPrefs.getCoordinateType();
-
         // Feature supporting this has not been implemented
 //        mCoordinateDatum = prefs.getCoordinateDatum();
     }
@@ -690,6 +746,11 @@ public class TrackingFragment extends Fragment implements TripDetailFragment.Dia
      * ******************************************************************
      */
 
+    /**
+     * Request permission and presents need dialogs to grant permissions
+     * @param permission String Permission being requested
+     * @param resultCode int
+     */
     private void checkPermissions(final String permission, final int resultCode) {
         PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {

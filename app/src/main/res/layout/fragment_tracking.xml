@@ -24,6 +24,7 @@
                 android:layout_weight="1"
                 android:text="@string/textTripTitle"
                 android:textAlignment="center"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
         </TableRow>

@@ -21,7 +21,7 @@
             android:layout_width = "match_parent"
             android:layout_height = "wrap_content"
             android:id = "@+id/textName"
-            android:hint = "@string/hint_activity_name"
+            android:hint = "@string/hint_trip_name"
             android:inputType = "textCapSentences|textAutoCorrect"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -39,7 +39,7 @@
             android:id="@+id/textDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_activity_desc"
+            android:hint="@string/hint_trip_desc"
             android:inputType="textAutoCorrect|textMultiLine|textCapSentences"
             android:minLines="4"
             android:singleLine="false" />
@@ -57,7 +57,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="@string/check_active" />
+            android:text="@string/check_active"
+            android:checked="true"/>
 
     </LinearLayout>
 
@@ -86,6 +87,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_save" />
+
+        <Button
+            android:id="@+id/btn_continue"
+            style="@style/ButtonPrefSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_continue"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
