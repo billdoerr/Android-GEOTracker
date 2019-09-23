@@ -286,10 +286,10 @@ public class CoordinateConversionUtils
     // Lat Lon to UTM variables
 
     // equatorial radius
-    double equatorialRadius = 6378137;
+    final double equatorialRadius = 6378137;
 
     // polar radius
-    double polarRadius = 6356752.314;
+    final double polarRadius = 6356752.314;
 
     // flattening
     double flattening = 0.00335281066474748;// (equatorialRadius-polarRadius)/equatorialRadius;
@@ -301,12 +301,12 @@ public class CoordinateConversionUtils
     double rm = POW(equatorialRadius * polarRadius, 1 / 2.0);
 
     // scale factor
-    double k0 = 0.9996;
+    final double k0 = 0.9996;
 
     // eccentricity
-    double e = Math.sqrt(1 - POW(polarRadius / equatorialRadius, 2));
+    final double e = Math.sqrt(1 - POW(polarRadius / equatorialRadius, 2));
 
-    double e1sq = e * e / (1 - e * e);
+    final double e1sq = e * e / (1 - e * e);
 
     double n = (equatorialRadius - polarRadius)
         / (equatorialRadius + polarRadius);
@@ -321,21 +321,21 @@ public class CoordinateConversionUtils
     // Meridional Arc
     double S = 5103266.421;
 
-    double A0 = 6367449.146;
+    final double A0 = 6367449.146;
 
-    double B0 = 16038.42955;
+    final double B0 = 16038.42955;
 
-    double C0 = 16.83261333;
+    final double C0 = 16.83261333;
 
-    double D0 = 0.021984404;
+    final double D0 = 0.021984404;
 
-    double E0 = 0.000312705;
+    final double E0 = 0.000312705;
 
     // Calculation Constants
     // Delta Long
     double p = -0.483084;
 
-    double sin1 = 4.84814E-06;
+    final double sin1 = 4.84814E-06;
 
     // Coefficients for UTM Coordinates
     double K1 = 5101225.115;
@@ -469,12 +469,12 @@ public class CoordinateConversionUtils
 
     int zone;
 
-    String southernHemisphere = "ACDEFGHJKLM";
+    final String southernHemisphere = "ACDEFGHJKLM";
 
     protected String getHemisphere(String latZone)
     {
       String hemisphere = "N";
-      if (southernHemisphere.indexOf(latZone) > -1)
+      if (southernHemisphere.contains(latZone))
       {
         hemisphere = "S";
       }
@@ -617,28 +617,28 @@ public class CoordinateConversionUtils
 
     double b = 6356752.314;
 
-    double a = 6378137;
+    final double a = 6378137;
 
-    double e = 0.081819191;
+    final double e = 0.081819191;
 
-    double e1sq = 0.006739497;
+    final double e1sq = 0.006739497;
 
-    double k0 = 0.9996;
+    final double k0 = 0.9996;
 
   }
 
   @SuppressWarnings({"unchecked", "UnusedAssignment"})
   private class Digraphs
   {
-    private Map digraph1 = new Hashtable();
+    private final Map digraph1 = new Hashtable();
 
-    private Map digraph2 = new Hashtable();
+    private final Map digraph2 = new Hashtable();
 
-    private String[] digraph1Array = { "A", "B", "C", "D", "E", "F", "G", "H",
+    private final String[] digraph1Array = { "A", "B", "C", "D", "E", "F", "G", "H",
         "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
         "Y", "Z" };
 
-    private String[] digraph2Array = { "V", "A", "B", "C", "D", "E", "F", "G",
+    private final String[] digraph2Array = { "V", "A", "B", "C", "D", "E", "F", "G",
         "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V" };
 
     public Digraphs()
@@ -748,24 +748,24 @@ public class CoordinateConversionUtils
 
   private class LatZones
   {
-    private char[] letters = { 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
+    private final char[] letters = { 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
         'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Z' };
 
-    private int[] degrees = { -90, -84, -72, -64, -56, -48, -40, -32, -24, -16,
+    private final int[] degrees = { -90, -84, -72, -64, -56, -48, -40, -32, -24, -16,
         -8, 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84 };
 
-    private char[] negLetters = { 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
+    private final char[] negLetters = { 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K',
         'L', 'M' };
 
-    private int[] negDegrees = { -90, -84, -72, -64, -56, -48, -40, -32, -24,
+    private final int[] negDegrees = { -90, -84, -72, -64, -56, -48, -40, -32, -24,
         -16, -8 };
 
-    private char[] posLetters = { 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+    private final char[] posLetters = { 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
         'X', 'Z' };
 
-    private int[] posDegrees = { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84 };
+    private final int[] posDegrees = { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84 };
 
-    private int arrayLength = 22;
+    private final int arrayLength = 22;
 
     public LatZones()
     {
@@ -802,7 +802,8 @@ public class CoordinateConversionUtils
 
           if (lat > posDegrees[i])
           {
-            continue;
+            // Pass
+//            continue;
           }
           else
           {
@@ -829,7 +830,8 @@ public class CoordinateConversionUtils
           }
           else
           {
-            continue;
+            // Pass
+//            continue;
           }
 
         }

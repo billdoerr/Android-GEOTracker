@@ -7,6 +7,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.LayoutRes;
@@ -40,6 +41,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -51,6 +53,8 @@ import java.util.Objects;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = "BaseActivity";
+
+    private static final String PREF_KEY_KEEP_DEVICE_AWAKE = "com.billdoerr.android.geotracker.settings.PREF_KEY_POWER_SAVINGS_KEEP_DEVICE_ON";
 
     // System log filename
     public static final String SYS_LOG = "geo_tracker.log";
@@ -92,19 +96,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Initialize database instance
         initDatabase();
 
+        // Check preferences whether to keep screen on
+        initPowerSavings(getApplicationContext());
+
 
     }
 
+    //  TODO:  onCreateOptionsMenu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_common, menu);
-
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true);
-
+//        getMenuInflater().inflate(R.menu.menu_common, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -183,7 +184,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-                        Fragment fragment = null;
+                        Fragment fragment;
 
                         // Set item as selected to persist highlight
                         menuItem.setChecked(true);
@@ -372,5 +373,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         FileStorageUtils.writeSystemLog(this.getApplicationContext(), SYS_LOG,TAG + FileStorageUtils.TABS + msg + FileStorageUtils.LINE_SEPARATOR);
     }
 
+    /**
+     * Check preferences whether to keep screen on.
+     * @param context Context:  Application context.
+     */
+    private void initPowerSavings(Context context) {
 
+        SharedPreferences appSharedPrefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        boolean keepDeviceAwake = appSharedPrefs.getBoolean(PREF_KEY_KEEP_DEVICE_AWAKE, true);
+        if (keepDeviceAwake) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
+    }
 }

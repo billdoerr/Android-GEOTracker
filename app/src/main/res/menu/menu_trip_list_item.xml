@@ -9,9 +9,4 @@
         android:id="@+id/deleteTrip"
         android:title="@string/action_trip_delete" />
 
-    <item
-        android:id="@+id/tbd"
-        android:title="@string/action_trip_tbd" />
-
-
 </menu>

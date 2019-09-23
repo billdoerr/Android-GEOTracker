@@ -24,36 +24,51 @@ public class ActivityType {
     private String desc;
     private int activeFlag;
 
-    public int getActivityTypeId() {
+    public int getId() {
         return id;
     }
 
-    public void setActivityTypeId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getActivityTypeName() {
+    public String getName() {
         return name;
     }
 
-    public void setActivityTypeName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getActivityTypeDesc() {
+    public String getDesc() {
         return desc;
     }
 
-    public void setActivityTypeDesc(String desc) {
+    public void setDesc(String desc) {
         this.desc = desc;
     }
 
-    public int getActivityTypeActiveFlag() {
+    public int isActiveFlag() {
         return activeFlag;
     }
 
-    public void setActivityTypeActiveFlag(int activeFlag) {
+    public void setActive(int activeFlag) {
         this.activeFlag = activeFlag;
+    }
+
+    // To display object as a string in spinner
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ActivityType){
+            ActivityType c = (ActivityType )obj;
+            if(c.getName().equals(name) && c.getId()==id ) return true;
+        }
+        return false;
     }
 
 }

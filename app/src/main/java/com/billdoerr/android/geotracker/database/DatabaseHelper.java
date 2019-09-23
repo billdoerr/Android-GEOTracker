@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DatabaseHelper";
 
-    public static String DATABASE_NAME = "geo_tracker.db";
+    public static final String DATABASE_NAME = "geo_tracker.db";
     private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {
@@ -83,23 +83,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, ActivityType.INACTIVE);
         insert(db, ActivityType.TABLE, values);
 
-
-
-        // TODO:  Just for testing
-        // Default data:  Trip
-
-        values.clear();
-        values.put(Trip.KEY_TRIP_NAME, "First trip");
-        values.put(Trip.KEY_TRIP_DESC, "My first trip.");
-        values.put(Trip.KEY_TRIP_ACTIVE_FLAG, Trip.ACTIVE);
-        insert(db, Trip.TABLE, values);
-
-        values.put(Trip.KEY_TRIP_NAME, "Second trip");
-        values.put(Trip.KEY_TRIP_DESC, "My second trip.");
-        values.put(Trip.KEY_TRIP_ACTIVE_FLAG, Trip.ACTIVE);
-        insert(db, Trip.TABLE, values);
-
-
     }
 
     /**
@@ -107,8 +90,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param db  SQLiteDatabase:
      * @param values ContentValues:  Data values to be inserted.
      */
-    private void insert(SQLiteDatabase db, String table, ContentValues values) {
-        int rowId;
+    private int insert(SQLiteDatabase db, String table, ContentValues values) {
+        int rowId = -1;
         try {
             db.beginTransaction();
             rowId = (int)db.insert(table, null, values);
@@ -118,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+        return rowId;
     }
 
 }

@@ -23,7 +23,6 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -76,7 +75,8 @@ public class ActivityTypeListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_activity_type_list);
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_activity_type_list);
     }
 
     @Override
@@ -129,31 +129,26 @@ public class ActivityTypeListFragment extends Fragment {
 
         private static final String TAG = "ActivityTypeHolder";
 
-        private ActivityType mActivityType;
-        private CardView cv;
-        private TextView mTextName;
-        private TextView mTextDesc;
-        private int mCurrentPosition;
+        private final TextView mTextName;
+        private final TextView mTextDesc;
 
-        public ActivityTypeHolder (View itemView) {
+        private ActivityTypeHolder (View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            cv = itemView.findViewById(R.id.cv);
             mTextName = itemView.findViewById(R.id.textName);
             mTextDesc = itemView.findViewById(R.id.textDesc);
         }
 
-        public void bind(ActivityType activityType) {
-            mActivityType = activityType;
-            mTextName.setText(mActivityType.getActivityTypeName());
-            mTextDesc.setText(mActivityType.getActivityTypeDesc());
+        private void bind(ActivityType activityType) {
+            mTextName.setText(activityType.getName());
+            mTextDesc.setText(activityType.getDesc());
         }
 
         @Override
         public void onClick(View view) {
-            mCurrentPosition = this.getAdapterPosition();  // Store current index
-            dialogActivityDetails(mActivityTypes.get(mCurrentPosition));
+            int currentPosition = this.getAdapterPosition();  // Store current index
+            dialogActivityDetails(mActivityTypes.get(currentPosition));
         }
 
     }
@@ -165,7 +160,7 @@ public class ActivityTypeListFragment extends Fragment {
 
             private static final String TAG = "ActivityTypeAdapter";
 
-            public ActivityTypeAdapter(List<ActivityType> activityTypes) {
+            private ActivityTypeAdapter(List<ActivityType> activityTypes) {
                 mActivityTypes = activityTypes;
             }
 
@@ -188,11 +183,11 @@ public class ActivityTypeListFragment extends Fragment {
                 return mActivityTypes.size();
             }
 
-            public void setActivityTypes(List<ActivityType> activityType) {
+            private void setActivityTypes(List<ActivityType> activityType) {
                 mActivityTypes = activityType;
             }
 
-            public void updateList() {
+            private void updateList() {
                 mActivityTypes.clear();
                 mActivityTypes = new ActivityTypeRepo().getActivities();
             }
@@ -215,9 +210,9 @@ public class ActivityTypeListFragment extends Fragment {
         final CheckBox checkActive = dialogView.findViewById(R.id.checkBoxActive);
 
         if (activityType != null) {
-            textName.setText(activityType.getActivityTypeName());
-            textDesc.setText(activityType.getActivityTypeDesc());
-            checkActive.setChecked(activityType.getActivityTypeActiveFlag() == ActivityType.ACTIVE);
+            textName.setText(activityType.getName());
+            textDesc.setText(activityType.getDesc());
+            checkActive.setChecked(activityType.isActiveFlag() == ActivityType.ACTIVE);
         }
 
         dialogBuilder.setTitle(R.string.dialog_title_activity_type_new);
@@ -227,16 +222,16 @@ public class ActivityTypeListFragment extends Fragment {
                 if (activityType == null) {
                     // Add new record
                     ActivityType at = new ActivityType();
-                    at.setActivityTypeName(textName.getText().toString());
-                    at.setActivityTypeDesc(textDesc.getText().toString());
-                    at.setActivityTypeActiveFlag(checkActive.isChecked() ? 1 : 0);
+                    at.setName(textName.getText().toString());
+                    at.setDesc(textDesc.getText().toString());
+                    at.setActive(checkActive.isChecked() ? 1 : 0);
                     new ActivityTypeRepo().insert(at);
                     mActivityTypeAdapter.updateList();
                 } else {
                     // Update current record
-                    activityType.setActivityTypeName(textName.getText().toString());
-                    activityType.setActivityTypeDesc(textDesc.getText().toString());
-                    activityType.setActivityTypeActiveFlag(checkActive.isChecked() ? 1 : 0);
+                    activityType.setName(textName.getText().toString());
+                    activityType.setDesc(textDesc.getText().toString());
+                    activityType.setActive(checkActive.isChecked() ? 1 : 0);
                     new ActivityTypeRepo().update(activityType);
                 }
 

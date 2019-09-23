@@ -24,3 +24,18 @@
     - Analytics. 
 5. **STRETCH GOAL** 
     - Sync data.  Upload data to cloud.
+
+    
+    
+Objects.requireNonNull    
+    
+ ERROR: Could not find method implementation() for arguments [DefaultProjectDependency{dependencyProject='project ':app'', configuration='default'}] on object of type org.gradle.api.internal.artifacts.dsl.dependencies.DefaultDependencyHandler.
+
+             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);  
+    
+    
+    
+    
+    
+    
+    

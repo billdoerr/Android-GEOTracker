@@ -9,11 +9,15 @@ import android.icu.util.Calendar;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +55,11 @@ public class TrackingFragment extends Fragment {
     private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
     private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
 
-    public static final String ARGS_TRIP = "Trip";
+    // Indicates invalid table index
+    private static final int INVALID_INDEX = -1;
+
+    private static final String ARGS_TRIP = "trip";
+    private static final String ARGS_TRIP_ID = "trip_id";
 
     private static final long TIME_DELAY = 1000;
     private static final SimpleDateFormat sDateFormat = new SimpleDateFormat( "hh:mm:ss a" , Locale.US);
@@ -83,7 +91,7 @@ public class TrackingFragment extends Fragment {
 //    private static int mCoordinateDatum;
 
     // UI widgets
-    private TextView mTextTripTitle;
+    private EditText mTextTripTitle;
     private TextView mTextLatitudeLongitude;
     private TextView mTextLatitudeData;
     private TextView mTextLatitudeUnits;
@@ -123,7 +131,7 @@ public class TrackingFragment extends Fragment {
 
             // Are we collecting data?
             if (mTrip.getState() == Trip.TripState.RUNNING ) {
-                long diffInMillis = mCurrentTime.getTime() - mTrip.getTripStartTime().getTime();
+                long diffInMillis = mCurrentTime.getTime() - mTrip.getStartTime();
                 mTrip.setTotalTimeInMillis( diffInMillis - mTrip.getPausedTimeInMillis() );
                 Log.d(TAG, "Total time in millis:  " + mTrip.getTotalTimeInMillis());
                 Log.d(TAG, "Total paused time in millis:  " + mTrip.getPausedTimeInMillis());
@@ -132,14 +140,14 @@ public class TrackingFragment extends Fragment {
             // Update UI.
             // Update only if we are either RUNNING or PAUSED.
             if ( (mTrip.getState() == Trip.TripState.RUNNING) || (mTrip.getState() == Trip.TripState.PAUSED) ) {
-                mTextStartTimeData.setText(sDateFormat.format(mTrip.getTripStartTime()));
+                mTextStartTimeData.setText(sDateFormat.format(mTrip.getStartTime()));
                 mTextMovingTimeData.setText(DateUtils.formatElapsedTime(mTrip.getTotalTimeInMillis() / 1000));
-                mTextTotalTimeData.setText(DateUtils.formatElapsedTime( (mCurrentTime.getTime() - mTrip.getTripStartTime().getTime() ) /  1000 ) );
+                mTextTotalTimeData.setText(DateUtils.formatElapsedTime( (mCurrentTime.getTime() - mTrip.getStartTime() ) /  1000 ) );
                 mTextPausedTimeData.setText(DateUtils.formatElapsedTime(mTrip.getPausedTimeInMillis() / 1000));
             }
             // If paused, update paused time.
             if (mTrip.getState() == Trip.TripState.PAUSED) {
-                long pausedTime = mTrip.getPausedTimeInMillis() + mCurrentTime.getTime() - mTrip.getPausedTime().getTime();
+                long pausedTime = mTrip.getPausedTimeInMillis() + mCurrentTime.getTime() - mTrip.getPausedTime();
                 mTextPausedTimeData.setText(DateUtils.formatElapsedTime(pausedTime / 1000));
             }
 
@@ -163,6 +171,7 @@ public class TrackingFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
         // Register event bus
         EventBus.getDefault().register(this);
     }
@@ -171,16 +180,11 @@ public class TrackingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//       setHasOptionsMenu(true);
-
         // Get Shared Preferences
         getSharedPreferences();
 
         // Get current time
         mCurrentTime = Calendar.getInstance().getTime();
-
-        // Initialize Trip object
-        initTrip();
 
     }
 
@@ -189,17 +193,23 @@ public class TrackingFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tracking, container, false);
 
-        // TODO: I don't know about this
         // Trip name/detail
         mTextTripTitle = view.findViewById(R.id.textTripTitle);
-        mTextTripTitle.setOnClickListener(new View.OnClickListener() {
+        mTextTripTitle.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                if (mTrip.getState() != Trip.TripState.STOPPED ) {
-                    showTripDetailDialog(REQUEST_CODE_TRIP_DIALOG_CONTINUE);
-                } else {
-                    Toast.makeText(getContext(), R.string.toast_new_track, Toast.LENGTH_SHORT).show();
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Pass
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Pass
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Assign trip name
+                mTrip.setName(mTextTripTitle.getText().toString());
             }
         });
 
@@ -261,27 +271,18 @@ public class TrackingFragment extends Fragment {
         mBtnStartTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //  Have location permissions, begin updates
-                startLocationUpdates();
-
-                // Trip paused, update paused time
-                if (mTrip.getState() == Trip.TripState.PAUSED) {
-                    mTrip.setPausedTimeInMillis( mTrip.getPausedTimeInMillis() + mCurrentTime.getTime() - mTrip.getPausedTime().getTime() );
-                }
-                // Start trip time
-                else {
-                    if (mTrip.getTripStartTime() == null) {
-                        mTrip.setTripStartTime(Calendar.getInstance().getTime());
+                if (mTextTripTitle.getText().length() == 0) {
+                    Toast.makeText(getContext(), R.string.toast_trip_name_required, Toast.LENGTH_SHORT).show();
+                } else {
+                    // Display dialog to save trip details. Need to have a TripId before starting location services.
+                    // Tracking will started in the dialog listener 'onActivityResult'
+                    // First check if active trip, is so then not dialog not displayed after pause/resume.
+                    if (mTrip.getState() != Trip.TripState.PAUSED) {
+                        showTripDetailDialog(REQUEST_CODE_TRIP_DIALOG_CONTINUE);
                     }
-                    mTrip.setPausedTime(null);
+                    // Resume tracking
+                    startTracking();
                 }
-
-                // Update display with start time and update trip state
-                mTextStartTimeData.setText(sDateFormat.format(mTrip.getTripStartTime()));
-                setState(Trip.TripState.RUNNING);
-                mTrip.setPausedTime(null);
-
             }
         });
 
@@ -289,7 +290,7 @@ public class TrackingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setState(Trip.TripState.PAUSED);
-                mTrip.setPausedTime(Calendar.getInstance().getTime());
+                mTrip.setPausedTime(Calendar.getInstance().getTimeInMillis());
 
                 // Stop location updates.  Will be resumed in play is clicked
                 stopLocationUpdates();
@@ -307,6 +308,10 @@ public class TrackingFragment extends Fragment {
             }
         });
 
+
+        // Initialize Trip object
+        initTrip();
+
         // Update UI
         updateUnits();
 
@@ -319,7 +324,8 @@ public class TrackingFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_track);
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_track);
     }
 
     @Override
@@ -338,9 +344,12 @@ public class TrackingFragment extends Fragment {
         // Update UI, if unit preferences have changed
         updateUnits();
         if (mTrip != null) {
-            mTextTripTitle.setText(mTrip.getTripName());
+            mTextTripTitle.setText(mTrip.getName());
+            // Hide keyboard upon focus.  Thanks to:  Revisit  https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
         }
-
     }
 
     @Override
@@ -367,7 +376,10 @@ public class TrackingFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         // We don't use savedInstanceState but store state in preference
-        PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
+        // Only save if active trip
+        if ((mTrip.getState() == Trip.TripState.RUNNING) || (mTrip.getState() == Trip.TripState.PAUSED)) {
+            PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -388,10 +400,12 @@ public class TrackingFragment extends Fragment {
         }
         // Just get update trip details
         else if( requestCode == REQUEST_CODE_TRIP_DIALOG_CONTINUE) {
-            if (trip != null) {
-                mTrip = trip;
-                mTextTripTitle.setText(mTrip.getTripName());
+            // Begin tracking location
+            int ret = insertTripIntoDatabase();
+            if (ret != INVALID_INDEX) {
+                startTracking();
             }
+
         }
     }
 
@@ -402,15 +416,12 @@ public class TrackingFragment extends Fragment {
         // Initialize GPS location services
         initializeLocationServices();
 
-        // We don't use savedInstanceState but store state in preference
-        mTrip = PreferenceUtils.getActiveTripFromSharedPrefs(Objects.requireNonNull(getContext()));
-        if (mTrip == null) {
-            // Create fragment state container
-            initTrip();
-        } else {
-            if ((mTrip.getState() == Trip.TripState.RUNNING) || (mTrip.getState() == Trip.TripState.PAUSED)) {
-                startLocationUpdates();
-            }
+        // Resume location updates if currently tracking
+        if ((mTrip.getState() == Trip.TripState.RUNNING) || (mTrip.getState() == Trip.TripState.PAUSED)) {
+            // Set trip title
+            mTextTripTitle.setText(mTrip.getName());
+            // Resume location updates
+            startLocationUpdates();
         }
 
         // Start timer.  Updates current time and once trip starts updates data
@@ -426,9 +437,36 @@ public class TrackingFragment extends Fragment {
      * Initialize Trip object
      */
     private void initTrip() {
+        // We don't use savedInstanceState but store state in preference
+        Trip trip = PreferenceUtils.getActiveTripFromSharedPrefs(Objects.requireNonNull(getContext()));
+        // No running trip, initialize trip
+        if (trip != null) {
+            // Assign to global variable
+            mTrip = trip;
+            // If active trip, start location updates
+            if ((mTrip.getState() == Trip.TripState.RUNNING) || (mTrip.getState() == Trip.TripState.PAUSED)) {
+                // Set trip title
+                mTextTripTitle.setText(mTrip.getName());
+                // Resume location updates
+                startLocationUpdates();
+            }
+        } else {
+            // Create fragment state container
+            newTrip();
+        }
+    }
+
+    /**
+     * Initialize Trip object
+     */
+    private void newTrip() {
         mTrip = new Trip();
         mTrip.setState(Trip.TripState.NOT_STARTED);
-        mTrip.setTripActiveFlag(1);
+        mTrip.setPausedTimeInMillis(0);
+        mTrip.setActive(1);
+        mTrip.setId(INVALID_INDEX);
+        // Set default value for trip name with current date
+        mTrip.setName(mCurrentTime.toString());
     }
 
     /**
@@ -436,36 +474,60 @@ public class TrackingFragment extends Fragment {
      */
     private void saveTrip() {
         // Set trip end time
-        mTrip.setTripEndTime(Calendar.getInstance().getTime());
+        mTrip.setEndTime(Calendar.getInstance().getTimeInMillis());
 
         // Write to database
-        //  TODO:  Write to database
-        int ret = TripRepo.insert(mTrip);
-        // Returns -1 if error
-        if (ret == -1) {
-            Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
-        }
-        Log.i(TAG, getString(R.string.msg_trip_save) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_trip_save) + ": " + mTrip.toString());
+        updateImageButtons();
 
         // Update UI
-        mTextEndTimeData.setText(sDateFormat.format(mTrip.getTripEndTime()));
+        mTextEndTimeData.setText(sDateFormat.format(mTrip.getEndTime()));
 
-        // Create empty trip, clear state, initialize, and save to shared preferences.  This
-        // has the effect of clearing the preference.
-        mTrip = new Trip();
-        setState(Trip.TripState.NOT_STARTED);
-        mTrip.setPausedTimeInMillis(0);
-        mTrip.setTripActiveFlag(1);
+        // Save trip to database
+        insertTripIntoDatabase();
+
+        // Create empty trip, clear state, initialize.
+        newTrip();
+
+        // Save to shared preferences.  This has the effect of clearing the preference.
         PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
 
         // Enable/Disable image buttons
         updateImageButtons();
 
         // Update UI
-        updateUI();
+        clearScreenData();
 
     }
+
+    /**
+     * Add trip to database.  Whether it performs and insert or update is based on the TripId.
+     * If the trip = -1, this is an invalid database index and will perform an INSERT, else UPDATE.
+     */
+    private int insertTripIntoDatabase() {
+        int ret;
+        // Must be new trip, insert into database
+        if (mTrip.getId() == INVALID_INDEX) {
+            ret = TripRepo.insert(mTrip);
+            mTrip.setId(ret);
+        }
+        // Existing trip, just update
+        else {
+            ret = TripRepo.update(mTrip);
+        }
+
+        // Returns -1 if error
+        if (ret == INVALID_INDEX) {
+            Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
+        } else {
+            PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
+        }
+
+        Log.i(TAG, getString(R.string.msg_trip_inserted) + ": " + ret);
+        Log.i(TAG, getString(R.string.msg_trip_inserted) + ": " + mTrip.toString());
+
+        return  ret;
+    }
+
 
     /**
      * Initialize location services if permissions granted
@@ -479,6 +541,8 @@ public class TrackingFragment extends Fragment {
      */
     private void startLocationUpdates() {
         if (mGPSServiceIntent != null) {
+            // Send locator service trip id
+            mGPSServiceIntent.putExtra(ARGS_TRIP_ID, mTrip.getId());
             Objects.requireNonNull(getActivity()).startService(mGPSServiceIntent);
         }
     }
@@ -493,6 +557,31 @@ public class TrackingFragment extends Fragment {
     }
 
     /**
+     * Begin tracking location data
+     */
+    private void startTracking() {
+        //  Have location permissions, begin updates
+        startLocationUpdates();
+
+        // Trip paused, update paused time
+        if (mTrip.getState() == Trip.TripState.PAUSED) {
+            mTrip.setPausedTimeInMillis( mTrip.getPausedTimeInMillis() + mCurrentTime.getTime() - mTrip.getPausedTime() );
+        }
+        // Start trip time
+        else {
+            if (mTrip.getStartTime() == 0) {
+                mTrip.setStartTime(Calendar.getInstance().getTimeInMillis());
+            }
+            mTrip.setPausedTime(0);
+        }
+
+        // Update display with start time and update trip state
+        mTextStartTimeData.setText(sDateFormat.format(mTrip.getStartTime()));
+        setState(Trip.TripState.RUNNING);
+        mTrip.setPausedTime(0);
+    }
+
+    /**
      * This method will be called when a MessageEvent is posted
      * @param locationMessageEvent LocationMessageEvent
      */
@@ -500,9 +589,8 @@ public class TrackingFragment extends Fragment {
     public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
         // Get location data
         Location location = locationMessageEvent.getLocation();
-        // Update screen data
+        // Update screen data.  The GPSService will insert data into the TripDetails table.
         updateLocationUI(location);
-        //  TODO:  Insert into database
     }
 
     /**
@@ -684,8 +772,8 @@ public class TrackingFragment extends Fragment {
     /**
      * This clears screen of data
      */
-    private void updateUI() {
-        mTextTripTitle.setText("");
+    private void clearScreenData() {
+        mTextTripTitle.setText(mTrip.getName());
 //        mTextLatitudeLongitude.setText("");
 //        mTextLatitudeData.setText("");
 //        mTextLongitudeData.setText("");
@@ -756,10 +844,12 @@ public class TrackingFragment extends Fragment {
                 new PermissionUtils.PermissionAskListener() {
                     @Override
                     public void onNeedPermission() {
+                        Log.i(TAG, "checkPermissions -> onNeedPermission");
                         requestPermissions(new String[]{permission},resultCode);
                     }
                     @Override
                     public void onPermissionPreviouslyDenied() {
+                        Log.i(TAG, "checkPermissions -> onPermissionPreviouslyDenied");
                         // Show a dialog explaining permission and then request permission
                         PermissionUtils.displayPermissionsRequestDialog(getActivity(),
                                 permission,
@@ -769,10 +859,12 @@ public class TrackingFragment extends Fragment {
                     }
                     @Override
                     public void onPermissionDisabled() {
+                        Log.i(TAG, "checkPermissions -> onPermissionDisabled");
                         PermissionUtils.displayAppPermissionDialog(getActivity());
                     }
                     @Override
                     public void onPermissionGranted() {
+                        Log.i(TAG, "checkPermissions -> initApp");
                         //  Init app
                         initApp();
                     }

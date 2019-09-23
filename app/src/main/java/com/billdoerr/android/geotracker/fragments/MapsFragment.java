@@ -6,9 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,10 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.billdoerr.android.geotracker.R;
-import com.billdoerr.android.geotracker.services.GPSUtils;
+import com.billdoerr.android.geotracker.database.model.Trip;
+import com.billdoerr.android.geotracker.database.model.TripDetails;
+import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
 import com.billdoerr.android.geotracker.services.LocationMessageEvent;
 import com.billdoerr.android.geotracker.utils.PermissionUtils;
-import com.google.android.gms.maps.model.LatLng;
+import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,12 +28,12 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -47,14 +46,10 @@ public class MapsFragment extends Fragment
     private static final String SAVED_MAP_TYPE = "map_type";
     private static final String SAVED_ZOOM = "zoom";
 
-    private static final float mZoom = 15.0f;  // 2 - 21
+    private static final float mZoom = 15.0f;  // Range:  2 - 21
 
     private org.osmdroid.views.MapView mMapView;
-    private MapController mMapController;
-
-    private LatLng mCurrentLocation;
-    private LatLng mDestination;
-
+    private Trip mTrip;
 
     /**
      * Required empty public constructor
@@ -70,6 +65,7 @@ public class MapsFragment extends Fragment
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
         // Register event bus
         EventBus.getDefault().register(this);
     }
@@ -78,17 +74,7 @@ public class MapsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        setHasOptionsMenu(true);
-
-        //  Restore state
-//        restoreValuesFromBundle(savedInstanceState);
-
-        //  Get args
-        Bundle args = getArguments();
-        if(args != null) {
-            //  TODO:  Get args
-        }
-
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -123,28 +109,36 @@ public class MapsFragment extends Fragment
         */
         mapController.setZoom(16.0);
 
-//        GeoPoint startPoint = new GeoPoint(47.3159d, -121.5040d);
-//        mapController.setCenter(startPoint);
-
-
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_maps);
+
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
         // Check location permissions, if granted 'initApp()' will be called
         // https://github.com/permissions-dispatcher/PermissionsDispatcher/issues/90
         checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
+        List<TripDetails> tripDetails;
+
+        // Is there an active trip?
+        if ( initTrip(getContext()) ) {
+            tripDetails = getTripDetails(mTrip.getId());
+            // Plot markers
+            plotMarkers(tripDetails);
+        }
+
         // Get current location
-        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
+//        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
     }
 
     @Override
@@ -175,76 +169,94 @@ public class MapsFragment extends Fragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-//        outState.putInt(SAVED_MAP_TYPE, mMapType);
-        outState.putFloat(SAVED_ZOOM, mZoom);
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_maps, menu);
-//        initMapType(menu);
+    /**
+     * This method will be called when a MessageEvent is posted with a new location
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
+        // Get location data
+        Location location = locationMessageEvent.getLocation();
+
+        // Add marker
+        addMarker(getContext(), mMapView, location.getLatitude(), location.getLongitude(), true, false, false);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.action_map_type_hybrid:
-//                item.setChecked(true);
-//                mMapType = GoogleMap.MAP_TYPE_HYBRID;
-//                updateMapType();
-//                return true;
-//            case R.id.action_map_type_normal:
-//                item.setChecked(true);
-//                mMapType = GoogleMap.MAP_TYPE_NORMAL;
-//                updateMapType();
-//                return true;
-//            case R.id.action_map_type_satellite:
-//                item.setChecked(true);
-//                mMapType = GoogleMap.MAP_TYPE_SATELLITE;
-//                updateMapType();
-//                return true;
-//            case R.id.action_map_type_terrain:
-//                item.setChecked(true);
-//                mMapType = GoogleMap.MAP_TYPE_TERRAIN;
-//                updateMapType();
-//                return true;
-            default:
-                return false;
-        }
-    }
-
-    private static void addMarker(Context context, MapView map, double latitude, double longitude) {
+    /**
+     * Plot location to map. If animate true, then will zoom into the location specified
+     * @param context Context
+     * @param map MapView
+     * @param latitude double Latitude
+     * @param longitude double Longitude
+     * @param animate boolean True if zoom animation
+     * @param start boolean True if starting point
+     * @param end boolean True if ending point
+     */
+    private static void addMarker(Context context, MapView map, double latitude, double longitude, boolean animate, boolean start, boolean end) {
         if (map == null || context == null) return;
         Marker marker = new Marker(map);
         marker.setPosition(new GeoPoint(latitude, longitude));
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        //  TODO:  Need icon
 //        marker.setIcon(context.getResources().getDrawable(R.drawable.ic_map_marker_p));
         marker.setInfoWindow(null);
         map.getOverlays().add(marker);
         map.invalidate();
 
         GeoPoint newGeoPoint = new GeoPoint(latitude, longitude);
-        map.getController().animateTo(newGeoPoint);
+        if (animate) {
+            map.getController().animateTo(newGeoPoint);
+        }
+
     }
 
-    /*
-     * Util methods
+    /**
+     * Plot points on map
+     * @param tripDetails List<TripDetails>
      */
+    private void plotMarkers(List<TripDetails> tripDetails) {
+        // Loop through and add markers
+        final int size = tripDetails.size() - 1;
+        boolean start = false;
+        boolean end = false;
+        boolean animate = false;
+//        for (TripDetails tripDetail : tripDetails) {
+        for (int i = 0; i <= size; i++) {
+            if (i ==0) {
+                start = true;
+            }
+            if (i == size) {
+                end = animate = true;
+            }
+            addMarker(getContext(), mMapView, tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), animate, start, end);
+            start = end = animate = false;
+        }
+    }
 
     /**
-     * This method will be called when a MessageEvent is posted
+     * Returns a List<TripDetails> with the give trip id.
+     * @param tripId
+     * @return
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
-        // Get location data
-        Location location = locationMessageEvent.getLocation();
-        // Update screen data
-        Log.i(TAG, "onMessageEvent: " + location);
+    private List<TripDetails> getTripDetails(int tripId) {
+        return TripDetailsRepo.getTripDetails(tripId);
+    }
 
-        // Add marker
-        addMarker(getContext(), mMapView, location.getLatitude(), location.getLongitude());
+    /**
+     * Retrieve active Trip object from Shared Preferences
+     * @param context Context Application context.
+     * @return boolean True if active trip
+     */
+    private boolean initTrip(Context context) {
+        Trip trip = PreferenceUtils.getActiveTripFromSharedPrefs(Objects.requireNonNull(context));
+        if (trip != null) {
+            // Assign to global variable
+            mTrip = trip;
+            return true;
+        } else {
+            Log.d(TAG, getString(R.string.msg_trip_not_found));
+            return false;
+        }
     }
 
     /*

@@ -26,43 +26,58 @@ public class Route {
     private int activityTypeId;
     private int activeFlag;
 
-    public int getRouteId() {
+    public int getId() {
         return id;
     }
 
-    public void setRouteId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getRouteName() {
+    public String getName() {
         return name;
     }
 
-    public void setRouteName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getRouteDesc() {
+    public String getDesc() {
         return desc;
     }
 
-    public void setRouteDesc(String desc) {
+    public void setDesc(String desc) {
         this.desc = desc;
     }
 
-    public int getRouteActivityTypeId() {
+    public int getActivityTypeId() {
         return activityTypeId;
     }
 
-    public void setRouteActivityTypeId(int activityTypeId) {
+    public void setActivityTypeId(int activityTypeId) {
         this.activityTypeId = activityTypeId;
     }
 
-    public int getRouteActiveFlag() {
+    public int isActiveFlag() {
         return activeFlag;
     }
 
-    public void setRouteActiveFlag(int activeFlag) {
+    public void setActive(int activeFlag) {
         this.activeFlag = activeFlag;
+    }
+
+    // To display object as a string in spinner
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Route){
+            Route c = (Route )obj;
+            if(c.getName().equals(name) && c.getId()==id ) return true;
+        }
+        return false;
     }
 }

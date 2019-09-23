@@ -41,13 +41,13 @@ public class ActivityTypeRepo {
      * @param activityType  ActivityType:
      * @return Returns -1 if error else returns row id of inserted record.
      */
-    public int insert(ActivityType activityType) {
+    public static int insert(ActivityType activityType) {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_NAME, activityType.getActivityTypeName());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_DESC, activityType.getActivityTypeDesc());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.getActivityTypeActiveFlag());
+        values.put(ActivityType.KEY_ACTIVITY_TYPE_NAME, activityType.getName());
+        values.put(ActivityType.KEY_ACTIVITY_TYPE_DESC, activityType.getDesc());
+        values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.isActiveFlag());
 
         // Insert row
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -67,14 +67,14 @@ public class ActivityTypeRepo {
 
     /**
      * Delete record(s) from database specified by the index.
-     * @param rowId  int:  Index for the ActivityType.
+     * @param id int:  Index for the ActivityType.
      * @return int:  Number of records deleted.
      */
-    public int delete(int rowId) {
+    public static int delete(int id) {
         int recordsDeleted = 0;
 
         String whereClause = ActivityType.KEY_ACTIVITY_TYPE_ID + " = ?";
-        String[] whereArgs = new String[]{Integer.toString(rowId) };
+        String[] whereArgs = new String[]{Integer.toString(id) };
 
         // Delete record(s)
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -97,16 +97,16 @@ public class ActivityTypeRepo {
      * @param activityType  ActivityType:
      * @return  int:  Number of rows updated.
      */
-    public int update(ActivityType activityType){
+    public static int update(ActivityType activityType){
         int recordsUpdated = 0;
 
         ContentValues values = new ContentValues();
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_NAME, activityType.getActivityTypeName());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_DESC, activityType.getActivityTypeDesc());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.getActivityTypeActiveFlag());
+        values.put(ActivityType.KEY_ACTIVITY_TYPE_NAME, activityType.getName());
+        values.put(ActivityType.KEY_ACTIVITY_TYPE_DESC, activityType.getDesc());
+        values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.isActiveFlag());
 
         String whereClause = ActivityType.KEY_ACTIVITY_TYPE_ID + " = ?";
-        String[] whereArgs = new String[]{ Integer.toString(activityType.getActivityTypeId()) };
+        String[] whereArgs = new String[]{ Integer.toString(activityType.getId()) };
 
         // Update record
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -128,7 +128,7 @@ public class ActivityTypeRepo {
      * Returns list of activities.
      * @return List<ActivityType>
      */
-    public List<ActivityType> getActivities() {
+    public static List<ActivityType> getActivities() {
         List<ActivityType> activities = new ArrayList<>();
         ActivityType activityType;
 
@@ -149,10 +149,10 @@ public class ActivityTypeRepo {
             if (cursor.moveToFirst()) {
                 do {
                     activityType = new ActivityType();
-                    activityType.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_ID)));
-                    activityType.setActivityTypeName(cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_NAME)));
-                    activityType.setActivityTypeDesc(cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_DESC)));
-                    activityType.setActivityTypeActiveFlag(cursor.getInt(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG)));
+                    activityType.setId(cursor.getInt(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_ID)));
+                    activityType.setName(cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_NAME)));
+                    activityType.setDesc(cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_DESC)));
+                    activityType.setActive(cursor.getInt(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG)));
 
                     activities.add(activityType);
                 } while (cursor.moveToNext());
@@ -167,6 +167,41 @@ public class ActivityTypeRepo {
         }
 
         return activities;
+    }
+
+    /**
+     * Returns activity name give activity id.
+     * @return String
+     */
+    public static String getActivityName(int id) {
+        String name = "";
+
+        String selectQuery = "SELECT "
+                + ActivityType.KEY_ACTIVITY_TYPE_NAME
+                + " FROM " + ActivityType.TABLE
+                + " WHERE " +  ActivityType.KEY_ACTIVITY_TYPE_ID + " = " + id;
+
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try {
+            Log.d(TAG, selectQuery);
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            // Loop through all rows and add to list
+            if (cursor.moveToFirst()) {
+                do {
+                    name = cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_NAME));
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
+        } finally {
+            DatabaseManager.getInstance().closeDatabase();
+        }
+
+        return name;
     }
 
 }

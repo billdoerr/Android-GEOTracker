@@ -64,6 +64,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:title="@string/pref_category_power_savings" >
+
+        <SwitchPreference
+            app:enabled="true"
+            app:defaultValue="true"
+            app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_POWER_SAVINGS_KEEP_DEVICE_ON"
+            app:title="@string/pref_title_power_savings_keep_screen_on"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:title="@string/pref_category_misc_settings" >
     </PreferenceCategory>
 

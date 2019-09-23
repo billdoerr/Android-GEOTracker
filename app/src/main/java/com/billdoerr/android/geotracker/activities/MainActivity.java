@@ -1,6 +1,6 @@
 package com.billdoerr.android.geotracker.activities;
 
-import com.billdoerr.android.geotracker.fragments.TripListFragment;
+import com.billdoerr.android.geotracker.fragments.MapsFragment;
 
 import androidx.fragment.app.Fragment;
 
@@ -13,7 +13,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected Fragment createFragment() {
-//        return MapsFragment.newInstance();
-        return TripListFragment.newInstance();
+        return MapsFragment.newInstance();
     }
 }

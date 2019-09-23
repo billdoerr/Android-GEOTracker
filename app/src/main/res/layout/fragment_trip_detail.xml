@@ -1,6 +1,7 @@
 <?xml version = "1.0" encoding = "utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop = "18dp"
     android:minWidth="300dp"
     android:minHeight="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,8 +12,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
+        android:layout_marginTop = "18dp"
         android:id = "@+id/layout_name"
-        android:layout_marginTop = "8dp"
         android:layout_marginStart = "8dp"
         android:layout_marginEnd = "8dp"
         app:hintTextAppearance="@android:style/TextAppearance.Medium">
@@ -47,10 +48,24 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
+        android:id="@+id/layout_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinnerActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layout_checkbox"
         android:layout_width = "match_parent"
-        android:layout_height = "0dp"
-        android:layout_weight="1">
+        android:layout_height = "wrap_content"
+        android:orientation="horizontal" >
 
         <CheckBox
             android:id="@+id/checkBoxActive"
@@ -66,9 +81,10 @@
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginBottom="20dp"
-        android:gravity="end"
+        android:gravity="bottom|end"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd" >

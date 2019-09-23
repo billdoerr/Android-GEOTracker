@@ -46,10 +46,10 @@ public class RouteRepo {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
-        values.put(Route.KEY_ROUTE_NAME, Route.getRouteName());
-        values.put(Route.KEY_ROUTE_DESC, Route.getRouteDesc());
-        values.put(Route.KEY_ROUTE_ACTIVE_FLAG, Route.getRouteActiveFlag());
-        values.put(Route.KEY_ROUTE_ACTIVITY_TYPE_ID, Route.getRouteActivityTypeId());
+        values.put(Route.KEY_ROUTE_NAME, Route.getName());
+        values.put(Route.KEY_ROUTE_DESC, Route.getDesc());
+        values.put(Route.KEY_ROUTE_ACTIVE_FLAG, Route.isActiveFlag());
+        values.put(Route.KEY_ROUTE_ACTIVITY_TYPE_ID, Route.getActivityTypeId());
 
         // Insert row
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -67,17 +67,16 @@ public class RouteRepo {
         return rowId;
     }
 
-    // TODO:  RouteRepo.delete() not implemented
     /**
      * Delete record(s) from database specified by the index.
-     * @param rowId  int:  Index for the Route.
+     * @param id  int:  Index for the Route.
      * @return int:  Number of records deleted.
      */
-    public int delete(int rowId) {
+    public int delete(int id) {
         int recordsDeleted = 0;
 
         String whereClause = Route.KEY_ROUTE_ID + " = ?";
-        String[] whereArgs = new String[]{Integer.toString(rowId) };
+        String[] whereArgs = new String[]{Integer.toString(id) };
 
         // Delete record(s)
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -104,13 +103,13 @@ public class RouteRepo {
         int recordsUpdated = 0;
 
         ContentValues values = new ContentValues();
-        values.put(Route.KEY_ROUTE_NAME, route.getRouteName());
-        values.put(Route.KEY_ROUTE_DESC, route.getRouteDesc());
-        values.put(Route.KEY_ROUTE_ACTIVE_FLAG, route.getRouteActiveFlag());
-        values.put(Route.KEY_ROUTE_ACTIVITY_TYPE_ID, route.getRouteActivityTypeId());
+        values.put(Route.KEY_ROUTE_NAME, route.getName());
+        values.put(Route.KEY_ROUTE_DESC, route.getDesc());
+        values.put(Route.KEY_ROUTE_ACTIVE_FLAG, route.isActiveFlag());
+        values.put(Route.KEY_ROUTE_ACTIVITY_TYPE_ID, route.getActivityTypeId());
 
         String whereClause = Route.KEY_ROUTE_ID + " = ?";
-        String[] whereArgs = new String[]{ Integer.toString(route.getRouteId()) };
+        String[] whereArgs = new String[]{ Integer.toString(route.getId()) };
 
         // Update record
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -154,11 +153,11 @@ public class RouteRepo {
             if (cursor.moveToFirst()) {
                 do {
                     route = new Route();
-                    route.setRouteId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ID)));
-                    route.setRouteName(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_NAME)));
-                    route.setRouteDesc(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_DESC)));
-                    route.setRouteActiveFlag(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVE_FLAG)));
-                    route.setRouteActivityTypeId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVITY_TYPE_ID)));
+                    route.setId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ID)));
+                    route.setName(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_NAME)));
+                    route.setDesc(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_DESC)));
+                    route.setActive(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVE_FLAG)));
+                    route.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVITY_TYPE_ID)));
 
                     routes.add(route);
                 } while (cursor.moveToNext());

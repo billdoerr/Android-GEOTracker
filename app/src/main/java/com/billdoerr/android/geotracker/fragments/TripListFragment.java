@@ -1,6 +1,8 @@
 package com.billdoerr.android.geotracker.fragments;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +13,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
+import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
 import com.billdoerr.android.geotracker.database.repo.TripRepo;
+import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -38,13 +46,21 @@ public class TripListFragment extends Fragment {
     private static final String TAG = "TripListFragment";
 
     private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
+    private static final int REQUEST_CODE_TRIP_DIALOG_FILTER = 3;
 
-    private static final String ARGS_TRIP = "Trip";
+    private static final String ARGS_TRIP = "trip";
+    private static final String ARGS_FILTER_ACTIVE_FLAG = "args_filter_active_flag";
+    private static final String ARGS_FILTER_ACTIVITY_TYPE_ID = "args_filter_activity_type_id";
+
+    private static final int CLEAR_FILTER = -1;
 
     private TripAdapter mTripAdapter;
     private List<Trip> mTrips;
     private int mCurrentPosition;
     private ViewFlipper mViewFlipper;
+
+    private static int mActiveFlagFilter = CLEAR_FILTER;
+    private static int mActivityTypeIdFilter = CLEAR_FILTER;
 
     /**
      * Required empty public constructor
@@ -60,9 +76,7 @@ public class TripListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // TODO:  enable options menu??
-       setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -93,7 +107,15 @@ public class TripListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_trip_list);
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_trip_list);
+        if (savedInstanceState != null) {
+            mActiveFlagFilter = savedInstanceState.getInt(ARGS_FILTER_ACTIVE_FLAG);
+            mActivityTypeIdFilter = savedInstanceState.getInt(ARGS_FILTER_ACTIVITY_TYPE_ID);
+
+            // Retrieve filter results
+            filterResults();
+        }
     }
 
     @Override
@@ -114,6 +136,8 @@ public class TripListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(ARGS_FILTER_ACTIVE_FLAG, mActiveFlagFilter);
+        outState.putInt(ARGS_FILTER_ACTIVITY_TYPE_ID, mActivityTypeIdFilter);
     }
 
     @Override
@@ -121,49 +145,85 @@ public class TripListFragment extends Fragment {
         super.onDetach();
     }
 
-    // TODO:  onCreateOptionsMenu
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//       inflater.inflate(R.menu.fragment_crime_list, menu);
-//
-//       MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
-//       if (mSubtitleVisible) {
-//           subtitleItem.setTitle(R.string.hide_subtitle);
-//       } else {
-//           subtitleItem.setTitle(R.string.show_subtitle);
-//       }
-    }
-
-    // TODO:  onOptionsItemSelected
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-//           case R.id.new_crime:
-//               addCrime();
-//               return true;
-//           case R.id.show_subtitle:
-//               mSubtitleVisible = !mSubtitleVisible;
-//               getActivity().invalidateOptionsMenu();
-//               updateSubtitle();
-//               return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if( resultCode != Activity.RESULT_OK ) {
             return;
         }
-        // Save trip to database
-        if( requestCode == REQUEST_CODE_TRIP_DIALOG_SAVE) {
-            Trip trip = (Trip) data.getSerializableExtra(ARGS_TRIP);
-            if (trip != null) {
-                updateTrip(trip);
-            }
+        switch (requestCode) {
+            case REQUEST_CODE_TRIP_DIALOG_SAVE:
+                Trip trip = (Trip) data.getSerializableExtra(ARGS_TRIP);
+                if (trip != null) {
+                    updateTrip(trip);
+                }
+                break;
+             case REQUEST_CODE_TRIP_DIALOG_FILTER:
+                 mActiveFlagFilter = data.getIntExtra(ARGS_FILTER_ACTIVE_FLAG, -1);
+                 mActivityTypeIdFilter = data.getIntExtra(ARGS_FILTER_ACTIVITY_TYPE_ID, -1);
+                 // Retrieve filter results
+                 filterResults();
+                 break;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_trip_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconifiedByDefault(true);
+
+        // Listening to search query text change
+        // Ripped from:  https://www.androidhive.info/2017/11/android-recyclerview-with-search-filter-functionality/
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Filter recycler view when query submitted
+                mTripAdapter.getFilter().filter(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // Filter recycler view when text is changed
+                mTripAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                return true;
+            case R.id.action_apply_filter:
+                showTripFilterDialog(REQUEST_CODE_TRIP_DIALOG_FILTER);
+                return true;
+            case R.id.action_clear_filter:
+                // Reset flags
+                mActiveFlagFilter = CLEAR_FILTER;
+                mActivityTypeIdFilter = CLEAR_FILTER;
+                // Clear list, re-query and notify data changed
+                mTrips.clear();
+                mTrips = TripRepo.getTrips();
+                mTripAdapter.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Retrieve filter results
+     */
+    private void filterResults() {
+        mTrips.clear();
+        mTrips = TripRepo.filterTrips(mActiveFlagFilter, mActivityTypeIdFilter);
+        mTripAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -179,12 +239,17 @@ public class TripListFragment extends Fragment {
             // Update RecyclerView
             mTrips.set(mCurrentPosition, trip);
             mTripAdapter.notifyItemChanged(mCurrentPosition);
+
+            // If active trip, save to shared preferences
+            if ((trip.getState() == Trip.TripState.PAUSED) || (trip.getState() == Trip.TripState.RUNNING)) {
+                PreferenceUtils.saveActiveTripToSharedPrefs(getContext(), trip);
+            }
         } else {
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(TAG, getString(R.string.msg_trip_save) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_trip_save) + ": " + trip.toString());
+        Log.i(TAG, getString(R.string.msg_trip_update) + ": " + ret);
+        Log.i(TAG, getString(R.string.msg_trip_update) + ": " + trip.toString());
     }
 
     /**
@@ -193,7 +258,7 @@ public class TripListFragment extends Fragment {
      */
     private void deleteTrip(Trip trip, int position) {
         // Delete from database
-        int ret = TripRepo.delete(trip.getTripId());
+        int ret = TripRepo.delete(trip.getId());
 
         // If 0, then no records updated
         if (ret > 0) {
@@ -212,7 +277,7 @@ public class TripListFragment extends Fragment {
     }
 
     /**
-     * FragmentDialog that allows the editing of the trip's details
+     * FragmentDialog that allows the filtering of the trip list
      * @param requestCode int
      */
     private void showTripDetailDialog(Trip trip, int requestCode) {
@@ -241,7 +306,7 @@ public class TripListFragment extends Fragment {
      * @param trip Trip
      */
     private void showTripDeleteDialog(final Trip trip, final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         builder.setTitle(R.string.dialog_title_trip_delete);
         builder.setMessage(R.string.dialog_msg_trip_delete);
         builder.setPositiveButton(R.string.btn_delete, new DialogInterface.OnClickListener() {
@@ -260,6 +325,33 @@ public class TripListFragment extends Fragment {
         alert.show();
     }
 
+    /**
+     * FragmentDialog that allows the editing of the trip's details
+     * @param requestCode int
+     */
+    private void showTripFilterDialog(int requestCode) {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        Bundle args = new Bundle();
+        args.putSerializable(ARGS_TRIP, new Trip());
+        args.putInt(ARGS_FILTER_ACTIVE_FLAG, mActiveFlagFilter);
+        args.putInt(ARGS_FILTER_ACTIVITY_TYPE_ID, mActivityTypeIdFilter);
+
+        // Create and show the dialog.
+        DialogFragment dialogFragment = TripListFilterFragment.newInstance();
+        dialogFragment.setArguments(args);
+        dialogFragment.setTargetFragment(this, requestCode);
+        dialogFragment.show(ft, TripListFilterFragment.TAG);
+    }
+
 
     /*
      * Inner class:  TripHolder
@@ -268,9 +360,10 @@ public class TripListFragment extends Fragment {
 
         private static final String TAG = "TripHolder";
 
-        private TextView mTextName;
-        private TextView mTextDesc;
-        private TextView mTextViewOption;
+        private final TextView mTextName;
+        private final TextView mTextDesc;
+        private final TextView mTextActivity;
+        private final TextView mTextViewOption;
 
         public TripHolder (View itemView) {
             super(itemView);
@@ -278,12 +371,15 @@ public class TripListFragment extends Fragment {
 
             mTextName = itemView.findViewById(R.id.textName);
             mTextDesc = itemView.findViewById(R.id.textDesc);
+            mTextActivity = itemView.findViewById(R.id.textActivity);
             mTextViewOption = itemView.findViewById(R.id.textViewOptions);
         }
 
         public void bind(Trip trip) {
-            mTextName.setText(trip.getTripName());
-            mTextDesc.setText(trip.getTripDesc());
+            mTextName.setText(trip.getName());
+            mTextDesc.setText(trip.getDesc());
+            // Query the ActivityTypeName.  Not sure if I should have perform inner join on query to retrieve this or not.mm
+            mTextActivity.setText(ActivityTypeRepo.getActivityName(trip.getActivityTypeId()));
         }
 
         @Override
@@ -297,9 +393,11 @@ public class TripListFragment extends Fragment {
     /*
      * Inner Class:  TripAdapter
      */
-    private class TripAdapter extends RecyclerView.Adapter<TripHolder> {
+    private class TripAdapter extends RecyclerView.Adapter<TripHolder> implements Filterable {
 
         private static final String TAG = "TripAdapter";
+
+        private List<Trip> tripListFiltered;
 
         public TripAdapter(List<Trip> trips) {
             mTrips = trips;
@@ -324,7 +422,7 @@ public class TripListFragment extends Fragment {
                 public void onClick(View view) {
 
                     // Creating a popup menu
-                    PopupMenu popup = new PopupMenu(getContext(), holder.mTextViewOption);
+                    PopupMenu popup = new PopupMenu(Objects.requireNonNull(getContext()), holder.mTextViewOption);
                     // Inflating menu from xml resource
                     popup.inflate(R.menu.menu_trip_list_item);
                     // Adding click listener
@@ -338,9 +436,6 @@ public class TripListFragment extends Fragment {
                                     return true;
                                 case R.id.deleteTrip:
                                     showTripDeleteDialog(trip, holder.getAdapterPosition());
-                                    return true;
-                                case R.id.tbd:
-                                    //  TODO: Add action
                                     return true;
                                 default:
                                     return false;
@@ -363,6 +458,42 @@ public class TripListFragment extends Fragment {
             mTrips = trips;
         }
 
+        // Ripped from:  https://www.androidhive.info/2017/11/android-recyclerview-with-search-filter-functionality/
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        tripListFiltered = mTrips;
+                    } else {
+                        List<Trip> filteredList = new ArrayList<>();
+                        for (Trip row : mTrips) {
+
+                            // name match condition. this might differ depending on your requirement
+                            // here we are looking for name or phone number match
+                            if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getName().contains(charSequence)) {
+                                filteredList.add(row);
+                            }
+                        }
+
+                        tripListFiltered = filteredList;
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = tripListFiltered;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    mTrips = (ArrayList<Trip>) filterResults.values;
+                    notifyDataSetChanged();
+                }
+            };
+        }
     }
 
 }

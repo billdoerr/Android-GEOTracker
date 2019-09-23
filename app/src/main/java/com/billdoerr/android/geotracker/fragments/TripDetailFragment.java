@@ -6,17 +6,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.billdoerr.android.geotracker.R;
+import com.billdoerr.android.geotracker.database.model.ActivityType;
 import com.billdoerr.android.geotracker.database.model.Trip;
+import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.List;
 
 public class TripDetailFragment extends DialogFragment {
 
@@ -25,13 +31,9 @@ public class TripDetailFragment extends DialogFragment {
 
     private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
 
-    private static final String ARGS_TRIP = "Trip";
+    private static final String ARGS_TRIP = "trip";
 
     private Trip mTrip;
-
-    private EditText mTextName;
-    private EditText mTextDesc;
-    private CheckBox mCheckActive;
 
     public TripDetailFragment() {
         // Required empty public constructor
@@ -58,20 +60,25 @@ public class TripDetailFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_trip_detail, container, false);
 
-        mTextName = view.findViewById(R.id.textName);
-        mTextDesc = view.findViewById(R.id.textDesc);
-        mCheckActive = view.findViewById(R.id.checkBoxActive);
+        // Set dialog title
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
+        getDialog().setTitle(R.string.dialog_title_trip_edit);
+
+        final EditText textName = view.findViewById(R.id.textName);
+        final EditText textDesc = view.findViewById(R.id.textDesc);
+        final CheckBox checkActive = view.findViewById(R.id.checkBoxActive);
+        final Spinner spinnerActivity = view.findViewById(R.id.spinnerActivity);
 
         final Button btnSave = view.findViewById(R.id.btn_save);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Send result to calling fragment
-                if (mTextName.getText().length() > 0 ) {
-                    mTrip.setTripName(mTextName.getText().toString());
-                    mTrip.setTripDesc(mTextDesc.getText().toString());
+                if (textName.getText().length() > 0 ) {
+                    mTrip.setName(textName.getText().toString());
+                    mTrip.setDesc(textDesc.getText().toString());
                     // Convert boolean to integer
-                    mTrip.setTripActiveFlag(mCheckActive.isChecked()?1:0);
+                    mTrip.setActive(checkActive.isChecked()?1:0);
                     sendResult(mTrip, Activity.RESULT_OK);
                 }
                 // Inform user that Trip Name is required
@@ -87,11 +94,11 @@ public class TripDetailFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 // Send result to calling fragment
-                if (mTextName.getText().length() > 0 ) {
-                    mTrip.setTripName(mTextName.getText().toString());
-                    mTrip.setTripDesc(mTextDesc.getText().toString());
+                if (textName.getText().length() > 0 ) {
+                    mTrip.setName(textName.getText().toString());
+                    mTrip.setDesc(textDesc.getText().toString());
                     // Convert boolean to integer
-                    mTrip.setTripActiveFlag(mCheckActive.isChecked()?1:0);
+                    mTrip.setActive(checkActive.isChecked()?1:0);
                     sendResult(mTrip, Activity.RESULT_OK);
                 }
             }
@@ -106,6 +113,27 @@ public class TripDetailFragment extends DialogFragment {
             }
         });
 
+        /*
+        * Configure spinner.  Ripped from:  https://stackoverflow.com/questions/24712540/set-key-and-value-in-spinner
+         */
+        // Fill data in spinner
+        List<ActivityType> listActivities = getActivities();
+        ArrayAdapter<ActivityType> adapter = new ArrayAdapter<ActivityType>(getContext(), android.R.layout.simple_spinner_dropdown_item, listActivities);
+        spinnerActivity.setAdapter(adapter);
+
+        spinnerActivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ActivityType activityType = (ActivityType) parent.getSelectedItem();
+                mTrip.setActivityTypeId(activityType.getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Pass
+            }
+        });
+
 
         // Disable Cancel and enable Continue
         if (getTargetRequestCode() == REQUEST_CODE_TRIP_DIALOG_CONTINUE) {
@@ -114,10 +142,12 @@ public class TripDetailFragment extends DialogFragment {
         }
 
         if (mTrip != null) {
-            mTextName.setText(mTrip.getTripName());
-            mTextDesc.setText(mTrip.getTripDesc());
+            textName.setText(mTrip.getName());
+            textDesc.setText(mTrip.getDesc());
             // Boolean stored as integer in SQLite, so convert to integer.
-            mCheckActive.setChecked(mTrip.getTripActiveFlag() == Trip.ACTIVE);
+            checkActive.setChecked(mTrip.isActive() == Trip.ACTIVE);
+            // Set trip's activity
+            spinnerActivity.setSelection(adapter.getPosition(getActivity(listActivities, mTrip.getActivityTypeId())));
         }
 
         return view;
@@ -140,6 +170,29 @@ public class TripDetailFragment extends DialogFragment {
         intent.putExtra(ARGS_TRIP, trip);
         getTargetFragment().onActivityResult(getTargetRequestCode(), result, intent);
         dismiss();
+    }
+
+    /**
+     * Returns list of Activities
+     * @return List<ActivityType>
+     */
+    private List<ActivityType> getActivities() {
+        return ActivityTypeRepo.getActivities();
+    }
+
+    /**
+     * Finds the ActivityType from a List<ActivityType> from the Trip object
+     * @param activities List<ActivityType>
+     * @param id int Trip id.
+     * @return ActivityType
+     */
+    private ActivityType getActivity(List<ActivityType> activities, int id) {
+        for (ActivityType activity : activities) {
+            if (activity.getId() == id) {
+                return activity;
+            }
+        }
+        return null;
     }
 
 }

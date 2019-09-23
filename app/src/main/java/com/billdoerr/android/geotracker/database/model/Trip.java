@@ -19,6 +19,8 @@ public class Trip implements Serializable {
     public static final String KEY_TRIP_DESC = "trip_desc";
     public static final String KEY_TRIP_START_TIME = "start_time";
     public static final String KEY_TRIP_END_TIME = "end_time";
+    public static final String KEY_TRIP_PAUSED_TIME = "paused_time";
+    public static final String KEY_TRIP_TOTAL_TIME = "total_time";
     public static final String KEY_TRIP_ACTIVITY_TYPE_ID = "activity_id";
     public static final String KEY_TRIP_ACTIVE_FLAG = "active_flag";
 
@@ -36,16 +38,14 @@ public class Trip implements Serializable {
     private int mId;
     private String mName;
     private String mDesc;
-    private Date mStartTime;
-    private Date mEndTime;
-    private int mActivityTypeId;
-    private int mActiveFlag;
-
-    //  TODO:  Should I add these here???
+    private long mStartTime;
+    private long mEndTime;
     private int mState;
-    private Date mPausedTime;
+    private long mPausedTime;
     private long mTotalTimeInMillis;
     private long mPausedTimeInMillis;
+    private int mActivityTypeId;
+    private int mActiveFlag;
 
     public int getState() {
         return mState;
@@ -55,11 +55,11 @@ public class Trip implements Serializable {
         mState = state;
     }
 
-    public Date getPausedTime() {
+    public long getPausedTime() {
         return mPausedTime;
     }
 
-    public void setPausedTime(Date pausedTime) {
+    public void setPausedTime(long pausedTime) {
         mPausedTime = pausedTime;
     }
 
@@ -79,59 +79,59 @@ public class Trip implements Serializable {
         mPausedTimeInMillis = pausedTimeInMillis;
     }
 
-    public int getTripId() {
+    public int getId() {
         return mId;
     }
 
-    public void setTripId(int id) {
+    public void setId(int id) {
         this.mId = id;
     }
 
-    public String getTripName() {
+    public String getName() {
         return mName;
     }
 
-    public void setTripName(String name) {
+    public void setName(String name) {
         this.mName = name;
     }
 
-    public String getTripDesc() {
+    public String getDesc() {
         return mDesc;
     }
 
-    public void setTripDesc(String desc) {
+    public void setDesc(String desc) {
         this.mDesc = desc;
     }
 
-    public Date getTripStartTime() {
+    public long getStartTime() {
         return mStartTime;
     }
 
-    public void setTripStartTime(Date startTime) {
+    public void setStartTime(long startTime) {
         this.mStartTime = startTime;
     }
 
-    public Date getTripEndTime() {
+    public long getEndTime() {
         return mEndTime;
     }
 
-    public void setTripEndTime(Date endTime) {
+    public void setEndTime(long endTime) {
         this.mEndTime = endTime;
     }
 
-    public int getTripActivityTypeId() {
+    public int getActivityTypeId() {
         return mActivityTypeId;
     }
 
-    public void setTripActivityTypeId(int activityTypeId) {
+    public void setActivityTypeId(int activityTypeId) {
         this.mActivityTypeId = activityTypeId;
     }
 
-    public int getTripActiveFlag() {
+    public int isActive() {
         return mActiveFlag;
     }
 
-    public void setTripActiveFlag(int activeFlag) {
+    public void setActive(int activeFlag) {
         this.mActiveFlag = activeFlag;
     }
 

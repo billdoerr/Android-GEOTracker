@@ -29,7 +29,6 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,7 +82,8 @@ public class RouteListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fragment_title_route_list);
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_route_list);
     }
 
     @Override
@@ -137,24 +137,22 @@ public class RouteListFragment extends Fragment {
         private static final String TAG = "RouteHolder";
 
         private Route mRoute;
-        private CardView cv;
-        private TextView mTextName;
-        private TextView mTextDesc;
+        private final TextView mTextName;
+        private final TextView mTextDesc;
         private int mCurrentPosition;
 
         public RouteHolder (View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            cv = itemView.findViewById(R.id.cv);
             mTextName = itemView.findViewById(R.id.textName);
             mTextDesc = itemView.findViewById(R.id.textDesc);
         }
 
         public void bind(Route route) {
             mRoute = route;
-            mTextName.setText(mRoute.getRouteName());
-            mTextDesc.setText(mRoute.getRouteDesc());
+            mTextName.setText(mRoute.getName());
+            mTextDesc.setText(mRoute.getDesc());
         }
 
         @Override
@@ -239,7 +237,7 @@ public class RouteListFragment extends Fragment {
         // Create list for spinner data
         ArrayList<String> items = new ArrayList<>();
         for (int i=0; i < activityTypes.size(); i++) {
-            items.add(activityTypes.get(i).getActivityTypeName());
+            items.add(activityTypes.get(i).getName());
         }
 
         // Assign adapter to spinner
@@ -248,10 +246,10 @@ public class RouteListFragment extends Fragment {
 
         // If data exists populate widget values
         if (route != null) {
-            textName.setText(route.getRouteName());
-            textDesc.setText(route.getRouteDesc());
-            checkActive.setChecked(route.getRouteActiveFlag() == Route.ACTIVE);
-            spinnerActivity.setSelection(getListIndex(activityTypes, route.getRouteActivityTypeId()));
+            textName.setText(route.getName());
+            textDesc.setText(route.getDesc());
+            checkActive.setChecked(route.isActiveFlag() == Route.ACTIVE);
+            spinnerActivity.setSelection(getListIndex(activityTypes, route.getActivityTypeId()));
         }
 
         // Build dialog
@@ -262,18 +260,18 @@ public class RouteListFragment extends Fragment {
                 if (route == null) {
                     // Add new record
                     Route newRoute = new Route();
-                    newRoute.setRouteName(textName.getText().toString());
-                    newRoute.setRouteDesc(textDesc.getText().toString());
-                    newRoute.setRouteActiveFlag(checkActive.isChecked() ? 1 : 0);
-                    newRoute.setRouteActivityTypeId(activityTypes.get(mSelectedActivityType).getActivityTypeId());
+                    newRoute.setName(textName.getText().toString());
+                    newRoute.setDesc(textDesc.getText().toString());
+                    newRoute.setActive(checkActive.isChecked() ? 1 : 0);
+                    newRoute.setActivityTypeId(activityTypes.get(mSelectedActivityType).getId());
                     new RouteRepo().insert(newRoute);
                     mRouteAdapter.updateList();
                 } else {
                     // Update current record
-                    route.setRouteName(textName.getText().toString());
-                    route.setRouteDesc(textDesc.getText().toString());
-                    route.setRouteActiveFlag(checkActive.isChecked() ? 1 : 0);
-                    route.setRouteActivityTypeId(activityTypes.get(mSelectedActivityType).getActivityTypeId());
+                    route.setName(textName.getText().toString());
+                    route.setDesc(textDesc.getText().toString());
+                    route.setActive(checkActive.isChecked() ? 1 : 0);
+                    route.setActivityTypeId(activityTypes.get(mSelectedActivityType).getId());
                     new RouteRepo().update(route);
                 }
 
@@ -299,7 +297,7 @@ public class RouteListFragment extends Fragment {
     private int getListIndex(List<ActivityType> list, int rowId) {
         int i;
         for ( i=0; i < list.size(); i++) {
-            if (list.get(i).getActivityTypeId() == rowId) {
+            if (list.get(i).getId() == rowId) {
                 break;
             }
         }

@@ -36,6 +36,8 @@
     <string name="dialog_msg_grant_permissions">GEOTracker requires permissions be granted. Please permit the permission through "
                 + "Settings screen.\n\nSelect Permissions -> Enable permission</string>
 
+    <string name="dialog_title_trip_list_filter">Filter Trip List</string>
+    <string name="dialog_title_trip_edit">Edit Trip</string>
     <string name="dialog_title_trip_delete">Trip Delete</string>
     <string name="dialog_msg_trip_delete">Are you sure you want to delete this trip?</string>
 
@@ -116,8 +118,16 @@
     <string name="textAccuracyUnits_English">ft</string>
     <string name="textSpeedUnits_Nautical">kt</string>
 
+    <string name="textViewActivityType">Activity</string>
+
     <string name="text_no_trips">No trips</string>
     <string name="text_add_trips">Click Track to add trip.</string>
+
+    <string name="radiogroup_trip_list_filter_active">Trip</string>
+    <string name="radiogroup_trip_list_filter_activity_type">Activity</string>
+    <string name="radiobutton_trip_list_filter_active_all">All</string>
+    <string name="radiobutton_trip_list_filter_active_active">Active</string>
+    <string name="radiobutton_trip_list_filter_active_inactive">Inactive</string>
 
     <!-- ******************************** -->
     <!-- Maps Activity -->
@@ -136,6 +146,11 @@
     <string name="action_trip_delete">Delete trip</string>
     <string name="action_trip_edit">Edit trip</string>
     <string name="action_trip_tbd">TBD</string>
+
+    <string name="action_filter">Filter</string>
+    <string name="action_filter_apply">Apply Filter</string>
+    <string name="action_filter_clear">Clear Filter</string>
+    <string name="action_trip_search_hint">Type trip name \u2026</string>
 
     <!--  Maps Messages-->
     <string name="maps_you_are_here">You are here</string>
@@ -159,6 +174,7 @@
     <string name="pref_category_units">Units</string>
     <string name="pref_category_network_settings">Network Settings</string>
     <string name="pref_category_location_services">Location Services</string>
+    <string name="pref_category_power_savings">Power Savings</string>
     <string name="pref_category_misc_settings">Misc</string>
 
     <!--  Preference Titles -->
@@ -169,12 +185,13 @@
     <string name="pref_title_units_coordinate_datum">Coordinate Datum</string>
     <string name="pref_title_location_services_update_interval">Update Interval (in seconds)</string>
     <string name="pref_title_location_services_update_distance">Update Distance (in meters)</string>
+    <string name="pref_title_power_savings_keep_screen_on">Keep Screen On</string>
 
     <!--  Default Shared Preference Values -->
     <string name="pref_default_camera_name">Front</string>
 
     <!--  Logging messages -->
-    <string name="msg_application_starting">Application starting&#8230;</string>
+    <string name="msg_application_starting">Application starting \u2026</string>
     <string name="msg_creating_db_tables">Creating database tables.</string>
 
     <string name="msg_has_location_permissions">Has Location permissions.</string>
@@ -189,8 +206,12 @@
     <string name="msg_gps_service_restart">GPS restart.</string>
     <string name="msg_gps_service_stop">GPS service stopped.</string>
 
-    <string name="msg_trip_save">Trip saved.</string>
+    <string name="msg_trip_inserted">Trip inserted.</string>
+    <string name="msg_trip_update">Trip updated.</string>
     <string name="msg_trip_delete">Trip deleted.</string>
+    <string name="msg_trip_details_insert">Trip Details inserted. Trip Details ID: \u0020</string>
+    <string name="msg_trip_details_insert_error">Error inserting trip details.</string>
+    <string name="msg_trip_not_found">No active trip found in shared preferences.</string>
 
     <!--  About -->
     <string name="text_version">Version</string>
