@@ -160,7 +160,7 @@ public class TripDetailsRepo {
             if (cursor.moveToFirst()) {
                 do {
                     tripDetail = new TripDetails();
-                    tripDetail.setLatitude(cursor.getInt(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_LATITUDE)));
+                    tripDetail.setLatitude(cursor.getDouble(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_LATITUDE)));
                     tripDetail.setLongitude(cursor.getDouble(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_LONGITUDE)));
                     tripDetail.setAltitude(cursor.getDouble(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_ALTITUDE)));
                     tripDetail.setTimeStamp(cursor.getLong(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_TIME_STAMP)));

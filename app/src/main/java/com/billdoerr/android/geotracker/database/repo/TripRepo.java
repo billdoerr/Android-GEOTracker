@@ -163,7 +163,7 @@ public class TripRepo {
                 + Trip.KEY_TRIP_ACTIVE_FLAG + ", "
                 + Trip.KEY_TRIP_ACTIVITY_TYPE_ID
                 + " FROM " + Trip.TABLE
-                + " ORDER BY " +  Trip.KEY_TRIP_NAME + " ASC";
+                + " ORDER BY " +  Trip.KEY_TRIP_START_TIME + " DESC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {

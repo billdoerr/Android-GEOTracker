@@ -36,6 +36,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -333,8 +334,8 @@ public class TripListFragment extends Fragment {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
+        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -436,6 +437,19 @@ public class TripListFragment extends Fragment {
                                     return true;
                                 case R.id.deleteTrip:
                                     showTripDeleteDialog(trip, holder.getAdapterPosition());
+                                    return true;
+                                case R.id.reviewTrip:
+                                    // Pass in trip id
+                                    Bundle args = new Bundle();
+                                    args.putSerializable(ARGS_TRIP, trip);
+
+                                    // Create fragment
+                                    TripReviewFragment fragment= new TripReviewFragment();
+                                    fragment.setArguments(args);
+                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.TAG)
+                                            .addToBackStack(TripReviewFragment.TAG)
+                                            .commit();
                                     return true;
                                 default:
                                     return false;

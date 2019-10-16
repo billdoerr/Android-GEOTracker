@@ -120,8 +120,8 @@
 
     <string name="textViewActivityType">Activity</string>
 
-    <string name="text_no_trips">No trips</string>
-    <string name="text_add_trips">Click Track to add trip.</string>
+    <string name="text_no_trips">No trips found</string>
+    <string name="text_add_trips">Click Track to add trip</string>
 
     <string name="radiogroup_trip_list_filter_active">Trip</string>
     <string name="radiogroup_trip_list_filter_activity_type">Activity</string>
@@ -145,7 +145,7 @@
 
     <string name="action_trip_delete">Delete trip</string>
     <string name="action_trip_edit">Edit trip</string>
-    <string name="action_trip_tbd">TBD</string>
+    <string name="action_trip_review">Review trip</string>
 
     <string name="action_filter">Filter</string>
     <string name="action_filter_apply">Apply Filter</string>
@@ -205,6 +205,7 @@
     <string name="msg_gps_service_starting">GPS service is starting.</string>
     <string name="msg_gps_service_restart">GPS restart.</string>
     <string name="msg_gps_service_stop">GPS service stopped.</string>
+    <string name="msg_gps_requesting_updates">GPS service requesting updates.</string>
 
     <string name="msg_trip_inserted">Trip inserted.</string>
     <string name="msg_trip_update">Trip updated.</string>

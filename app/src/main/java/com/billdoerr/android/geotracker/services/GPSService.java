@@ -16,6 +16,8 @@ import android.util.Log;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.activities.MainActivity;
+import com.billdoerr.android.geotracker.database.DatabaseHelper;
+import com.billdoerr.android.geotracker.database.DatabaseManager;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
@@ -71,7 +73,7 @@ public class GPSService extends Service implements LocationListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-//        Log.d(TAG, getResources().getString(R.string.msg_gps_service_starting));
+        Log.i(TAG, getResources().getString(R.string.msg_gps_service_starting));
 
         mContext = getApplicationContext();
 
@@ -203,6 +205,7 @@ public class GPSService extends Service implements LocationListener {
 
         // Start requesting updates
         try {
+            Log.i(TAG, getResources().getString(R.string.msg_gps_requesting_updates));
             mLocationManager.registerGnssStatusCallback(gnssStatusListener);
             // Begin location updates
             mLocationManager.requestLocationUpdates(PROVIDER,
@@ -230,6 +233,12 @@ public class GPSService extends Service implements LocationListener {
      * @param location Location
      */
     private void insertLocationIntoDatabase(Location location) {
+
+        //  TODO:  I really don't like this being here
+        // Initialize instance of DatabaseManager
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        DatabaseManager.initializeInstance(db);
+
         int ret = INVALID_INDEX;
         // Write entry to database
         if (mTrip.getId() >= 0) {

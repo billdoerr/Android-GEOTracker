@@ -34,7 +34,25 @@ Objects.requireNonNull
              getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);  
     
     
-    
+ 
+OpenCycleMap
+    https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Transport
+    https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Landscape
+    https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Outdoors
+    https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Transport Dark
+    https://tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Spinal Map
+    https://tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Pioneer
+    https://tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Mobile Atlas
+    https://tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
+Neighbourhood
+    https://tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716    
     
     
     

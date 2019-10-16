@@ -17,7 +17,7 @@ public class PreferenceUtils {
 
     private static final String TAG = "PreferenceUtils";
 
-    private static final String PREFS_FILE_NAME = "com.billdoerr.android.geotracker.preferences_file";
+    private static final String PREFS_NAME = "com.billdoerr.android.geotracker.preferences";
 
     // Shared preferences
     private static final String PREF_KEY_UNITS_METRIC  = "com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_METRIC";
@@ -40,12 +40,12 @@ public class PreferenceUtils {
      */
 
     static void firstTimeAskingPermission(Context context, String permission, boolean isFirstTime){
-        SharedPreferences sharedPreference = context.getSharedPreferences(PREFS_FILE_NAME, MODE_PRIVATE);
+        SharedPreferences sharedPreference = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         sharedPreference.edit().putBoolean(permission, isFirstTime).apply();
     }
 
     static boolean isFirstTimeAskingPermission(Context context, String permission){
-        return context.getSharedPreferences(PREFS_FILE_NAME, MODE_PRIVATE).getBoolean(permission, true);
+        return context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean(permission, true);
     }
 
     /*
@@ -60,7 +60,7 @@ public class PreferenceUtils {
      */
     public static GeoTrackerSharedPreferences getSharedPreferences(Context context) {
 
-        SharedPreferences appSharedPrefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         GeoTrackerSharedPreferences prefs = new GeoTrackerSharedPreferences();
 
@@ -89,7 +89,7 @@ public class PreferenceUtils {
      * @return Trip
      */
     public static Trip getActiveTripFromSharedPrefs(Context context) {
-        SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = appSharedPrefs.getString(PREF_KEY_ACTIVE_TRIP, "");
         if (Objects.requireNonNull(json).length() == 0) {
@@ -105,7 +105,7 @@ public class PreferenceUtils {
      * @param context Context:  Application context.
      */
     public static void saveActiveTripToSharedPrefs(Context context, Trip trip) {
-        SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(trip); //tasks is an ArrayList instance variable
@@ -114,7 +114,7 @@ public class PreferenceUtils {
     }
 
     public static void clearActiveTripFromSharedPrefs(Context context) {
-        SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         appSharedPrefs.edit().remove(PREF_KEY_ACTIVE_TRIP).apply();
     }
 
