@@ -66,7 +66,7 @@ public class ActivityType {
     public boolean equals(Object obj) {
         if(obj instanceof ActivityType){
             ActivityType c = (ActivityType )obj;
-            if(c.getName().equals(name) && c.getId()==id ) return true;
+            return c.getName().equals(name) && c.getId() == id;
         }
         return false;
     }

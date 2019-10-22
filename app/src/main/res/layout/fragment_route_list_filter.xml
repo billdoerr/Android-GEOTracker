@@ -17,7 +17,7 @@
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             android:layout_marginTop="36dp"
-            android:text="@string/radiogroup_trip_list_filter_active"
+            android:text="@string/radiogroup_route_list_filter_active"
             android:textSize="24sp"
             android:textStyle="bold" />
 

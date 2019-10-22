@@ -10,9 +10,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.billdoerr.android.geotracker.R;
@@ -129,7 +127,7 @@ public class TripReviewFragment extends Fragment {
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
         private ViewPagerAdapter(FragmentManager manager) {
-            /**
+            /*
              * Indicates that only the current fragment will be
              * in the Lifecycle.State#RESUMED state. All other Fragments
              * are capped at Lifecycle.State#STARTED.

@@ -25,15 +25,9 @@
 5. **STRETCH GOAL** 
     - Sync data.  Upload data to cloud.
 
-    
-    
-Objects.requireNonNull    
-    
- ERROR: Could not find method implementation() for arguments [DefaultProjectDependency{dependencyProject='project ':app'', configuration='default'}] on object of type org.gradle.api.internal.artifacts.dsl.dependencies.DefaultDependencyHandler.
-
-             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);  
-    
-    
+        
+AutoCompleteTextView
+  
  
 OpenCycleMap
     https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716 
@@ -56,4 +50,23 @@ Neighbourhood
     
     
     
-    
+     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_add_24px"
+        android:focusable="true" />
+        
+         autocomplete = (AutoCompleteTextView)             
+      findViewById(R.id.autoCompleteTextView1);
+
+      ArrayAdapter<String> adapter = new ArrayAdapter<String>  
+      (this,android.R.layout.select_dialog_item, arr);
+
+      autocomplete.setThreshold(2);
+      autocomplete.setAdapter(adapter);   

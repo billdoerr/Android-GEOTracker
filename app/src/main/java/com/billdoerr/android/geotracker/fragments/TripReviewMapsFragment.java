@@ -40,15 +40,12 @@ public class TripReviewMapsFragment extends Fragment {
     private static final String SAVED_MAP_TYPE = "map_type";
     private static final String SAVED_ZOOM = "zoom";
 
-    private static final double mZoom = 15.0;  // Range:  2 - 21
+    private static final double mZoom = 10.0;  // Range:  2 - 21
 
     private View mView;
-    private org.osmdroid.views.MapView mMap;
+    private org.osmdroid.views.MapView mMapView;
     private Trip mTrip;
-
-    private List<TripDetails> mTripDetails;
-    private List<GeoPoint> mGeoPoints;
-
+    private MapUtils mMapUtils;
 
     /**
      * Required empty public constructor
@@ -74,6 +71,8 @@ public class TripReviewMapsFragment extends Fragment {
 
         Bundle args = getArguments();
         mTrip = (Trip) args.getSerializable(ARGS_TRIP);
+
+        mMapUtils = new MapUtils();
     }
 
     @Override
@@ -81,9 +80,15 @@ public class TripReviewMapsFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_maps_review, container, false);
 
+        /* Important! Set your user agent to prevent getting banned from the osm servers.
+         * Background: This setting identifies your app uniquely to tile servers. It's not the end user's identity,
+         * but the name of your app. If your users abuse the tile server or your app does in some way, this will
+         * prevent everyone that uses osmdroid from getting banned rather than just the users of your app.
+         */
         Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
-        createMapView(mView);
+        // Initialize the MapView
+        initMapView(mView);
 
         return mView;
     }
@@ -99,37 +104,34 @@ public class TripReviewMapsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        //  TODO:  'initApp()'
         // Check location permissions, if granted 'initApp()' will be called
         // https://github.com/permissions-dispatcher/PermissionsDispatcher/issues/90
         checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        createMapView(mView);
-//        if (mMap != null) {
-////            mMap.onResume();
+        initMapView(mView);
+        if (mMapView != null) {
+            mMapView.onResume();
             plotTrip();
-//        }
+        }
     }
 
     @Override
     public void onPause() {
-        if (mMap != null) {
-//            mMap.onPause();
+        if (mMapView != null) {
+            mMapView.onPause();
         }
         super.onPause();
     }
 
     @Override
     public void onDetach() {
-        if (mMap != null)
-            mMap.onDetach();
-        mMap = null;
+        if (mMapView != null)
+            mMapView.onDetach();
+        mMapView = null;
         super.onDetach();
     }
 
@@ -143,7 +145,11 @@ public class TripReviewMapsFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void createMapView(View view) {
+    /**
+     * Initializes the MapView
+     * @param view View
+     */
+    private void initMapView(View view) {
 
         final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors/"};
 
@@ -156,11 +162,11 @@ public class TripReviewMapsFragment extends Fragment {
                         tileUrlOutdoor,
                         "from thunderforest.com");
 
-        mMap = view.findViewById(R.id.mapview);
-        mMap.setTileSource(tileSource);
+        mMapView = view.findViewById(R.id.mapview);
+        mMapView.setTileSource(tileSource);
 
         // Add multi-touch capability
-        mMap.setMultiTouchControls(true);
+        mMapView.setMultiTouchControls(true);
 
         final float density = getResources().getDisplayMetrics().density;
         TileSystem.setTileSize(Math.round(256*density));
@@ -170,20 +176,20 @@ public class TripReviewMapsFragment extends Fragment {
          * source.<br>
          * If false, tiles are rendered in their real size.
          */
-        mMap.setTilesScaledToDpi(true);
+        mMapView.setTilesScaledToDpi(true);
 
         /*
          * Setting an additional scale factor both for ScaledToDpi and standard size
          * > 1.0 enlarges map display, < 1.0 shrinks map display
          */
-        mMap.setTilesScaleFactor(2);
+        mMapView.setTilesScaleFactor(2);
 
         // Add compass to map
-        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), new InternalCompassOrientationProvider(getActivity()), mMap);
+        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), new InternalCompassOrientationProvider(getActivity()), mMapView);
         compassOverlay.enableCompass();
-        mMap.getOverlays().add(compassOverlay);
+        mMapView.getOverlays().add(compassOverlay);
 
-        IMapController mapController = mMap.getController();
+        IMapController mapController = mMapView.getController();
         /*
         Approximate Map Scale 	OSM Zoom Level
         5M 	                        5
@@ -197,28 +203,26 @@ public class TripReviewMapsFragment extends Fragment {
         */
         mapController.setZoom(mZoom);
 
-        // Plot trip
-//        plotTrip();
-
     }
 
     /**
-     * Draw trip markers
+     * Draw trip markers, polyline, etc
      */
     private void plotTrip() {
-        mTripDetails = getTripDetails(mTrip.getId());
-        mGeoPoints = MapUtils.getTripGeoPoints(mTripDetails);
-        MapUtils.plotMarkers(getContext(), mMap, mTripDetails );
-//        MapUtils.drawPolyLine(mMap, mTripDetails);
+        List<TripDetails> tripDetails = getTripDetails(mTrip.getId());
+//        MapUtils.plotMarkers(getContext(), mMapView, mTripDetails );
+//        MapUtils.drawPolyLine(getContext(), mMapView, tripDetails);
+//        mMapUtils.drawPolyLine(getContext(), mMapView, tripDetails);
+        List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+        mMapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
     }
-
 
     /**
      * Returns a List<TripDetails> with the give trip id.
-     * @param tripId
-     * @return
+     * @param tripId int Table index
+     * @return List<TripDetails>
      */
-    public List<TripDetails> getTripDetails(int tripId) {
+    private List<TripDetails> getTripDetails(int tripId) {
         return TripDetailsRepo.getTripDetails(tripId);
     }
 
@@ -228,6 +232,11 @@ public class TripReviewMapsFragment extends Fragment {
      * ******************************************************************
      */
 
+    /**
+     * Verify required permissions have been accepted
+     * @param permission String Permission being requested
+     * @param resultCode int
+     */
     private void checkPermissions(final String permission, final int resultCode) {
         PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {
@@ -250,7 +259,7 @@ public class TripReviewMapsFragment extends Fragment {
                     @Override
                     public void onPermissionGranted() {
                         //  Init app
-                        //  TODO:  initApp()
+                        //  TODO:  onPermissionGranted NOT BEING CALLED.  initApp()
                     }
                 });
     }

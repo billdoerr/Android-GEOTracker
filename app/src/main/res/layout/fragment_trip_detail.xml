@@ -75,6 +75,14 @@
             android:text="@string/check_active"
             android:checked="true"/>
 
+        <CheckBox
+            android:id="@+id/checkBoxSaveTripNameToRoutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/check_save_trip_name_to_routes"
+            android:checked="false"/>
+
     </LinearLayout>
 
     <!-- Save/Cancel/Delete buttons -->

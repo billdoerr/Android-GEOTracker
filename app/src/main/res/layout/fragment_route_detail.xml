@@ -1,28 +1,29 @@
 <?xml version = "1.0" encoding = "utf-8"?>
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop = "18dp"
+    android:minWidth="300dp"
+    android:minHeight="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#dde4dd"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width = "match_parent"
-        android:layout_height = "wrap_content"
-        android:id = "@+id/layout_name"
-        android:layout_marginTop = "8dp"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop = "16dp"
         android:layout_marginStart = "8dp"
         android:layout_marginEnd = "8dp"
-        app:hintTextAppearance="@android:style/TextAppearance.Medium">
+        android:labelFor="@+id/autoCompleteTextView"
+        android:text="@string/hint_route_name" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width = "match_parent"
-            android:layout_height = "wrap_content"
-            android:id = "@+id/textName"
-            android:hint = "@string/hint_route_name"
-            android:inputType = "textCapSentences|textAutoCorrect"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width = "match_parent"
@@ -34,39 +35,72 @@
         app:hintTextAppearance="@android:style/TextAppearance.Medium">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width = "match_parent"
-            android:layout_height = "wrap_content"
-            android:id = "@+id/textDesc"
-            android:hint = "@string/hint_route_desc"
-            android:inputType = "textCapSentences|textAutoCorrect"/>
+            android:id="@+id/textDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_trip_desc"
+            android:inputType="textAutoCorrect|textMultiLine|textCapSentences"
+            android:minLines="4"
+            android:singleLine="false" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:id="@+id/layout_spinner"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/spinnerActivity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_checkbox"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:orientation="horizontal" >
 
         <CheckBox
             android:id="@+id/checkBoxActive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/check_active" />
+            android:layout_marginTop="6dp"
+            android:text="@string/check_active"
+            android:checked="true"/>
+
+    </LinearLayout>
+
+    <!-- Save/Cancel/Delete buttons -->
+    <LinearLayout
+        android:id="@+id/layout_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="bottom|end"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd" >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/ButtonPrefCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="@string/btn_cancel" />
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/ButtonPrefSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_save" />
 
     </LinearLayout>
 

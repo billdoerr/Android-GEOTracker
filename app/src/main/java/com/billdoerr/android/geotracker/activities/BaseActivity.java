@@ -3,7 +3,6 @@ package com.billdoerr.android.geotracker.activities;
 // https://www.simplifiedcoding.net/bottom-navigation-android-example/
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,13 +21,13 @@ import com.billdoerr.android.geotracker.fragments.MapsFragment;
 import com.billdoerr.android.geotracker.fragments.RouteListFragment;
 import com.billdoerr.android.geotracker.fragments.TrackingFragment;
 import com.billdoerr.android.geotracker.fragments.TripListFragment;
+import com.billdoerr.android.geotracker.services.GPSService;
 import com.billdoerr.android.geotracker.settings.SettingsActivity;
 import com.billdoerr.android.geotracker.utils.FileStorageUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.core.view.GravityCompat;
@@ -62,6 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
+
+    private Intent mGPSServiceIntent;
 
     protected abstract Fragment createFragment();
 
@@ -99,10 +100,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Check preferences whether to keep screen on
         initPowerSavings(getApplicationContext());
 
+        // Start GPS Service
+        startGPSServices();
 
     }
 
-    //  TODO:  onCreateOptionsMenu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.menu_common, menu);
@@ -121,6 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        stopGPSService();
         super.onDestroy();
     }
 
@@ -386,4 +389,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Start GPS service
+     */
+    private void startGPSServices() {
+        mGPSServiceIntent = new Intent(this, GPSService.class);
+        if (mGPSServiceIntent != null) {
+            Objects.requireNonNull(startService(mGPSServiceIntent));
+        }
+    }
+
+    /**
+     * Stop GPS service
+     */
+    private void stopGPSService() {
+        if (mGPSServiceIntent != null) {
+            Objects.requireNonNull(stopService(mGPSServiceIntent));
+        }
+    }
+
 }

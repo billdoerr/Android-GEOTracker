@@ -16,11 +16,6 @@ import android.util.Log;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.activities.MainActivity;
-import com.billdoerr.android.geotracker.database.DatabaseHelper;
-import com.billdoerr.android.geotracker.database.DatabaseManager;
-import com.billdoerr.android.geotracker.database.model.Trip;
-import com.billdoerr.android.geotracker.database.model.TripDetails;
-import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
 import com.billdoerr.android.geotracker.utils.GeoTrackerSharedPreferences;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
@@ -30,7 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.Objects;
 
 /**
  * Singleton class providing GPS location data
@@ -41,11 +35,7 @@ public class GPSService extends Service implements LocationListener {
     private static final String TAG = "GPSService";
 
     private static final String GPS_SERVICE_CHANNEL_ID = "GPSService";
-
     private static final int GPS_SERVICE_NOTIFICATION_ID = 1;
-
-    // Indicates invalid table index
-    private static final int INVALID_INDEX = -1;
 
     //The name of the provider with which to register This value must never be null.
     private static final String PROVIDER = LocationManager.GPS_PROVIDER;
@@ -58,7 +48,6 @@ public class GPSService extends Service implements LocationListener {
 
     private Context mContext;
     private LocationManager mLocationManager;
-    private Trip mTrip;
 
     public GPSService() {
         // Pass
@@ -76,9 +65,6 @@ public class GPSService extends Service implements LocationListener {
         Log.i(TAG, getResources().getString(R.string.msg_gps_service_starting));
 
         mContext = getApplicationContext();
-
-        // Initialize trip.  Get's active trip object from preferences or creates new trip object.
-        initTrip(mContext);
 
         // We need some preference settings
         GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(mContext);
@@ -151,9 +137,6 @@ public class GPSService extends Service implements LocationListener {
         Log.i(TAG, "onLocationChanged: " + location);
         // Post location to event bus
         EventBus.getDefault().post(new LocationMessageEvent(location));
-
-        // Write entry to database
-        insertLocationIntoDatabase(location);
     }
 
     @Override
@@ -205,7 +188,6 @@ public class GPSService extends Service implements LocationListener {
 
         // Start requesting updates
         try {
-            Log.i(TAG, getResources().getString(R.string.msg_gps_requesting_updates));
             mLocationManager.registerGnssStatusCallback(gnssStatusListener);
             // Begin location updates
             mLocationManager.requestLocationUpdates(PROVIDER,
@@ -225,46 +207,6 @@ public class GPSService extends Service implements LocationListener {
     private void stopUpdates() {
         if (mLocationManager != null) {
             mLocationManager.removeUpdates(this);
-        }
-    }
-
-    /**
-     * Insert new location into database
-     * @param location Location
-     */
-    private void insertLocationIntoDatabase(Location location) {
-
-        //  TODO:  I really don't like this being here
-        // Initialize instance of DatabaseManager
-        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-        DatabaseManager.initializeInstance(db);
-
-        int ret = INVALID_INDEX;
-        // Write entry to database
-        if (mTrip.getId() >= 0) {
-            // Set location
-            TripDetails tripDetail = new TripDetails();
-            tripDetail.setTripId(mTrip.getId());
-            tripDetail.setLocation(location);
-
-            // Insert a new record
-            ret = TripDetailsRepo.insert(tripDetail);
-        }
-        Log.i(TAG, "Trip ID:  " + mTrip.getId());
-        Log.i(TAG, getString(R.string.msg_trip_details_insert) + ret);
-    }
-
-    /**
-     * Retrieve active Trip object from Shared Preferences
-     * @param context Context Application context.
-     */
-    private void initTrip(Context context) {
-        Trip trip = PreferenceUtils.getActiveTripFromSharedPrefs(Objects.requireNonNull(context));
-        if (trip != null) {
-            // Assign to global variable
-            mTrip = trip;
-        } else {
-            Log.d(TAG, getString(R.string.msg_trip_not_found));
         }
     }
 

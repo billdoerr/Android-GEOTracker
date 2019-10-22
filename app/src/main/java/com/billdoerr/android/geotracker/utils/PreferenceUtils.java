@@ -3,8 +3,6 @@ package com.billdoerr.android.geotracker.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.preference.PreferenceManager;
-
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

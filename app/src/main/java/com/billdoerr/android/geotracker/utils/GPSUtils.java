@@ -1,4 +1,4 @@
-package com.billdoerr.android.geotracker.services;
+package com.billdoerr.android.geotracker.utils;
 
 import android.content.Context;
 import android.location.GnssStatus;
@@ -6,11 +6,27 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
+import com.billdoerr.android.geotracker.services.LocationMessageEvent;
+
 import org.greenrobot.eventbus.EventBus;
 
 public class GPSUtils {
 
     private static final String TAG = "GPSUtils";
+
+    /**
+     * Returns last known location and also posts to EventBus
+     */
+    public static Location getInitialLocation(Context context) {
+        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            return lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } catch (SecurityException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return null;
+    }
 
     /**
      * Returns last known location and also posts to EventBus

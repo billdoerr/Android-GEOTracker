@@ -2,12 +2,9 @@ package com.billdoerr.android.geotracker.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,32 +18,26 @@ import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
-import com.billdoerr.android.geotracker.services.GPSUtils;
+import com.billdoerr.android.geotracker.utils.GPSUtils;
 import com.billdoerr.android.geotracker.services.LocationMessageEvent;
+import com.billdoerr.android.geotracker.utils.MapUtils;
 import com.billdoerr.android.geotracker.utils.PermissionUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.PathOverlay;
-import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.IOrientationProvider;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.util.ArrayList;
@@ -54,21 +45,20 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MapsFragment extends Fragment
-{
+public class MapsFragment extends Fragment {
 
     private static final String TAG = MapsFragment.class.getSimpleName();
 
     //  Saved instance state data
+    private static final String SAVED_GEO_P0INTS = "geopoints";
     private static final String SAVED_MAP_TYPE = "map_type";
     private static final String SAVED_ZOOM = "zoom";
 
-    private static final double mZoom = 15.0;  // Range:  2 - 21
-
     private org.osmdroid.views.MapView mMapView;
-    private List<Marker> mMarkers = new ArrayList<>();
     private Trip mTrip;
+    private List<GeoPoint> mGeoPoints = new ArrayList<>();
 
+    private double mZoom = 18.0;  // Range:  2 - 21
 
     /**
      * Required empty public constructor
@@ -101,9 +91,15 @@ public class MapsFragment extends Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        /* Important! Set your user agent to prevent getting banned from the osm servers.
+         * Background: This setting identifies your app uniquely to tile servers. It's not the end user's identity,
+         * but the name of your app. If your users abuse the tile server or your app does in some way, this will
+         * prevent everyone that uses osmdroid from getting banned rather than just the users of your app.
+         */
         Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
-        createMapView(view);
+        // Initialize the MapView
+        initMapView(view);
 
         return view;
     }
@@ -111,6 +107,21 @@ public class MapsFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Get geopoints from bundle, if any
+        if (savedInstanceState != null) {
+            Gson gson = new Gson();
+            String jsonString = savedInstanceState.getString(SAVED_GEO_P0INTS, "");
+            if (!jsonString.isEmpty()) {
+                mGeoPoints = gson.fromJson(jsonString, new TypeToken<List<GeoPoint>>(){}.getType());
+            }
+
+            // Get zoom level
+            mZoom = savedInstanceState.getDouble(SAVED_ZOOM);
+        }
+
+        IMapController mapController = mMapView.getController();
+        mapController.setZoom(mZoom);
 
         // Change the toolbar title text
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
@@ -120,7 +131,6 @@ public class MapsFragment extends Fragment
     public void onStart() {
         super.onStart();
 
-        //  TODO:  'initApp()'
         // Check location permissions, if granted 'initApp()' will be called
         // https://github.com/permissions-dispatcher/PermissionsDispatcher/issues/90
         checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
@@ -128,20 +138,17 @@ public class MapsFragment extends Fragment
         // Get current location
         GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
 
-//        // Is there an active trip?
+        // Is there an active trip?
         if ( initTrip(getContext()) ) {
             // Plot markers
-//            plotMarkers(tripDetails);
-//            new DrawMarkersPreviousLocations().execute(tripDetails);
-
-        drawPolyLine();
-//        mMapView.invalidate();
-
-        }
-
-        if (!mMarkers.isEmpty()) {
-            mMapView.getOverlays().addAll(mMarkers);
-            mMapView.invalidate();
+//            List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+//            MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+            if ( (mTrip == null) || (mTrip.getState() < 0) ) {
+                MapUtils.drawPolyLine(getContext(), mMapView, mGeoPoints);
+            } else {
+                List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+                MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+            }
         }
 
     }
@@ -179,14 +186,23 @@ public class MapsFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        // Save geopoints to bundle
+        if (mGeoPoints != null) {
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(mGeoPoints);
+            outState.putString(SAVED_GEO_P0INTS, jsonString);
+        }
+        // Save zoom level
+        outState.putDouble(SAVED_ZOOM, mMapView.getZoomLevelDouble());
+
         super.onSaveInstanceState(outState);
     }
 
-    private void createMapView(View view) {
+    private void initMapView(View view) {
 
-        final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors/"};
+        final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors-v2/"};
 
-        final ITileSource tileSource =
+        final ITileSource tileSourceThunderforest =
                 new XYTileSource("Outdoors",
                         0,
                         (int)mZoom,
@@ -197,7 +213,7 @@ public class MapsFragment extends Fragment
 
         mMapView = view.findViewById(R.id.mapview);
 //        mMapView.setTileSource(TileSourceFactory.USGS_TOPO);
-        mMapView.setTileSource(tileSource);
+        mMapView.setTileSource(tileSourceThunderforest);
 //        mMapView.setTileSource(TileSourceFactory.MAPNIK);
         // Add multi-touch capability
         mMapView.setMultiTouchControls(true);
@@ -240,15 +256,6 @@ public class MapsFragment extends Fragment
     }
 
     /**
-     * Converts Android Location to osmdroid GeoPoint
-     * @param location Location
-     * @return GeoPoint
-     */
-    private GeoPoint LtoGeo(Location location) {
-       return new GeoPoint(location.getLatitude(), location.getLongitude(), location.getAltitude());
-    }
-
-    /**
      * This method will be called when a MessageEvent is posted with a new location
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -256,105 +263,26 @@ public class MapsFragment extends Fragment
         // Get location data
         Location location = locationMessageEvent.getLocation();
 
+        // Keep of list of geopoints
+        mGeoPoints.add(MapUtils.LtoGeo(location));
+
         // Add marker
-        drawMarker(getContext(), mMapView, LtoGeo(location), true, false, false);
-    }
-
-    /**
-     * Draws line
-     */
-    private void drawPolyLine() {
-        final List<TripDetails> tripDetails = getTripDetails(mTrip.getId());
-        final List<GeoPoint> geoPoints = getTripGeoPoints(tripDetails);
-        final Polyline line = new Polyline(mMapView);
-        line.setColor(Color.RED);
-        line.setWidth(5.0f);
-        line.setVisible(true);
-        line.setPoints(geoPoints);
-
-        mMapView.getOverlayManager().add(2, line);
-//        mMapView.invalidate();
-    }
-
-    /**
-     * Plot location to map. If animate true, then will zoom into the location specified
-     * @param context Context
-     * @param map MapView
-     * @param geoPoint GeoPoint
-     * @param animate boolean True if zoom animation
-     * @param start boolean True if starting point
-     * @param end boolean True if ending point
-     */
-    private void drawMarker(Context context, MapView map, GeoPoint geoPoint, boolean animate, boolean start, boolean end) {
-        if (map == null || context == null) return;
-        Marker marker = new Marker(map);
-        marker.setPosition(geoPoint);
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        marker.setIcon(context.getDrawable(R.drawable.marker_default));
-        marker.setInfoWindow(null);
-
-        mMarkers.add(marker);
-        map.getOverlays().add(marker);
-//        map.getOverlays().addAll(mMarkers);
-//        map.invalidate();
-
-        if (animate) {
-            map.getController().animateTo(geoPoint);
+        if ( (mTrip == null) || (mTrip.getState() < 0) ) {
+            MapUtils.drawPolyLine(getContext(), mMapView, mGeoPoints);
+        } else {
+            List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+            MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
         }
 
-    }
-
-    /**
-     * Draws a list of points on map
-     * @param tripDetails List<TripDetails>
-     */
-    private int plotMarkers(List<TripDetails> tripDetails) {
-        // Loop through and add markers
-        final int size = tripDetails.size() - 1;
-        boolean start = false;
-        boolean end = false;
-        boolean animate = false;
-        int i = 0;
-        for (TripDetails tripDetail : tripDetails) {
-//        for (int i = 0; i <= size; i++) {
-            if (i ==0) {
-                end = animate = false;
-                start = true;
-            }
-            if (i == size) {
-//                end = animate = true;
-                end = false;
-            }
-            GeoPoint geoPoint = new GeoPoint(tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), tripDetails.get(i).getAltitude());
-            drawMarker(getContext(), mMapView,geoPoint, animate, start, end);
-            Log.i(TAG, "plotMarkers");
-            start = end = animate = false;
-            i++;
-        }
-        return i;
     }
 
     /**
      * Returns a List<TripDetails> with the give trip id.
-     * @param tripId
-     * @return
+     * @param tripId int Table index
+     * @return List<TripDetails>
      */
     private List<TripDetails> getTripDetails(int tripId) {
         return TripDetailsRepo.getTripDetails(tripId);
-    }
-
-    /**
-     * Converts List<TripsDetails> to List<GeoPoint>
-     * @param tripDetails List<TripsDetails>
-     * @return List<GeoPoint>
-     */
-    private ArrayList<GeoPoint> getTripGeoPoints(List<TripDetails> tripDetails) {
-        ArrayList<GeoPoint> track = new ArrayList<>();
-        for (TripDetails tripDetail : tripDetails) {
-            GeoPoint geoPoint = new GeoPoint(tripDetail.getLatitude(), tripDetail.getLongitude(), tripDetail.getAltitude());
-            track.add(geoPoint);
-        }
-        return track;
     }
 
     /**
@@ -380,6 +308,9 @@ public class MapsFragment extends Fragment
      * ******************************************************************
      */
 
+    /**
+     * AsynTask to draw previous locations. Called when fragment is re-started (screen rotation, etc).
+     */
     private class DrawMarkersPreviousLocations extends AsyncTask<List<TripDetails>, Void, Void> {
 
         protected Void doInBackground(List<TripDetails>... listTripDetails) {
@@ -403,9 +334,10 @@ public class MapsFragment extends Fragment
                         if (i == size) {
                             end = animate = true;
                         }
-                        GeoPoint geoPoint = new GeoPoint(tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), tripDetails.get(i).getAltitude());
-                        drawMarker(getContext(), mMapView,geoPoint, animate, start, end);
-                        Log.i(TAG, "plotMarkers");
+//                        GeoPoint geoPoint = new GeoPoint(tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), tripDetails.get(i).getAltitude());
+//                        MapUtils.drawMarker(getContext(), mMapView,geoPoint, animate, start, end);
+                        List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+                        MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
                         start = end = animate = false;
                         i++;
                     }
@@ -434,6 +366,11 @@ public class MapsFragment extends Fragment
      * ******************************************************************
      */
 
+    /**
+     * Verify required permissions have been accepted
+     * @param permission String Permission being requested
+     * @param resultCode int
+     */
     private void checkPermissions(final String permission, final int resultCode) {
         PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {
@@ -456,7 +393,7 @@ public class MapsFragment extends Fragment
                     @Override
                     public void onPermissionGranted() {
                         //  Init app
-                        //  TODO:  initApp()
+                        //  TODO:  onPermissionGranted NOT BEING CALLED.  initApp()
                     }
                 });
     }
@@ -561,6 +498,20 @@ public class MapsFragment extends Fragment
 //            }
 //        }
 //    }
+
+    private class MyCompassOverlay extends CompassOverlay {
+
+        private MyCompassOverlay(Context context, IOrientationProvider orientationProvider, MapView mapView) {
+            super(context, orientationProvider, mapView);
+        }
+
+        @Override
+        public void onOrientationChanged(float orientation, IOrientationProvider source) {
+            super.onOrientationChanged(orientation, source);
+            Log.i(TAG, "onOrientationChanged: " + orientation );
+        }
+
+    }
 
 
 

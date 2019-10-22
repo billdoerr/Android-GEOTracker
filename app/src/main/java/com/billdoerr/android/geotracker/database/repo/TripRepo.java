@@ -1,13 +1,11 @@
 package com.billdoerr.android.geotracker.database.repo;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.billdoerr.android.geotracker.database.DatabaseManager;
-import com.billdoerr.android.geotracker.database.model.ActivityType;
 import com.billdoerr.android.geotracker.database.model.Trip;
 
 import java.util.ArrayList;
@@ -35,6 +33,7 @@ public class TripRepo {
                 + Trip.KEY_TRIP_ID + " INTEGER PRIMARY KEY, "
                 + Trip.KEY_TRIP_NAME + " TEXT NOT NULL, "
                 + Trip.KEY_TRIP_DESC + " TEXT, "
+                + Trip.KEY_TRIP_STATE + " INT, "
                 + Trip.KEY_TRIP_START_TIME + " INT, "
                 + Trip.KEY_TRIP_END_TIME + " INT, "
                 + Trip.KEY_TRIP_PAUSED_TIME + " INT, "
@@ -54,6 +53,7 @@ public class TripRepo {
         ContentValues values = new ContentValues();
         values.put(Trip.KEY_TRIP_NAME, trip.getName());
         values.put(Trip.KEY_TRIP_DESC, trip.getDesc());
+        values.put(Trip.KEY_TRIP_STATE, trip.getState());
         values.put(Trip.KEY_TRIP_START_TIME, trip.getStartTime());
         values.put(Trip.KEY_TRIP_END_TIME, trip.getEndTime());
         values.put(Trip.KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
@@ -118,6 +118,7 @@ public class TripRepo {
         ContentValues values = new ContentValues();
         values.put(Trip.KEY_TRIP_NAME, trip.getName());
         values.put(Trip.KEY_TRIP_DESC, trip.getDesc());
+        values.put(Trip.KEY_TRIP_STATE, trip.getState());
         values.put(Trip.KEY_TRIP_START_TIME, trip.getStartTime());
         values.put(Trip.KEY_TRIP_END_TIME, trip.getEndTime());
         values.put(Trip.KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
@@ -145,7 +146,7 @@ public class TripRepo {
     }
 
     /**
-     * Returns list of trips.
+     * Returns list of trips that only has an end time set. End time of zero indicates running trip.
      * @return List<ActivityType>
      */
     public static List<Trip> getTrips() {
@@ -156,6 +157,7 @@ public class TripRepo {
                 + Trip.KEY_TRIP_ID + ", "
                 + Trip.KEY_TRIP_NAME + ", "
                 + Trip.KEY_TRIP_DESC + ", "
+                + Trip.KEY_TRIP_STATE + ", "
                 + Trip.KEY_TRIP_START_TIME + ", "
                 + Trip.KEY_TRIP_END_TIME + ", "
                 + Trip.KEY_TRIP_PAUSED_TIME + ", "
@@ -163,6 +165,7 @@ public class TripRepo {
                 + Trip.KEY_TRIP_ACTIVE_FLAG + ", "
                 + Trip.KEY_TRIP_ACTIVITY_TYPE_ID
                 + " FROM " + Trip.TABLE
+                + " WHERE " + Trip.KEY_TRIP_END_TIME + "!= 0"
                 + " ORDER BY " +  Trip.KEY_TRIP_START_TIME + " DESC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
@@ -177,6 +180,7 @@ public class TripRepo {
                     trip.setId(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ID)));
                     trip.setName(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_NAME)));
                     trip.setDesc(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_DESC)));
+                    trip.setState(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_STATE)));
                     trip.setStartTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_START_TIME)));
                     trip.setEndTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_END_TIME)));
                     trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_PAUSED_TIME)));
@@ -198,7 +202,6 @@ public class TripRepo {
         return trips;
     }
 
-    //  TODO:  This is crap, big pile of!
     /**
      * Returns list of trips.
      * @return List<ActivityType>
@@ -229,6 +232,7 @@ public class TripRepo {
                 + Trip.KEY_TRIP_ID + ", "
                 + Trip.KEY_TRIP_NAME + ", "
                 + Trip.KEY_TRIP_DESC + ", "
+                + Trip.KEY_TRIP_STATE + ", "
                 + Trip.KEY_TRIP_START_TIME + ", "
                 + Trip.KEY_TRIP_END_TIME + ", "
                 + Trip.KEY_TRIP_PAUSED_TIME + ", "
@@ -251,6 +255,7 @@ public class TripRepo {
                     trip.setId(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ID)));
                     trip.setName(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_NAME)));
                     trip.setDesc(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_DESC)));
+                    trip.setState(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_STATE)));
                     trip.setStartTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_START_TIME)));
                     trip.setEndTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_END_TIME)));
                     trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_PAUSED_TIME)));

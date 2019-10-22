@@ -19,12 +19,23 @@ public class MapUtils {
 
     private static final String TAG = "MapUtils";
 
+    private static List<Marker> sMarkers;
+    private static Marker mStartMarker;
+    private static Marker mEndMarker;
+
     /**
-     * Draws line
+     * Draws PolyLine
      */
-    public static void drawPolyLine(MapView map, final List<TripDetails> tripDetails) {
-        // Convert to GeoPoints
-        final List<GeoPoint> geoPoints = getTripGeoPoints(tripDetails);
+    public static void drawPolyLine(Context context, MapView map, final List<GeoPoint> geoPoints) {
+
+        //  Need to remove last added marker
+        map.getOverlays().clear();
+
+        // Nothing to plot, let's get the heck out of here
+        if (geoPoints.size() <= 0) return;
+
+        // Place marker at first GeoPoint
+        drawMarker(context, map, geoPoints.get(0), false, true, false);
 
         // Create polyline
         final Polyline line = new Polyline(map);
@@ -32,8 +43,11 @@ public class MapUtils {
         line.setWidth(5.0f);
         line.setVisible(true);
         line.setPoints(geoPoints);
-
         map.getOverlayManager().add(line);
+
+        // Place marker and zoom to last GeoPoint
+        drawMarker(context, map, geoPoints.get( geoPoints.size()-1 ), true, false, true);
+
         map.invalidate();
     }
 
@@ -48,44 +62,56 @@ public class MapUtils {
      */
     public static void drawMarker(Context context, MapView map, GeoPoint geoPoint, boolean animate, boolean start, boolean end) {
         if (map == null || context == null) return;
+
         Marker marker = new Marker(map);
         marker.setPosition(geoPoint);
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        marker.setIcon(context.getDrawable(R.drawable.marker_default));
         marker.setInfoWindow(null);
 
+        // Set marker icon.
+        if (start) {
+            marker.setIcon(context.getDrawable(R.drawable.marker_default));
+            mStartMarker = marker;
+        } else if (end) {
+            marker.setIcon(context.getDrawable(R.drawable.person));
+            mEndMarker = marker;
+        } else {
+            marker.setIcon(context.getDrawable(R.drawable.marker_default));
+        }
+
+        // Add overlay
         map.getOverlays().add(marker);
 
+        // Zoom to GeoPoint
         if (animate) {
             map.getController().animateTo(geoPoint);
         }
 
+        map.invalidate();
     }
 
     /**
      * Draws a list of points on map
      * @param context Context
      * @param map Mapview
-     * @param tripDetails List<TripDetails>
+     * @param geoPoints List<GeoPoint>
      * @return int Number of markers drawn
      */
-    public static int plotMarkers(Context context, MapView map, List<TripDetails> tripDetails) {
+    public static int plotMarkers(Context context, MapView map, List<GeoPoint> geoPoints) {
         // Loop through and add markers
-        final int size = tripDetails.size() - 1;
+        final int size = geoPoints.size() - 1;
         boolean start = false;
         boolean end = false;
         boolean animate = false;
         int i = 0;
-        for (TripDetails tripDetail : tripDetails) {
+        for (GeoPoint geoPoint : geoPoints) {
 //        for (int i = 0; i <= size; i++) {
             if (i ==0) {
-                end = animate = false;
                 start = true;
             }
             if (i == size) {
                 end = animate = true;
             }
-            GeoPoint geoPoint = new GeoPoint(tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), tripDetails.get(i).getAltitude());
             drawMarker(context, map, geoPoint, animate, start, end);
             start = end = animate = false;
             i++;
@@ -116,4 +142,13 @@ public class MapUtils {
         }
         return track;
     }
+
+    public static Marker getStartMarker() {
+        return mStartMarker;
+    }
+
+    public static Marker getEndMarker() {
+        return mEndMarker;
+    }
+
 }

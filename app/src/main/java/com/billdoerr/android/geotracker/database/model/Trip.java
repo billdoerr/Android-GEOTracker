@@ -1,7 +1,6 @@
 package com.billdoerr.android.geotracker.database.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Data model for Trip table.
@@ -17,6 +16,7 @@ public class Trip implements Serializable {
     public static final String KEY_TRIP_ID = "trip_id";
     public static final String KEY_TRIP_NAME = "trip_name";
     public static final String KEY_TRIP_DESC = "trip_desc";
+    public static final String KEY_TRIP_STATE = "trip_state";
     public static final String KEY_TRIP_START_TIME = "start_time";
     public static final String KEY_TRIP_END_TIME = "end_time";
     public static final String KEY_TRIP_PAUSED_TIME = "paused_time";
@@ -30,7 +30,7 @@ public class Trip implements Serializable {
     public @interface TripState {
         int NO_PERMISSIONS = -99;
         int NOT_STARTED = -1;
-        int RUNNING = 0;
+        int STARTED = 0;
         int PAUSED =  1;
         int STOPPED = 2;
     }

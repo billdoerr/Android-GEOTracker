@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_search"
-        android:title="@string/menu_search"
+        android:id="@+id/action_route_add"
+        android:title="@string/action_route_add"
         app:showAsAction="ifRoom"
         android:orderInCategory="1"
-        android:icon="@android:drawable/ic_menu_search"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+        android:icon="@drawable/ic_add_24px" />
 
     <item
         android:id="@+id/action_filter"

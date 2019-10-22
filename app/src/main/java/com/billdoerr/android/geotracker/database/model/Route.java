@@ -1,9 +1,11 @@
 package com.billdoerr.android.geotracker.database.model;
 
+import java.io.Serializable;
+
 /**
  * Data model for Route table.
  */
-public class Route {
+public class Route implements Serializable {
 
     private static final String TAG = "Route";
 
@@ -58,7 +60,7 @@ public class Route {
         this.activityTypeId = activityTypeId;
     }
 
-    public int isActiveFlag() {
+    public int isActive() {
         return activeFlag;
     }
 
@@ -76,7 +78,7 @@ public class Route {
     public boolean equals(Object obj) {
         if(obj instanceof Route){
             Route c = (Route )obj;
-            if(c.getName().equals(name) && c.getId()==id ) return true;
+            return c.getName().equals(name) && c.getId() == id;
         }
         return false;
     }

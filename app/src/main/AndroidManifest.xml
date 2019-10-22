@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".utils.GlobalVariables"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,6 +22,11 @@
 
         <service
             android:name=".services.GPSService"
+            android:enabled="true" >
+        </service>
+
+        <service
+            android:name=".services.TrackingService"
             android:enabled="true" >
         </service>
 
@@ -59,6 +63,13 @@
 
         <receiver
             android:name=".services.GPSServiceRestartBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:label="RestartServiceWhenStopped">
+        </receiver>
+
+        <receiver
+            android:name=".services.TrackingServiceRestartBroadcastReceiver"
             android:enabled="true"
             android:exported="false"
             android:label="RestartServiceWhenStopped">

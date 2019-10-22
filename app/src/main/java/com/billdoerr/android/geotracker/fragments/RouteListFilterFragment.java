@@ -14,7 +14,7 @@ import android.widget.Spinner;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.ActivityType;
-import com.billdoerr.android.geotracker.database.model.Trip;
+import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
 
 import androidx.annotation.NonNull;
@@ -22,12 +22,10 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
 
-public class TripListFilterFragment extends DialogFragment {
+public class RouteListFilterFragment extends DialogFragment {
 
     // Making public since it is used with DialogFragment.show() in calling fragment
-    public static final String TAG = "TripListFilterFragment";
-
-    private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
+    public static final String TAG = "RouteListFilterFragment";
 
     private static final String ARGS_FILTER_ACTIVE_FLAG = "args_filter_active_flag";
     private static final String ARGS_FILTER_ACTIVITY_TYPE_ID = "args_filter_activity_type_id";
@@ -37,12 +35,12 @@ public class TripListFilterFragment extends DialogFragment {
     private static int mActiveFlagFilter = -1;
     private static int mActivityTypeIdFilter = -1;
 
-    public TripListFilterFragment() {
+    public RouteListFilterFragment() {
         // Required empty public constructor
     }
 
-    public static TripListFilterFragment newInstance() {
-        return new TripListFilterFragment();
+    public static RouteListFilterFragment newInstance() {
+        return new RouteListFilterFragment();
     }
 
     @Override
@@ -61,11 +59,11 @@ public class TripListFilterFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_trip_list_filter, container, false);
+        View view = inflater.inflate(R.layout.fragment_route_list_filter, container, false);
 
         // Set dialog title
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
-        getDialog().setTitle(R.string.dialog_title_trip_list_filter);
+        getDialog().setTitle(R.string.dialog_title_route_list_filter);
 
         final Spinner spinnerActivity = view.findViewById(R.id.spinnerActivity);
         final RadioButton radioButtonAll = view.findViewById(R.id.radioButtonAll);
@@ -80,10 +78,10 @@ public class TripListFilterFragment extends DialogFragment {
 
         // Initialize which radio button is checked
         switch (mActiveFlagFilter) {
-            case Trip.ACTIVE:
+            case Route.ACTIVE:
                 radioButtonActive.setChecked(true);
                 break;
-            case Trip.INACTIVE:
+            case Route.INACTIVE:
                 radioButtoninactive.setChecked(true);
                 break;
             default:
@@ -153,11 +151,11 @@ public class TripListFilterFragment extends DialogFragment {
                     break;
                 case R.id.radioButtonActive:
                     if (checked)
-                        mActiveFlagFilter = Trip.ACTIVE;
+                        mActiveFlagFilter = Route.ACTIVE;
                     break;
                 case R.id.radioButtonInactive:
                     if (checked)
-                        mActiveFlagFilter = Trip.INACTIVE;
+                        mActiveFlagFilter = Route.INACTIVE;
                     break;
             }
         }

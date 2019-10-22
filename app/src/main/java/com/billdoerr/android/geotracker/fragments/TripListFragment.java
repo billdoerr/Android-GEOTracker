@@ -22,6 +22,7 @@ import android.widget.ViewFlipper;
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
+import com.billdoerr.android.geotracker.database.repo.RouteRepo;
 import com.billdoerr.android.geotracker.database.repo.TripRepo;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
@@ -36,7 +37,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +50,7 @@ public class TripListFragment extends Fragment {
     private static final int REQUEST_CODE_TRIP_DIALOG_FILTER = 3;
 
     private static final String ARGS_TRIP = "trip";
+    private static final String ARGS_SAVE_TRIP_NAME_TO_ROUTES = "save_trip_name_to_routes";
     private static final String ARGS_FILTER_ACTIVE_FLAG = "args_filter_active_flag";
     private static final String ARGS_FILTER_ACTIVITY_TYPE_ID = "args_filter_activity_type_id";
 
@@ -85,15 +86,15 @@ public class TripListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_trip_list, container, false);
 
-        // Get data
+        // Get trips. Only returns list where end time != 0.
         mTrips = TripRepo.getTrips();
 
         mViewFlipper = view.findViewById(R.id.viewFlipper);
         if (mTrips.isEmpty()) {
-            mViewFlipper.setDisplayedChild(mViewFlipper.indexOfChild(view.findViewById(R.id.layout_no_data)));
+            mViewFlipper.setDisplayedChild(mViewFlipper.indexOfChild(view.findViewById(R.id.layout_no_trip_data)));
         }
 
-        RecyclerView tripRecyclerView = view.findViewById(R.id.tripList);
+        RecyclerView tripRecyclerView = view.findViewById(R.id.list);
         tripRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mTripAdapter = new TripAdapter(mTrips);
@@ -154,8 +155,12 @@ public class TripListFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_CODE_TRIP_DIALOG_SAVE:
                 Trip trip = (Trip) data.getSerializableExtra(ARGS_TRIP);
+                boolean saveTripName = data.getBooleanExtra(ARGS_SAVE_TRIP_NAME_TO_ROUTES, false);
                 if (trip != null) {
                     updateTrip(trip);
+                    if (saveTripName) {
+                        RouteRepo.saveTripName(trip.getName());
+                    }
                 }
                 break;
              case REQUEST_CODE_TRIP_DIALOG_FILTER:
@@ -242,7 +247,7 @@ public class TripListFragment extends Fragment {
             mTripAdapter.notifyItemChanged(mCurrentPosition);
 
             // If active trip, save to shared preferences
-            if ((trip.getState() == Trip.TripState.PAUSED) || (trip.getState() == Trip.TripState.RUNNING)) {
+            if ((trip.getState() == Trip.TripState.PAUSED) || (trip.getState() == Trip.TripState.STARTED)) {
                 PreferenceUtils.saveActiveTripToSharedPrefs(getContext(), trip);
             }
         } else {
@@ -285,8 +290,8 @@ public class TripListFragment extends Fragment {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getFragmentManager()).beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
+        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -486,7 +491,7 @@ public class TripListFragment extends Fragment {
                         List<Trip> filteredList = new ArrayList<>();
                         for (Trip row : mTrips) {
 
-                            // name match condition. this might differ depending on your requirement
+                            // Name match condition. This might differ depending on your requirement
                             // here we are looking for name or phone number match
                             if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getName().contains(charSequence)) {
                                 filteredList.add(row);
@@ -501,6 +506,7 @@ public class TripListFragment extends Fragment {
                     return filterResults;
                 }
 
+                @SuppressWarnings (value="unchecked")
                 @Override
                 protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                     mTrips = (ArrayList<Trip>) filterResults.values;
