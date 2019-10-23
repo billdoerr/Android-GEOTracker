@@ -1,6 +1,7 @@
 package com.billdoerr.android.geotracker.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class DateUtils {
+
+    private static final String TAG = "DateUtils";
 
     public static String formatDateTime(Context context, String timeToFormat) {
 
@@ -22,7 +25,7 @@ public class DateUtils {
             try {
                 date = iso8601Format.parse(timeToFormat);
             } catch (ParseException e) {
-                date = null;
+                Log.e(TAG, e.getMessage());
             }
 
             if (date != null) {

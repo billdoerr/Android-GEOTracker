@@ -156,8 +156,10 @@ public class TripListFragment extends Fragment {
             case REQUEST_CODE_TRIP_DIALOG_SAVE:
                 Trip trip = (Trip) data.getSerializableExtra(ARGS_TRIP);
                 boolean saveTripName = data.getBooleanExtra(ARGS_SAVE_TRIP_NAME_TO_ROUTES, false);
+                // Save trip
                 if (trip != null) {
                     updateTrip(trip);
+                    // Save trip name to routes if option selected
                     if (saveTripName) {
                         RouteRepo.saveTripName(trip.getName());
                     }
@@ -173,7 +175,7 @@ public class TripListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_trip_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
 

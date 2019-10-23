@@ -76,9 +76,10 @@ public class RouteDetailFragment extends DialogFragment {
         final CheckBox checkActive = view.findViewById(R.id.checkBoxActive);
         final Spinner spinnerActivity = view.findViewById(R.id.spinnerActivity);
 
-        final AutoCompleteTextView textName = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextView);
+        // Trip name text will have autocomplete based on saved routes
+        final AutoCompleteTextView textName = view.findViewById(R.id.autoCompleteTextView);
         List<String> array = RouteRepo.getRoutesNames();
-        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<String> (getContext(), android.R.layout.select_dialog_item, array);
+        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (getContext(), android.R.layout.select_dialog_item, array);
         textName.setThreshold(1);
         textName.setAdapter(adapterAutoComplete);
 

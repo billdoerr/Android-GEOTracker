@@ -88,7 +88,7 @@ public class TripDetailsRepo {
            recordsDeleted = db.delete(TripDetails.TABLE, whereClause, whereArgs);
            db.setTransactionSuccessful();
        } catch (Exception e) {
-           Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
+           Log.e(TAG, e.getMessage());
        } finally {
            db.endTransaction();
            DatabaseManager.getInstance().closeDatabase();

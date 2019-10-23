@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.ActivityType;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
+import com.billdoerr.android.geotracker.database.repo.RouteRepo;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -29,6 +31,7 @@ public class TripDetailFragment extends DialogFragment {
     // Making public since it is used with DialogFragment.show() in calling fragment
     public static final String TAG = "TripDetailFragment";
 
+    private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
     private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
 
     private static final String ARGS_TRIP = "trip";
@@ -65,11 +68,25 @@ public class TripDetailFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
         getDialog().setTitle(R.string.dialog_title_trip_edit);
 
-        final EditText textName = view.findViewById(R.id.textName);
         final EditText textDesc = view.findViewById(R.id.textDesc);
         final CheckBox checkActive = view.findViewById(R.id.checkBoxActive);
         final CheckBox checkSaveTripName = view.findViewById(R.id.checkBoxSaveTripNameToRoutes);
         final Spinner spinnerActivity = view.findViewById(R.id.spinnerActivity);
+
+        // Trip name text will have autocomplete based on saved routes
+        final AutoCompleteTextView textName = view.findViewById(R.id.autoCompleteTextView);
+        List<String> array = RouteRepo.getRoutesNames();
+        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (getContext(), android.R.layout.select_dialog_item, array);
+        textName.setThreshold(1);
+        textName.setAdapter(adapterAutoComplete);
+
+        // Only show if end of trip
+        int requestCode = getTargetRequestCode();
+        if (requestCode == REQUEST_CODE_TRIP_DIALOG_SAVE) {
+            checkSaveTripName.setEnabled(true);
+        } else {
+            checkSaveTripName.setEnabled(false);
+        }
 
         final Button btnSave = view.findViewById(R.id.btn_save);
         btnSave.setOnClickListener(new View.OnClickListener() {

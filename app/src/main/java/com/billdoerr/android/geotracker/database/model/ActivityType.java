@@ -1,5 +1,7 @@
 package com.billdoerr.android.geotracker.database.model;
 
+import androidx.annotation.NonNull;
+
 /**
  * Data model for ActivityType table.
  */
@@ -57,6 +59,7 @@ public class ActivityType {
     }
 
     // To display object as a string in spinner
+    @NonNull
     @Override
     public String toString() {
         return name;

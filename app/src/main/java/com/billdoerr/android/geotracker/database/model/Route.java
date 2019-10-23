@@ -1,5 +1,7 @@
 package com.billdoerr.android.geotracker.database.model;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
@@ -69,6 +71,7 @@ public class Route implements Serializable {
     }
 
     // To display object as a string in spinner
+    @NonNull
     @Override
     public String toString() {
         return name;

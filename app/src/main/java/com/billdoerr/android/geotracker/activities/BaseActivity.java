@@ -395,9 +395,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void startGPSServices() {
         mGPSServiceIntent = new Intent(this, GPSService.class);
-        if (mGPSServiceIntent != null) {
-            Objects.requireNonNull(startService(mGPSServiceIntent));
-        }
+        Objects.requireNonNull(startService(mGPSServiceIntent));
     }
 
     /**

@@ -308,56 +308,56 @@ public class MapsFragment extends Fragment {
      * ******************************************************************
      */
 
-    /**
-     * AsynTask to draw previous locations. Called when fragment is re-started (screen rotation, etc).
-     */
-    private class DrawMarkersPreviousLocations extends AsyncTask<List<TripDetails>, Void, Void> {
-
-        protected Void doInBackground(List<TripDetails>... listTripDetails) {
-            final int x;
-            final List<TripDetails> tripDetails = listTripDetails[0];
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int i = 0;
-                    // Loop through and add markers
-                    final int size = tripDetails.size() - 1;
-                    boolean start = false;
-                    boolean end = false;
-                    boolean animate = false;
-
-                    for (TripDetails tripDetail : tripDetails) {
-                        if (i ==0) {
-                            start = true;
-                        }
-                        if (i == size) {
-                            end = animate = true;
-                        }
-//                        GeoPoint geoPoint = new GeoPoint(tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), tripDetails.get(i).getAltitude());
-//                        MapUtils.drawMarker(getContext(), mMapView,geoPoint, animate, start, end);
-                        List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
-                        MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
-                        start = end = animate = false;
-                        i++;
-                    }
-                }
-            });
-            return null;
-        }
-
-        protected void onProgressUpdate(Void... progress) {
-            // Pass
-        }
-
-        protected void onPostExecute(Void result) {
-            // Pass
-        }
-
-        protected void onPreExecute() {
-            // Pass
-        }
-    }
+//    /**
+//     * AsyncTask to draw previous locations. Called when fragment is re-started (screen rotation, etc).
+//     */
+//    private class DrawMarkersPreviousLocations extends AsyncTask<List<TripDetails>, Void, Void> {
+//
+//        protected Void doInBackground(List<TripDetails>... listTripDetails) {
+//            final int x;
+//            final List<TripDetails> tripDetails = listTripDetails[0];
+//
+//            getActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    int i = 0;
+//                    // Loop through and add markers
+//                    final int size = tripDetails.size() - 1;
+//                    boolean start = false;
+//                    boolean end = false;
+//                    boolean animate = false;
+//
+//                    for (TripDetails tripDetail : tripDetails) {
+//                        if (i ==0) {
+//                            start = true;
+//                        }
+//                        if (i == size) {
+//                            end = animate = true;
+//                        }
+////                        GeoPoint geoPoint = new GeoPoint(tripDetails.get(i).getLatitude(), tripDetails.get(i).getLongitude(), tripDetails.get(i).getAltitude());
+////                        MapUtils.drawMarker(getContext(), mMapView,geoPoint, animate, start, end);
+//                        List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+//                        MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+//                        start = end = animate = false;
+//                        i++;
+//                    }
+//                }
+//            });
+//            return null;
+//        }
+//
+//        protected void onProgressUpdate(Void... progress) {
+//            // Pass
+//        }
+//
+//        protected void onPostExecute(Void result) {
+//            // Pass
+//        }
+//
+//        protected void onPreExecute() {
+//            // Pass
+//        }
+//    }
 
 
     /*

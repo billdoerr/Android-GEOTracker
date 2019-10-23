@@ -1,8 +1,6 @@
 package com.billdoerr.android.geotracker.fragments;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +30,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -166,7 +163,7 @@ public class RouteListFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_route_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -337,7 +334,7 @@ public class RouteListFragment extends Fragment {
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
         FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
-        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(RouteDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -352,7 +349,7 @@ public class RouteListFragment extends Fragment {
         DialogFragment dialogFragment = RouteListFilterFragment.newInstance();
         dialogFragment.setArguments(args);
         dialogFragment.setTargetFragment(this, requestCode);
-        dialogFragment.show(ft, TripListFilterFragment.TAG);
+        dialogFragment.show(ft, RouteListFilterFragment.TAG);
     }
 
     /*

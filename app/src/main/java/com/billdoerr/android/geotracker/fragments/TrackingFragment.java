@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
+import com.billdoerr.android.geotracker.database.repo.RouteRepo;
 import com.billdoerr.android.geotracker.database.repo.TripRepo;
 import com.billdoerr.android.geotracker.services.TrackingService;
 import com.billdoerr.android.geotracker.utils.GPSUtils;
@@ -61,6 +62,7 @@ public class TrackingFragment extends Fragment {
 
     private static final String ARGS_TRIP = "trip";
     private static final String ARGS_TRIP_ID = "trip_id";
+    private static final String ARGS_SAVE_TRIP_NAME_TO_ROUTES = "save_trip_name_to_routes";
 
     private static final long TIME_DELAY = 1000;
     private static final SimpleDateFormat sDateFormat = new SimpleDateFormat( "hh:mm:ss a" , Locale.US);
@@ -392,14 +394,20 @@ public class TrackingFragment extends Fragment {
         }
 
         Trip trip = (Trip) data.getSerializableExtra(ARGS_TRIP);
+        boolean saveTripName = data.getBooleanExtra(ARGS_SAVE_TRIP_NAME_TO_ROUTES, false);
 
         // Save trip to database
         if( requestCode == REQUEST_CODE_TRIP_DIALOG_SAVE) {
+            // Save trip
             if (trip != null) {
                 setState(Trip.TripState.STOPPED);
                 mTrip = trip;
+                // Save trip name to routes if option selected
+                if (saveTripName) {
+                    RouteRepo.saveTripName(trip.getName());
+                }
+                saveTrip();
             }
-            saveTrip();
         }
         // Just get update trip details
         else if( requestCode == REQUEST_CODE_TRIP_DIALOG_CONTINUE) {
