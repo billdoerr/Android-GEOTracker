@@ -7,28 +7,27 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.billdoerr.android.geotracker.R;
-import com.billdoerr.android.geotracker.activities.BaseActivity;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@SuppressWarnings("WeakerAccess")
 public class TripReviewFragment extends Fragment {
 
     public static final String TAG = "TripReviewFragment";
 
     private static final String ARGS_TRIP = "trip";
 
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
     private Trip mTrip;
 
     @Override
@@ -36,7 +35,7 @@ public class TripReviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        mTrip = (Trip) args.getSerializable(ARGS_TRIP);
+        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
     }
 
     @Override
@@ -45,13 +44,13 @@ public class TripReviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_trip_review, container, false);
 
         //  Setup action bar
-        setupActionBar(view);
+        setupActionBar();
 
-        mViewPager = view.findViewById(R.id.viewpager);
-        setupViewPager(mViewPager);
+        ViewPager viewPager = view.findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
-        mTabLayout = view.findViewById(R.id.tabs);
-        mTabLayout.setupWithViewPager(mViewPager);
+        TabLayout tabLayout = view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
         //  Add icons
 //        addTabLayoutIcons();
@@ -59,36 +58,27 @@ public class TripReviewFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
+    }
+
     /**
      * Add fragments to tabs.
      * @param viewPager ViewPager: Layout manager adapter will be assigned.
      */
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(Objects.requireNonNull(getActivity()).getSupportFragmentManager());
 
         // Maps fragment
         Bundle args = new Bundle();
         args.putSerializable(ARGS_TRIP, mTrip);
 
-        // Create fragment
-//        Fragment fragment = null;
-//        fragment = getActivity().getSupportFragmentManager().findFragmentByTag(TripReviewMapsFragment.TAG);
-
-//        TripReviewMapsFragment fragment = new TripReviewMapsFragment();
-//        fragment.setArguments(args);
-//
-//        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-////        fragment.setArguments(args);
-////        ft.detach(fragment);
-////        ft.attach(fragment);
-////        ft.commit();
-//        ft.detach(fragment).attach(fragment).commit();
-
         TripReviewMapsFragment fragment = new TripReviewMapsFragment();
         fragment.setArguments(args);
-
-        FragmentManager fm = getChildFragmentManager();
-        Fragment f = fm.findFragmentByTag(TripReviewMapsFragment.TAG);
 
         // Add fragment to adapter
         adapter.addFragment(fragment, getResources().getString(R.string.activity_title_maps));
@@ -99,13 +89,10 @@ public class TripReviewFragment extends Fragment {
 
     /**
      * Setup action bar.
-     * @param view View: Container for toolbar.
      */
-    private void setupActionBar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        ((BaseActivity)getActivity()).setSupportActionBar(toolbar);
-        ActionBar actionbar = ((BaseActivity)getActivity()).getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+    private void setupActionBar() {
+        ActionBar actionbar = ((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar();
+        Objects.requireNonNull(actionbar).setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
     }
 

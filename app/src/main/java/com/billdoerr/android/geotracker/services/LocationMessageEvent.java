@@ -4,9 +4,7 @@ import android.location.Location;
 
 public class LocationMessageEvent {
 
-    private static final String TAG = "LocationMessageEvent";
-
-    private Location mLocation;
+    private final Location mLocation;
 
     public LocationMessageEvent(Location location) {
         mLocation = location;
@@ -14,10 +12,6 @@ public class LocationMessageEvent {
 
     public Location getLocation() {
         return mLocation;
-    }
-
-    public void sendMessage(Location location) {
-        mLocation = location;
     }
 
 }

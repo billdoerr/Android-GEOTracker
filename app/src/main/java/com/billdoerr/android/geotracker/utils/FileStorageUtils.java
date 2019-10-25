@@ -5,11 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import com.billdoerr.android.geotracker.R;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,14 +20,11 @@ public class FileStorageUtils {
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String TABS = "\t\t";
 
-    private Context mContext;
-    private static String mFilename;
-
     /**
      * Generate date/time stamp that will be used to for system log entries.
      * @return String:  date/time in format:  "dd MMM yyyy HH:mm:ss".
      */
-    public static String getDateTime() {
+    private static String getDateTime() {
         String dateFormat = "dd MMM yyyy HH:mm:ss";
         Calendar c = Calendar.getInstance();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat(dateFormat);
@@ -45,7 +38,8 @@ public class FileStorageUtils {
      * @param filename String: The name of the file to open; can not contain path separators.
      * @param mode int: File creation mode
      */
-    public static void writeToFile(Context context, String data, String filename, int mode) {
+    @SuppressWarnings("SameParameterValue")
+    private static void writeToFile(Context context, String data, String filename, int mode) {
 
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(filename, mode));
@@ -57,44 +51,44 @@ public class FileStorageUtils {
         }
     }
 
-    /**
-     * Read data from file.
-     * @param context Context:  Application context.
-     * @param filename String: The name of the file to open; can not contain path separators.
-     * @return String:  Contents of file being read.
-     */
-    public static String readFromFile(Context context, String filename) {
-
-        final String lineSeparator = System.getProperty("line.separator");
-        String ret = "";
-
-        try {
-            InputStream inputStream = context.openFileInput(filename);
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString;
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                    stringBuilder.append(lineSeparator);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e(TAG, context.getString(R.string.exception_file_not_found) + " " + e.toString());
-        } catch (IOException e) {
-            Log.e(TAG, context.getString(R.string.exception_cannot_read_file) + " " + e.toString());
-        }
-
-        return ret;
-    }
+//    /**
+//     * Read data from file.
+//     * @param context Context:  Application context.
+//     * @param filename String: The name of the file to open; can not contain path separators.
+//     * @return String:  Contents of file being read.
+//     */
+//    private static String readFromFile(Context context, String filename) {
+//
+//        final String lineSeparator = System.getProperty("line.separator");
+//        String ret = "";
+//
+//        try {
+//            InputStream inputStream = context.openFileInput(filename);
+//
+//            if ( inputStream != null ) {
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                String receiveString;
+//                StringBuilder stringBuilder = new StringBuilder();
+//
+//                while ( (receiveString = bufferedReader.readLine()) != null ) {
+//                    stringBuilder.append(receiveString);
+//                    stringBuilder.append(lineSeparator);
+//                }
+//
+//                inputStream.close();
+//                ret = stringBuilder.toString();
+//
+//            }
+//        }
+//        catch (FileNotFoundException e) {
+//            Log.e(TAG, context.getString(R.string.exception_file_not_found) + " " + e.toString());
+//        } catch (IOException e) {
+//            Log.e(TAG, context.getString(R.string.exception_cannot_read_file) + " " + e.toString());
+//        }
+//
+//        return ret;
+//    }
 
     /**
      * Writes to the system log.  Each entry is preceded with a date/time stamp.
@@ -108,21 +102,21 @@ public class FileStorageUtils {
         writeToFile(context, output, filename, mode);
     }
 
-    /**
-     * Read the system log.
-     * @return String:  Contents of system log.
-     */
-    public static String readSystemLog(Context context, String filename) {
-        return readFromFile(context, filename);
-    }
+//    /**
+//     * Read the system log.
+//     * @return String:  Contents of system log.
+//     */
+//    public static String readSystemLog(Context context, String filename) {
+//        return readFromFile(context, filename);
+//    }
 
-    /**
-     * Clears the contents of the system log.
-     */
-    public static void clearSystemLog(Context context, String filename) {
-        final int mode = Context.MODE_PRIVATE;
-        writeToFile(context, "", filename, mode);
-    }
+//    /**
+//     * Clears the contents of the system log.
+//     */
+//    public static void clearSystemLog(Context context, String filename) {
+//        final int mode = Context.MODE_PRIVATE;
+//        writeToFile(context, "", filename, mode);
+//    }
 
 }
 

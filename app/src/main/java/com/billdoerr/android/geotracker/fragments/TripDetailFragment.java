@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TripDetailFragment extends DialogFragment {
 
@@ -66,7 +67,7 @@ public class TripDetailFragment extends DialogFragment {
 
         // Set dialog title
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
-        getDialog().setTitle(R.string.dialog_title_trip_edit);
+        Objects.requireNonNull(getDialog()).setTitle(R.string.dialog_title_trip_edit);
 
         final EditText textDesc = view.findViewById(R.id.textDesc);
         final CheckBox checkActive = view.findViewById(R.id.checkBoxActive);
@@ -76,7 +77,7 @@ public class TripDetailFragment extends DialogFragment {
         // Trip name text will have autocomplete based on saved routes
         final AutoCompleteTextView textName = view.findViewById(R.id.autoCompleteTextView);
         List<String> array = RouteRepo.getRoutesNames();
-        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (getContext(), android.R.layout.select_dialog_item, array);
+        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (Objects.requireNonNull(getContext()), android.R.layout.select_dialog_item, array);
         textName.setThreshold(1);
         textName.setAdapter(adapterAutoComplete);
 
@@ -172,10 +173,10 @@ public class TripDetailFragment extends DialogFragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
     /**
      * Sends result to calling fragment

@@ -2,8 +2,8 @@ package com.billdoerr.android.geotracker.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +18,8 @@ import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
-import com.billdoerr.android.geotracker.utils.GPSUtils;
 import com.billdoerr.android.geotracker.services.LocationMessageEvent;
+import com.billdoerr.android.geotracker.utils.GPSUtils;
 import com.billdoerr.android.geotracker.utils.MapUtils;
 import com.billdoerr.android.geotracker.utils.PermissionUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
@@ -35,9 +35,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.TileSystem;
-import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.IOrientationProvider;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.util.ArrayList;
@@ -51,7 +49,6 @@ public class MapsFragment extends Fragment {
 
     //  Saved instance state data
     private static final String SAVED_GEO_P0INTS = "geopoints";
-    private static final String SAVED_MAP_TYPE = "map_type";
     private static final String SAVED_ZOOM = "zoom";
 
     private org.osmdroid.views.MapView mMapView;
@@ -108,6 +105,9 @@ public class MapsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Change the toolbar title text
+        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
+
         // Get geopoints from bundle, if any
         if (savedInstanceState != null) {
             Gson gson = new Gson();
@@ -123,8 +123,6 @@ public class MapsFragment extends Fragment {
         IMapController mapController = mMapView.getController();
         mapController.setZoom(mZoom);
 
-        // Change the toolbar title text
-        Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
     }
 
     @Override
@@ -135,8 +133,11 @@ public class MapsFragment extends Fragment {
         // https://github.com/permissions-dispatcher/PermissionsDispatcher/issues/90
         checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
+        // Check for location permissions
+        checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION, PermissionUtils.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
         // Get current location
-        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
+        getCurrentLocation(getContext());
 
         // Is there an active trip?
         if ( initTrip(getContext()) ) {
@@ -179,10 +180,10 @@ public class MapsFragment extends Fragment {
         super.onDetach();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -198,6 +199,39 @@ public class MapsFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionsResult");
+        switch(requestCode) {
+            case PermissionUtils.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initApp();
+                }
+                break;
+        }
+    }
+
+    /**
+     * Module initialization steps
+     */
+    private void initApp() {
+        // Start GPSService if not running
+        GPSUtils.startGPSService(getContext());
+
+        // Get current location
+        getCurrentLocation(getContext());
+    }
+
+    private void getCurrentLocation(Context context) {
+        // Get current location
+        GPSUtils.getCurrentLocation(Objects.requireNonNull(context));
+    }
+
+    /**
+     * Initializes the mapping component
+     * @param view View
+     */
     private void initMapView(View view) {
 
         final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors-v2/"};
@@ -235,7 +269,7 @@ public class MapsFragment extends Fragment {
         mMapView.setTilesScaleFactor(2);
 
         // Add compass to map
-        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), new InternalCompassOrientationProvider(getActivity()), mMapView);
+        CompassOverlay compassOverlay = new CompassOverlay(Objects.requireNonNull(getActivity()), new InternalCompassOrientationProvider(getActivity()), mMapView);
         compassOverlay.enableCompass();
         mMapView.getOverlays().add(compassOverlay);
 
@@ -258,6 +292,7 @@ public class MapsFragment extends Fragment {
     /**
      * This method will be called when a MessageEvent is posted with a new location
      */
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
         // Get location data
@@ -371,6 +406,7 @@ public class MapsFragment extends Fragment {
      * @param permission String Permission being requested
      * @param resultCode int
      */
+    @SuppressWarnings("SameParameterValue")
     private void checkPermissions(final String permission, final int resultCode) {
         PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {
@@ -393,7 +429,7 @@ public class MapsFragment extends Fragment {
                     @Override
                     public void onPermissionGranted() {
                         //  Init app
-                        //  TODO:  onPermissionGranted NOT BEING CALLED.  initApp()
+                        //  Handled by overriding the fragments onRequestPermissionsResult()
                     }
                 });
     }
@@ -498,21 +534,5 @@ public class MapsFragment extends Fragment {
 //            }
 //        }
 //    }
-
-    private class MyCompassOverlay extends CompassOverlay {
-
-        private MyCompassOverlay(Context context, IOrientationProvider orientationProvider, MapView mapView) {
-            super(context, orientationProvider, mapView);
-        }
-
-        @Override
-        public void onOrientationChanged(float orientation, IOrientationProvider source) {
-            super.onOrientationChanged(orientation, source);
-            Log.i(TAG, "onOrientationChanged: " + orientation );
-        }
-
-    }
-
-
 
 }

@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group
-        android:id="@+id/configuration"
-        android:checkableBehavior="single">
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_activities"
             android:icon="@android:drawable/ic_menu_preferences"
@@ -16,9 +14,7 @@
             android:title="@string/fragment_title_route_list" />
     </group>
 
-    <group
-        android:id="@+id/settings"
-        android:checkableBehavior="none">
+    <group android:checkableBehavior="none">
         <item
             android:id="@+id/drawer_settings"
             android:icon="@android:drawable/ic_menu_preferences"

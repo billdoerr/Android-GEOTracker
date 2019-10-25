@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.billdoerr.android.geotracker.R;
+import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.RouteRepo;
 import com.billdoerr.android.geotracker.database.repo.TripRepo;
@@ -61,7 +63,6 @@ public class TrackingFragment extends Fragment {
     private static final int INVALID_INDEX = -1;
 
     private static final String ARGS_TRIP = "trip";
-    private static final String ARGS_TRIP_ID = "trip_id";
     private static final String ARGS_SAVE_TRIP_NAME_TO_ROUTES = "save_trip_name_to_routes";
 
     private static final long TIME_DELAY = 1000;
@@ -86,7 +87,6 @@ public class TrackingFragment extends Fragment {
     private Date mCurrentTime;
 
     // Preference settings
-    GeoTrackerSharedPreferences mSharedPrefs;
     private static boolean mIsMetric = false;
     private static boolean mIsNautical = false;
     private static int mCoordinateType;
@@ -97,13 +97,10 @@ public class TrackingFragment extends Fragment {
     private EditText mTextTripTitle;
     private TextView mTextLatitudeLongitude;
     private TextView mTextLatitudeData;
-    private TextView mTextLatitudeUnits;
     private TextView mTextLongitudeData;
-    private TextView mTextLongitudeUnits;
     private TextView mTextElevationData;
     private TextView mTextElevationUnits;
     private TextView mTextBearingData;
-    private TextView mTextBearingUnits;
     private TextView mTextSpeedData;
     private TextView mTextSpeedUnits;
     private TextView mTextAccuracyData;
@@ -124,7 +121,7 @@ public class TrackingFragment extends Fragment {
      * Used to get current time
      */
     private Handler mHandler;
-    private Runnable mRunnable = new Runnable() {
+    private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
 
@@ -167,9 +164,9 @@ public class TrackingFragment extends Fragment {
         // Pass
     }
 
-    public static TrackingFragment newInstance() {
-        return new TrackingFragment();
-    }
+//    public static TrackingFragment newInstance() {
+//        return new TrackingFragment();
+//    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -182,6 +179,8 @@ public class TrackingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(false);
 
         // Get Shared Preferences
         getSharedPreferences();
@@ -219,46 +218,46 @@ public class TrackingFragment extends Fragment {
         //  Data grid
         mTextLatitudeLongitude = view.findViewById(R.id.textLatitudeLongitude);
 
-        final TextView textLatitudeLabel = view.findViewById(R.id.textLatitudeLabel);
-        mTextLatitudeUnits = view.findViewById(R.id.textLatitudeUnits);
+//        final TextView textLatitudeLabel = view.findViewById(R.id.textLatitudeLabel);
+//        final TextView textLatitudeUnits = view.findViewById(R.id.textLatitudeUnits);
         mTextLatitudeData = view.findViewById(R.id.textLatitudeData);
 
-        final TextView textLongitudeLabel = view.findViewById(R.id.textLongitudeLabel);
-        mTextLongitudeUnits = view.findViewById(R.id.textLongitudeUnits);
+//        final TextView textLongitudeLabel = view.findViewById(R.id.textLongitudeLabel);
+//        final TextView textLongitudeUnits = view.findViewById(R.id.textLongitudeUnits);
         mTextLongitudeData = view.findViewById(R.id.textLongitudeData);
 
-        final TextView textElevationLabel = view.findViewById(R.id.textElevationLabel);
+//        final TextView textElevationLabel = view.findViewById(R.id.textElevationLabel);
         mTextElevationUnits = view.findViewById(R.id.textElevationUnits);
         mTextElevationData = view.findViewById(R.id.textElevationData);
 
-        final TextView textBearingLabel = view.findViewById(R.id.textBearingLabel);
-        mTextBearingUnits = view.findViewById(R.id.textBearingUnits);
+//        final TextView textBearingLabel = view.findViewById(R.id.textBearingLabel);
+//        final TextView textBearingUnits = view.findViewById(R.id.textBearingUnits);
         mTextBearingData = view.findViewById(R.id.textBearingData);
 
-        final TextView textSpeedLabel = view.findViewById(R.id.textSpeedLabel);
+//        final TextView textSpeedLabel = view.findViewById(R.id.textSpeedLabel);
         mTextSpeedUnits = view.findViewById(R.id.textSpeedUnits);
         mTextSpeedData = view.findViewById(R.id.textSpeedData);
 
-        final TextView textAccuracyLabel = view.findViewById(R.id.textAccuracyLabel);
+//        final TextView textAccuracyLabel = view.findViewById(R.id.textAccuracyLabel);
         mTextAccuracyUnits = view.findViewById(R.id.textAccuracyUnits);
         mTextAccuracyData = view.findViewById(R.id.textAccuracyData);
 
-        final TextView textCurrentTimeLabel = view.findViewById(R.id.textCurrentTimeLabel);
+//        final TextView textCurrentTimeLabel = view.findViewById(R.id.textCurrentTimeLabel);
         mTextCurrentTimeData = view.findViewById(R.id.textCurrentTimeData);
 
-        final TextView textStartTimeLabel = view.findViewById(R.id.textStartTimeLabel);
+//        final TextView textStartTimeLabel = view.findViewById(R.id.textStartTimeLabel);
         mTextStartTimeData = view.findViewById(R.id.textStartTimeData);
 
-        final TextView textEndTimeLabel = view.findViewById(R.id.textEndTimeLabel);
+//        final TextView textEndTimeLabel = view.findViewById(R.id.textEndTimeLabel);
         mTextEndTimeData = view.findViewById(R.id.textEndTimeData);
 
-        final TextView textTrackingTimeLabel = view.findViewById(R.id.textTrackingTimeLabel);
+//        final TextView textTrackingTimeLabel = view.findViewById(R.id.textTrackingTimeLabel);
         mTextMovingTimeData = view.findViewById(R.id.textTrackingTimeData);
 
-        final TextView textPausedTimeLabel = view.findViewById(R.id.textPausedTimeLabel);
+//        final TextView textPausedTimeLabel = view.findViewById(R.id.textPausedTimeLabel);
         mTextPausedTimeData = view.findViewById(R.id.textPausedTimeData);
 
-        final TextView textTotalTimeLabel = view.findViewById(R.id.textTotalTimeLabel);
+//        final TextView textTotalTimeLabel = view.findViewById(R.id.textTotalTimeLabel);
         mTextTotalTimeData = view.findViewById(R.id.textTotalTimeData);
 
         //  Data logging buttons
@@ -319,15 +318,13 @@ public class TrackingFragment extends Fragment {
         // Update UI
         updateUnits();
 
-        // Let's try to get current location
-        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
-
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         // Change the toolbar title text
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_track);
     }
@@ -343,10 +340,14 @@ public class TrackingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
         // Check if preferences have been changed
         getSharedPreferences();
+
         // Update UI, if unit preferences have changed
         updateUnits();
+
+        // Update trip name in UI
         if (mTrip != null) {
             mTextTripTitle.setText(mTrip.getName());
             // Hide keyboard upon focus.  Thanks to:  Revisit  https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
@@ -404,7 +405,12 @@ public class TrackingFragment extends Fragment {
                 mTrip = trip;
                 // Save trip name to routes if option selected
                 if (saveTripName) {
-                    RouteRepo.saveTripName(trip.getName());
+                    Route route = new Route();
+                    route.setActive(1);
+                    route.setName(trip.getName());
+                    route.setDesc(trip.getDesc());
+                    route.setActivityTypeId(trip.getActivityTypeId());
+                    RouteRepo.insert(route);
                 }
                 saveTrip();
             }
@@ -420,12 +426,28 @@ public class TrackingFragment extends Fragment {
 
     }
 
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionsResult");
+        switch(requestCode) {
+            case PermissionUtils.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initApp();
+                }
+                break;
+        }
+    }
+
     /**
      * Initialize app stuff goes here
      */
     private void initApp() {
         // Initialize GPS location services
         initializeLocationServices();
+
+        // Let's try to get current location
+        GPSUtils.getCurrentLocation(Objects.requireNonNull(getContext()));
 
         // Resume location updates if currently tracking
         if ((mTrip.getState() == Trip.TripState.STARTED) || (mTrip.getState() == Trip.TripState.PAUSED)) {
@@ -544,6 +566,7 @@ public class TrackingFragment extends Fragment {
      * Initialize location services if permissions granted
      */
     private void initializeLocationServices() {
+        GPSUtils.startGPSService(getContext());
         mTrackingServiceIntent = new Intent(getContext(), TrackingService.class);
     }
 
@@ -553,7 +576,6 @@ public class TrackingFragment extends Fragment {
     private void startTrackingService() {
         if (mTrackingServiceIntent != null) {
             // Send locator service trip id
-//            mTrackingServiceIntent.putExtra(ARGS_TRIP_ID, mTrip.getId());
             PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
             if (!ServiceUtils.isMyServiceRunning(getContext(), TrackingService.class)) {
                 Objects.requireNonNull(getActivity()).startService(mTrackingServiceIntent);
@@ -599,6 +621,7 @@ public class TrackingFragment extends Fragment {
      * This method will be called when a MessageEvent is posted
      * @param locationMessageEvent LocationMessageEvent
      */
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
         // Get location data
@@ -733,7 +756,7 @@ public class TrackingFragment extends Fragment {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(Objects.requireNonNull(getActivity()).getSupportFragmentManager()).beginTransaction();
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
@@ -834,10 +857,10 @@ public class TrackingFragment extends Fragment {
      * Get required Shared Preferences
      */
     private void getSharedPreferences() {
-        mSharedPrefs = PreferenceUtils.getSharedPreferences(getContext());
-        mIsMetric = mSharedPrefs.isMetric();
-        mIsNautical = mSharedPrefs.isNautical();
-        mCoordinateType = mSharedPrefs.getCoordinateType();
+        GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(Objects.requireNonNull(getContext()));
+        mIsMetric = sharedPrefs.isMetric();
+        mIsNautical = sharedPrefs.isNautical();
+        mCoordinateType = sharedPrefs.getCoordinateType();
         // Feature supporting this has not been implemented
 //        mCoordinateDatum = prefs.getCoordinateDatum();
     }
@@ -853,6 +876,7 @@ public class TrackingFragment extends Fragment {
      * @param permission String Permission being requested
      * @param resultCode int
      */
+    @SuppressWarnings("SameParameterValue")
     private void checkPermissions(final String permission, final int resultCode) {
         PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {

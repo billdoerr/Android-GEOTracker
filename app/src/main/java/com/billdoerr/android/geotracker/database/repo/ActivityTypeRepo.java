@@ -14,14 +14,32 @@ import java.util.List;
 /**
  * Repository class which generates create, insert, delete,etc SQL statements.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class ActivityTypeRepo {
 
     private static final String TAG = "ActivityTypeRepo";
 
-    private ActivityType mActivityType;
+    // Table name
+    private static final String TABLE = "ActivityType";
 
-    public ActivityTypeRepo() {
-        mActivityType = new ActivityType();
+    // Columns
+    private static final String KEY_ACTIVITY_TYPE_ID = "activity_type_id";
+    private static final String KEY_ACTIVITY_TYPE_NAME = "activity_type_name";
+    private static final String KEY_ACTIVITY_TYPE_DESC = "activity_type_desc";
+    private static final String KEY_ACTIVITY_TYPE_ACTIVE_FLAG = "activity_type_active_flag";
+
+//    private final ActivityType mActivityType;
+//
+//    public ActivityTypeRepo() {
+//        mActivityType = new ActivityType();
+//    }
+
+    /**
+     * Returns table name.
+     * @return String
+     */
+    public static String getTableName() {
+        return TABLE;
     }
 
     /**
@@ -29,11 +47,11 @@ public class ActivityTypeRepo {
      * @return String:  Database creation SQL string.
      */
     public static String createTable() {
-        return "CREATE TABLE " + ActivityType.TABLE + "("
-        + ActivityType.KEY_ACTIVITY_TYPE_ID + " INTEGER PRIMARY KEY, "
-        + ActivityType.KEY_ACTIVITY_TYPE_NAME + " TEXT NOT NULL UNIQUE, "
-        + ActivityType.KEY_ACTIVITY_TYPE_DESC + " TEXT, "
-        + ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG + " INT)";
+        return "CREATE TABLE " + TABLE + "("
+                + KEY_ACTIVITY_TYPE_ID + " INTEGER PRIMARY KEY, "
+                + KEY_ACTIVITY_TYPE_NAME + " TEXT NOT NULL UNIQUE, "
+                + KEY_ACTIVITY_TYPE_DESC + " TEXT, "
+                + KEY_ACTIVITY_TYPE_ACTIVE_FLAG + " INT)";
     }
 
     /**
@@ -45,15 +63,15 @@ public class ActivityTypeRepo {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_NAME, activityType.getName());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_DESC, activityType.getDesc());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.isActiveFlag());
+        values.put(KEY_ACTIVITY_TYPE_NAME, activityType.getName());
+        values.put(KEY_ACTIVITY_TYPE_DESC, activityType.getDesc());
+        values.put(KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.isActiveFlag());
 
         // Insert row
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            rowId = (int)db.insert(ActivityType.TABLE, null, values);
+            rowId = (int)db.insert(TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -65,35 +83,35 @@ public class ActivityTypeRepo {
         return rowId;
     }
 
+//    /**
+//     * Delete record(s) from database specified by the index.
+//     * @param id int:  Index for the
+//     * @return int:  Number of records deleted.
+//     */
+//    public static int delete(int id) {
+//        int recordsDeleted = 0;
+//
+//        String whereClause = KEY_ACTIVITY_TYPE_ID + " = ?";
+//        String[] whereArgs = new String[]{Integer.toString(id) };
+//
+//        // Delete record(s)
+//        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+//        try {
+//            db.beginTransaction();
+//            recordsDeleted = db.delete(TABLE, whereClause, whereArgs);
+//            db.setTransactionSuccessful();
+//        } catch (Exception e) {
+//            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
+//        } finally {
+//            db.endTransaction();
+//            DatabaseManager.getInstance().closeDatabase();
+//        }
+//
+//        return recordsDeleted;
+//    }
+
     /**
-     * Delete record(s) from database specified by the index.
-     * @param id int:  Index for the ActivityType.
-     * @return int:  Number of records deleted.
-     */
-    public static int delete(int id) {
-        int recordsDeleted = 0;
-
-        String whereClause = ActivityType.KEY_ACTIVITY_TYPE_ID + " = ?";
-        String[] whereArgs = new String[]{Integer.toString(id) };
-
-        // Delete record(s)
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        try {
-            db.beginTransaction();
-            recordsDeleted = db.delete(ActivityType.TABLE, whereClause, whereArgs);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
-        } finally {
-            db.endTransaction();
-            DatabaseManager.getInstance().closeDatabase();
-        }
-
-        return recordsDeleted;
-    }
-
-    /**
-     * Update record in database specified by the ActivityType.id which is the index of the table.
+     * Update record in database specified by the id which is the index of the table.
      * @param activityType  ActivityType:
      * @return  int:  Number of rows updated.
      */
@@ -101,18 +119,18 @@ public class ActivityTypeRepo {
         int recordsUpdated = 0;
 
         ContentValues values = new ContentValues();
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_NAME, activityType.getName());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_DESC, activityType.getDesc());
-        values.put(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.isActiveFlag());
+        values.put(KEY_ACTIVITY_TYPE_NAME, activityType.getName());
+        values.put(KEY_ACTIVITY_TYPE_DESC, activityType.getDesc());
+        values.put(KEY_ACTIVITY_TYPE_ACTIVE_FLAG, activityType.isActiveFlag());
 
-        String whereClause = ActivityType.KEY_ACTIVITY_TYPE_ID + " = ?";
+        String whereClause = KEY_ACTIVITY_TYPE_ID + " = ?";
         String[] whereArgs = new String[]{ Integer.toString(activityType.getId()) };
 
         // Update record
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            recordsUpdated = db.update(ActivityType.TABLE, values, whereClause, whereArgs);
+            recordsUpdated = db.update(TABLE, values, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -133,12 +151,12 @@ public class ActivityTypeRepo {
         ActivityType activityType;
 
         String selectQuery = "SELECT "
-                + ActivityType.KEY_ACTIVITY_TYPE_ID + ", "
-                + ActivityType.KEY_ACTIVITY_TYPE_NAME + ", "
-                + ActivityType.KEY_ACTIVITY_TYPE_DESC + ", "
-                + ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG
-                + " FROM " + ActivityType.TABLE
-                + " ORDER BY " +  ActivityType.KEY_ACTIVITY_TYPE_NAME + " ASC";
+                + KEY_ACTIVITY_TYPE_ID + ", "
+                + KEY_ACTIVITY_TYPE_NAME + ", "
+                + KEY_ACTIVITY_TYPE_DESC + ", "
+                + KEY_ACTIVITY_TYPE_ACTIVE_FLAG
+                + " FROM " + TABLE
+                + " ORDER BY " +  KEY_ACTIVITY_TYPE_NAME + " ASC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -149,10 +167,10 @@ public class ActivityTypeRepo {
             if (cursor.moveToFirst()) {
                 do {
                     activityType = new ActivityType();
-                    activityType.setId(cursor.getInt(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_ID)));
-                    activityType.setName(cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_NAME)));
-                    activityType.setDesc(cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_DESC)));
-                    activityType.setActive(cursor.getInt(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_ACTIVE_FLAG)));
+                    activityType.setId(cursor.getInt(cursor.getColumnIndex(KEY_ACTIVITY_TYPE_ID)));
+                    activityType.setName(cursor.getString(cursor.getColumnIndex(KEY_ACTIVITY_TYPE_NAME)));
+                    activityType.setDesc(cursor.getString(cursor.getColumnIndex(KEY_ACTIVITY_TYPE_DESC)));
+                    activityType.setActive(cursor.getInt(cursor.getColumnIndex(KEY_ACTIVITY_TYPE_ACTIVE_FLAG)));
 
                     activities.add(activityType);
                 } while (cursor.moveToNext());
@@ -177,9 +195,9 @@ public class ActivityTypeRepo {
         String name = "";
 
         String selectQuery = "SELECT "
-                + ActivityType.KEY_ACTIVITY_TYPE_NAME
-                + " FROM " + ActivityType.TABLE
-                + " WHERE " +  ActivityType.KEY_ACTIVITY_TYPE_ID + " = " + id;
+                + KEY_ACTIVITY_TYPE_NAME
+                + " FROM " + TABLE
+                + " WHERE " +  KEY_ACTIVITY_TYPE_ID + " = " + id;
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -189,7 +207,7 @@ public class ActivityTypeRepo {
             // Loop through all rows and add to list
             if (cursor.moveToFirst()) {
                 do {
-                    name = cursor.getString(cursor.getColumnIndex(ActivityType.KEY_ACTIVITY_TYPE_NAME));
+                    name = cursor.getString(cursor.getColumnIndex(KEY_ACTIVITY_TYPE_NAME));
                 } while (cursor.moveToNext());
             }
 
@@ -202,6 +220,58 @@ public class ActivityTypeRepo {
         }
 
         return name;
+    }
+
+    /**
+     * Inserts default data into the database.
+     */
+    public static void insertDefaultData(SQLiteDatabase db) {
+
+        ContentValues values = new ContentValues();
+
+        // Default data:  ActivityType
+
+        values.clear();
+        values.put(KEY_ACTIVITY_TYPE_NAME, "Run");
+        values.put(KEY_ACTIVITY_TYPE_DESC, "Going for a run.");
+        values.put(KEY_ACTIVITY_TYPE_ACTIVE_FLAG, ActivityType.INACTIVE);
+        insert(db, TABLE, values);
+
+        values.put(KEY_ACTIVITY_TYPE_NAME, "Bike");
+        values.put(KEY_ACTIVITY_TYPE_DESC, "Going for a bike ride.");
+        values.put(KEY_ACTIVITY_TYPE_ACTIVE_FLAG, ActivityType.ACTIVE);
+        insert(db, TABLE, values);
+
+        values.put(KEY_ACTIVITY_TYPE_NAME, "Hike");
+        values.put(KEY_ACTIVITY_TYPE_DESC, "Damn those steep climbs.");
+        values.put(KEY_ACTIVITY_TYPE_ACTIVE_FLAG, ActivityType.ACTIVE);
+        insert(db, TABLE, values);
+
+        values.put(KEY_ACTIVITY_TYPE_NAME, "Car Trip");
+        values.put(KEY_ACTIVITY_TYPE_DESC, "Could use a Porsche.");
+        values.put(KEY_ACTIVITY_TYPE_ACTIVE_FLAG, ActivityType.INACTIVE);
+        insert(db, TABLE, values);
+
+    }
+
+    /**
+     * Helper routine to insert record into database.
+     * @param db  SQLiteDatabase:
+     * @param values ContentValues:  Data values to be inserted.
+     */
+    @SuppressWarnings("SameParameterValue")
+    private static int insert(SQLiteDatabase db, String table, ContentValues values) {
+        int rowId = -1;
+        try {
+            db.beginTransaction();
+            rowId = (int)db.insert(table, null, values);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
+        } finally {
+            db.endTransaction();
+        }
+        return rowId;
     }
 
 }

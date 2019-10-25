@@ -21,15 +21,13 @@ import java.util.Objects;
  */
 public class AboutFragment extends Fragment {
 
-    private static final String TAG = "AboutFragment";
-
     public AboutFragment() {
         // Required empty public constructor
     }
 
-    public static AboutFragment newInstance() {
-        return new AboutFragment();
-    }
+//    public static AboutFragment newInstance() {
+//        return new AboutFragment();
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -21,8 +21,6 @@ import java.util.Objects;
 public class SettingsActivity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
-    private static final String TAG = "SettingsActivity";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +71,6 @@ public class SettingsActivity extends AppCompatActivity implements
      */
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
-        private static final String TAG = "SettingsFragment";
-
         public SettingsFragment() {
             // Required empty public constructor
         }
@@ -82,11 +78,6 @@ public class SettingsActivity extends AppCompatActivity implements
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
         }
 
         @Override

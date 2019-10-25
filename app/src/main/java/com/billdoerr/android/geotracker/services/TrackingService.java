@@ -17,9 +17,8 @@ import com.billdoerr.android.geotracker.database.DatabaseManager;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
+import com.billdoerr.android.geotracker.utils.GPSUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
-import com.billdoerr.android.geotracker.utils.ServiceUtils;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -34,6 +33,7 @@ import java.util.Objects;
  * Singleton class providing GPS location data
  * Reference:  https://developer.android.com/reference/android/location/Location
  */
+@SuppressWarnings("UnusedReturnValue")
 public class TrackingService extends Service {
 
     private static final String TAG = "TrackingService";
@@ -44,17 +44,16 @@ public class TrackingService extends Service {
     // Indicates invalid table index
     private static final int INVALID_INDEX = -1;
 
-    private Context mContext;
     private Trip mTrip;
 
     public TrackingService() {
         // Pass
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -62,14 +61,10 @@ public class TrackingService extends Service {
 
         Log.i(TAG, getResources().getString(R.string.msg_tracking_service_starting));
 
-        mContext = getApplicationContext();
+        Context context = getApplicationContext();
 
         // Need the GPSService
-        boolean isGPSService = ServiceUtils.isMyServiceRunning(mContext, GPSService.class);
-        if (!isGPSService) {
-            Log.i(TAG, mContext.getString(R.string.msg_gps_service_restart));
-                mContext.startService(new Intent(mContext, GPSService.class));
-        }
+        GPSUtils.startGPSService(context);
 
         /* Initialize instance of DatabaseManager. This is performed in BaseActivity but if
          *  trip is running and the app is dismissed the TrackingService will restart in background.
@@ -78,7 +73,7 @@ public class TrackingService extends Service {
         initDatabase();
 
         // Initialize trip.  Get's active trip object from preferences or creates new trip object.
-        initTrip(mContext);
+        initTrip(context);
 
         // Display notification to user that we are tracking
         sendNotification();
@@ -116,6 +111,7 @@ public class TrackingService extends Service {
      * This method will be called when a MessageEvent is posted
      * @param locationMessageEvent LocationMessageEvent
      */
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LocationMessageEvent locationMessageEvent) {
         // Get location data
@@ -189,7 +185,7 @@ public class TrackingService extends Service {
      * Initialize instance of DatabaseManager
      * @return  DatabaseHelper
      */
-    protected DatabaseHelper initDatabase() {
+    private DatabaseHelper initDatabase() {
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         DatabaseManager.initializeInstance(db);
         return db;

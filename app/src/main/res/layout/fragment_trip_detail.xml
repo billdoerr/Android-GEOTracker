@@ -5,12 +5,10 @@
     android:minWidth="300dp"
     android:minHeight="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#dde4dd"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop = "16dp"
@@ -28,7 +26,6 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
-        android:id = "@+id/layout_desc"
         android:layout_marginTop = "8dp"
         android:layout_marginStart = "8dp"
         android:layout_marginEnd = "8dp"
@@ -46,7 +43,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
-        android:id="@+id/layout_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -60,7 +56,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layout_checkbox"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:orientation="vertical" >
@@ -85,7 +80,6 @@
 
     <!-- Save/Cancel/Delete buttons -->
     <LinearLayout
-        android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="20dp"

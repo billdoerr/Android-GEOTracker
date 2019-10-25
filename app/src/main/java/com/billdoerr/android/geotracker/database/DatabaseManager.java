@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseManager {
 
-    private static final String TAG = "DatabaseManager";
-
     private Integer mOpenCounter = 0;
 
     private static DatabaseManager mInstance;

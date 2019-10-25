@@ -6,10 +6,7 @@ import android.preference.PreferenceActivity;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuInflater;
 import android.view.View;
@@ -36,13 +33,13 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().onPostCreate(savedInstanceState);
     }
 
-    public ActionBar getSupportActionBar() {
-        return getDelegate().getSupportActionBar();
-    }
+//    public ActionBar getSupportActionBar() {
+//        return getDelegate().getSupportActionBar();
+//    }
 
-    public void setSupportActionBar(@Nullable Toolbar toolbar) {
-        getDelegate().setSupportActionBar(toolbar);
-    }
+//    public void setSupportActionBar(@Nullable Toolbar toolbar) {
+//        getDelegate().setSupportActionBar(toolbar);
+//    }
 
     @NonNull
     @Override

@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RouteDetailFragment extends DialogFragment {
 
@@ -34,7 +35,7 @@ public class RouteDetailFragment extends DialogFragment {
     private static final String ARGS_ROUTE = "route";
 
     private static final int REQUEST_CODE_ROUTE_DIALOG_ADD = 1;
-    private static final int REQUEST_CODE_ROUTE_DIALOG_EDIT = 2;
+//    private static final int REQUEST_CODE_ROUTE_DIALOG_EDIT = 2;
 
     private Route mRoute;
 
@@ -67,9 +68,9 @@ public class RouteDetailFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
         int requestCode = getTargetRequestCode();
         if (requestCode == REQUEST_CODE_ROUTE_DIALOG_ADD) {
-            getDialog().setTitle(R.string.dialog_title_route_add);
+            Objects.requireNonNull(getDialog()).setTitle(R.string.dialog_title_route_add);
         } else {
-            getDialog().setTitle(R.string.dialog_title_route_edit);
+            Objects.requireNonNull(getDialog()).setTitle(R.string.dialog_title_route_edit);
         }
 
         final EditText textDesc = view.findViewById(R.id.textDesc);
@@ -79,7 +80,7 @@ public class RouteDetailFragment extends DialogFragment {
         // Trip name text will have autocomplete based on saved routes
         final AutoCompleteTextView textName = view.findViewById(R.id.autoCompleteTextView);
         List<String> array = RouteRepo.getRoutesNames();
-        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (getContext(), android.R.layout.select_dialog_item, array);
+        ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (Objects.requireNonNull(getContext()), android.R.layout.select_dialog_item, array);
         textName.setThreshold(1);
         textName.setAdapter(adapterAutoComplete);
 
@@ -145,10 +146,10 @@ public class RouteDetailFragment extends DialogFragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
     /**
      * Sends result to calling fragment

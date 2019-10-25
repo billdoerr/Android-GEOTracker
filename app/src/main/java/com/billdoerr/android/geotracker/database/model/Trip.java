@@ -7,23 +7,6 @@ import java.io.Serializable;
  */
 public class Trip implements Serializable {
 
-    private static final String TAG = "Trip";
-
-    // Table mName
-    public static final String TABLE = "Trip";
-
-    // Columns
-    public static final String KEY_TRIP_ID = "trip_id";
-    public static final String KEY_TRIP_NAME = "trip_name";
-    public static final String KEY_TRIP_DESC = "trip_desc";
-    public static final String KEY_TRIP_STATE = "trip_state";
-    public static final String KEY_TRIP_START_TIME = "start_time";
-    public static final String KEY_TRIP_END_TIME = "end_time";
-    public static final String KEY_TRIP_PAUSED_TIME = "paused_time";
-    public static final String KEY_TRIP_TOTAL_TIME = "total_time";
-    public static final String KEY_TRIP_ACTIVITY_TYPE_ID = "activity_id";
-    public static final String KEY_TRIP_ACTIVE_FLAG = "active_flag";
-
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
 

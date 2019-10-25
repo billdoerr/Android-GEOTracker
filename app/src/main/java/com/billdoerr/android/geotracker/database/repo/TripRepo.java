@@ -18,10 +18,33 @@ public class TripRepo {
 
     private static final String TAG = "TripRepo";
 
-    private Trip mTrip;
+    // Table mName
+    private static final String TABLE = "Trip";
 
-    public TripRepo() {
-        mTrip = new Trip();
+    // Columns
+    private static final String KEY_TRIP_ID = "trip_id";
+    private static final String KEY_TRIP_NAME = "trip_name";
+    private static final String KEY_TRIP_DESC = "trip_desc";
+    private static final String KEY_TRIP_STATE = "trip_state";
+    private static final String KEY_TRIP_START_TIME = "start_time";
+    private static final String KEY_TRIP_END_TIME = "end_time";
+    private static final String KEY_TRIP_PAUSED_TIME = "paused_time";
+    private static final String KEY_TRIP_TOTAL_TIME = "total_time";
+    private static final String KEY_TRIP_ACTIVITY_TYPE_ID = "activity_id";
+    private static final String KEY_TRIP_ACTIVE_FLAG = "active_flag";
+
+//    private final Trip mTrip;
+//
+//    public TripRepo() {
+//        mTrip = new Trip();
+//    }
+
+    /**
+     * Returns table name.
+     * @return String
+     */
+    public static String getTableName() {
+        return TABLE;
     }
 
     /**
@@ -29,17 +52,17 @@ public class TripRepo {
      * @return String:  Database creation SQL string.
      */
     public static String createTable() {
-        return "CREATE TABLE " + Trip.TABLE + "("
-                + Trip.KEY_TRIP_ID + " INTEGER PRIMARY KEY, "
-                + Trip.KEY_TRIP_NAME + " TEXT NOT NULL, "
-                + Trip.KEY_TRIP_DESC + " TEXT, "
-                + Trip.KEY_TRIP_STATE + " INT, "
-                + Trip.KEY_TRIP_START_TIME + " INT, "
-                + Trip.KEY_TRIP_END_TIME + " INT, "
-                + Trip.KEY_TRIP_PAUSED_TIME + " INT, "
-                + Trip.KEY_TRIP_TOTAL_TIME + " INT, "
-                + Trip.KEY_TRIP_ACTIVE_FLAG + " INT, "
-                + Trip.KEY_TRIP_ACTIVITY_TYPE_ID + " INT)";
+        return "CREATE TABLE " + TABLE + "("
+                + KEY_TRIP_ID + " INTEGER PRIMARY KEY, "
+                + KEY_TRIP_NAME + " TEXT NOT NULL, "
+                + KEY_TRIP_DESC + " TEXT, "
+                + KEY_TRIP_STATE + " INT, "
+                + KEY_TRIP_START_TIME + " INT, "
+                + KEY_TRIP_END_TIME + " INT, "
+                + KEY_TRIP_PAUSED_TIME + " INT, "
+                + KEY_TRIP_TOTAL_TIME + " INT, "
+                + KEY_TRIP_ACTIVE_FLAG + " INT, "
+                + KEY_TRIP_ACTIVITY_TYPE_ID + " INT)";
     }
 
     /**
@@ -51,21 +74,21 @@ public class TripRepo {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
-        values.put(Trip.KEY_TRIP_NAME, trip.getName());
-        values.put(Trip.KEY_TRIP_DESC, trip.getDesc());
-        values.put(Trip.KEY_TRIP_STATE, trip.getState());
-        values.put(Trip.KEY_TRIP_START_TIME, trip.getStartTime());
-        values.put(Trip.KEY_TRIP_END_TIME, trip.getEndTime());
-        values.put(Trip.KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
-        values.put(Trip.KEY_TRIP_TOTAL_TIME, trip.getTotalTimeInMillis());
-        values.put(Trip.KEY_TRIP_ACTIVE_FLAG, trip.isActive());
-        values.put(Trip.KEY_TRIP_ACTIVITY_TYPE_ID, trip.getActivityTypeId());
+        values.put(KEY_TRIP_NAME, trip.getName());
+        values.put(KEY_TRIP_DESC, trip.getDesc());
+        values.put(KEY_TRIP_STATE, trip.getState());
+        values.put(KEY_TRIP_START_TIME, trip.getStartTime());
+        values.put(KEY_TRIP_END_TIME, trip.getEndTime());
+        values.put(KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
+        values.put(KEY_TRIP_TOTAL_TIME, trip.getTotalTimeInMillis());
+        values.put(KEY_TRIP_ACTIVE_FLAG, trip.isActive());
+        values.put(KEY_TRIP_ACTIVITY_TYPE_ID, trip.getActivityTypeId());
 
         // Insert row
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            rowId = (int)db.insert(Trip.TABLE, null, values);
+            rowId = (int)db.insert(TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -79,13 +102,13 @@ public class TripRepo {
 
     /**
      * Delete record(s) from database specified by the index.
-     * @param id int:  Index for the Trip.
+     * @param id int:  Index for the
      * @return int:  Number of records deleted.
      */
     public static int delete(int id) {
         int recordsDeleted = 0;
 
-        String whereClause = Trip.KEY_TRIP_ID + " = ?";
+        String whereClause = KEY_TRIP_ID + " = ?";
         String[] whereArgs = new String[]{Integer.toString(id) };
 
         // Delete record(s) from table:  TripDetails
@@ -95,7 +118,7 @@ public class TripRepo {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            recordsDeleted = db.delete(Trip.TABLE, whereClause, whereArgs);
+            recordsDeleted = db.delete(TABLE, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -108,7 +131,7 @@ public class TripRepo {
     }
 
     /**
-     * Update record in database specified by the Trip.id which is the index of the table.
+     * Update record in database specified by the id which is the index of the table.
      * @param trip  Trip:
      * @return  int:  Number of rows updated.
      */
@@ -116,24 +139,24 @@ public class TripRepo {
         int recordsUpdated = 0;
 
         ContentValues values = new ContentValues();
-        values.put(Trip.KEY_TRIP_NAME, trip.getName());
-        values.put(Trip.KEY_TRIP_DESC, trip.getDesc());
-        values.put(Trip.KEY_TRIP_STATE, trip.getState());
-        values.put(Trip.KEY_TRIP_START_TIME, trip.getStartTime());
-        values.put(Trip.KEY_TRIP_END_TIME, trip.getEndTime());
-        values.put(Trip.KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
-        values.put(Trip.KEY_TRIP_TOTAL_TIME, trip.getTotalTimeInMillis());
-        values.put(Trip.KEY_TRIP_ACTIVE_FLAG, trip.isActive());
-        values.put(Trip.KEY_TRIP_ACTIVITY_TYPE_ID, trip.getActivityTypeId());
+        values.put(KEY_TRIP_NAME, trip.getName());
+        values.put(KEY_TRIP_DESC, trip.getDesc());
+        values.put(KEY_TRIP_STATE, trip.getState());
+        values.put(KEY_TRIP_START_TIME, trip.getStartTime());
+        values.put(KEY_TRIP_END_TIME, trip.getEndTime());
+        values.put(KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
+        values.put(KEY_TRIP_TOTAL_TIME, trip.getTotalTimeInMillis());
+        values.put(KEY_TRIP_ACTIVE_FLAG, trip.isActive());
+        values.put(KEY_TRIP_ACTIVITY_TYPE_ID, trip.getActivityTypeId());
 
-        String whereClause = Trip.KEY_TRIP_ID + " = ?";
+        String whereClause = KEY_TRIP_ID + " = ?";
         String[] whereArgs = new String[]{ Integer.toString(trip.getId()) };
 
         // Update record
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            recordsUpdated = db.update(Trip.TABLE, values, whereClause, whereArgs);
+            recordsUpdated = db.update(TABLE, values, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -154,19 +177,19 @@ public class TripRepo {
         Trip trip;
 
         String selectQuery = "SELECT "
-                + Trip.KEY_TRIP_ID + ", "
-                + Trip.KEY_TRIP_NAME + ", "
-                + Trip.KEY_TRIP_DESC + ", "
-                + Trip.KEY_TRIP_STATE + ", "
-                + Trip.KEY_TRIP_START_TIME + ", "
-                + Trip.KEY_TRIP_END_TIME + ", "
-                + Trip.KEY_TRIP_PAUSED_TIME + ", "
-                + Trip.KEY_TRIP_TOTAL_TIME + ", "
-                + Trip.KEY_TRIP_ACTIVE_FLAG + ", "
-                + Trip.KEY_TRIP_ACTIVITY_TYPE_ID
-                + " FROM " + Trip.TABLE
-                + " WHERE " + Trip.KEY_TRIP_END_TIME + "!= 0"
-                + " ORDER BY " +  Trip.KEY_TRIP_START_TIME + " DESC";
+                + KEY_TRIP_ID + ", "
+                + KEY_TRIP_NAME + ", "
+                + KEY_TRIP_DESC + ", "
+                + KEY_TRIP_STATE + ", "
+                + KEY_TRIP_START_TIME + ", "
+                + KEY_TRIP_END_TIME + ", "
+                + KEY_TRIP_PAUSED_TIME + ", "
+                + KEY_TRIP_TOTAL_TIME + ", "
+                + KEY_TRIP_ACTIVE_FLAG + ", "
+                + KEY_TRIP_ACTIVITY_TYPE_ID
+                + " FROM " + TABLE
+                + " WHERE " + KEY_TRIP_END_TIME + "!= 0"
+                + " ORDER BY " +  KEY_TRIP_START_TIME + " DESC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -177,16 +200,16 @@ public class TripRepo {
             if (cursor.moveToFirst()) {
                 do {
                     trip = new Trip();
-                    trip.setId(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ID)));
-                    trip.setName(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_NAME)));
-                    trip.setDesc(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_DESC)));
-                    trip.setState(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_STATE)));
-                    trip.setStartTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_START_TIME)));
-                    trip.setEndTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_END_TIME)));
-                    trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_PAUSED_TIME)));
-                    trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_TOTAL_TIME)));
-                    trip.setActive(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ACTIVE_FLAG)));
-                    trip.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ACTIVITY_TYPE_ID)));
+                    trip.setId(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ID)));
+                    trip.setName(cursor.getString(cursor.getColumnIndex(KEY_TRIP_NAME)));
+                    trip.setDesc(cursor.getString(cursor.getColumnIndex(KEY_TRIP_DESC)));
+                    trip.setState(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_STATE)));
+                    trip.setStartTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_START_TIME)));
+                    trip.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_END_TIME)));
+                    trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_PAUSED_TIME)));
+                    trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_TOTAL_TIME)));
+                    trip.setActive(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVE_FLAG)));
+                    trip.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVITY_TYPE_ID)));
                     trips.add(trip);
                 } while (cursor.moveToNext());
             }
@@ -214,10 +237,10 @@ public class TripRepo {
         String s2 = "";
         String where = "";
         if (activeFlag >= 0) {
-            s1 = Trip.KEY_TRIP_ACTIVE_FLAG + " = " + activeFlag;
+            s1 = KEY_TRIP_ACTIVE_FLAG + " = " + activeFlag;
         }
         if (activityId > 0) {
-            s2 = Trip.KEY_TRIP_ACTIVITY_TYPE_ID + " = " + activityId;
+            s2 = KEY_TRIP_ACTIVITY_TYPE_ID + " = " + activityId;
         }
         if (s1.length() > 0) {
             where = " WHERE " + s1;
@@ -229,19 +252,19 @@ public class TripRepo {
         }
 
         String selectQuery = "SELECT "
-                + Trip.KEY_TRIP_ID + ", "
-                + Trip.KEY_TRIP_NAME + ", "
-                + Trip.KEY_TRIP_DESC + ", "
-                + Trip.KEY_TRIP_STATE + ", "
-                + Trip.KEY_TRIP_START_TIME + ", "
-                + Trip.KEY_TRIP_END_TIME + ", "
-                + Trip.KEY_TRIP_PAUSED_TIME + ", "
-                + Trip.KEY_TRIP_TOTAL_TIME + ", "
-                + Trip.KEY_TRIP_ACTIVE_FLAG + ", "
-                + Trip.KEY_TRIP_ACTIVITY_TYPE_ID
-                + " FROM " + Trip.TABLE
+                + KEY_TRIP_ID + ", "
+                + KEY_TRIP_NAME + ", "
+                + KEY_TRIP_DESC + ", "
+                + KEY_TRIP_STATE + ", "
+                + KEY_TRIP_START_TIME + ", "
+                + KEY_TRIP_END_TIME + ", "
+                + KEY_TRIP_PAUSED_TIME + ", "
+                + KEY_TRIP_TOTAL_TIME + ", "
+                + KEY_TRIP_ACTIVE_FLAG + ", "
+                + KEY_TRIP_ACTIVITY_TYPE_ID
+                + " FROM " + TABLE
                 + where
-                + " ORDER BY " +  Trip.KEY_TRIP_NAME + " ASC";
+                + " ORDER BY " +  KEY_TRIP_NAME + " ASC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -252,16 +275,16 @@ public class TripRepo {
             if (cursor.moveToFirst()) {
                 do {
                     trip = new Trip();
-                    trip.setId(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ID)));
-                    trip.setName(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_NAME)));
-                    trip.setDesc(cursor.getString(cursor.getColumnIndex(Trip.KEY_TRIP_DESC)));
-                    trip.setState(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_STATE)));
-                    trip.setStartTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_START_TIME)));
-                    trip.setEndTime(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_END_TIME)));
-                    trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_PAUSED_TIME)));
-                    trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(Trip.KEY_TRIP_TOTAL_TIME)));
-                    trip.setActive(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ACTIVE_FLAG)));
-                    trip.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(Trip.KEY_TRIP_ACTIVITY_TYPE_ID)));
+                    trip.setId(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ID)));
+                    trip.setName(cursor.getString(cursor.getColumnIndex(KEY_TRIP_NAME)));
+                    trip.setDesc(cursor.getString(cursor.getColumnIndex(KEY_TRIP_DESC)));
+                    trip.setState(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_STATE)));
+                    trip.setStartTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_START_TIME)));
+                    trip.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_END_TIME)));
+                    trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_PAUSED_TIME)));
+                    trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_TOTAL_TIME)));
+                    trip.setActive(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVE_FLAG)));
+                    trip.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVITY_TYPE_ID)));
                     trips.add(trip);
                 } while (cursor.moveToNext());
             }

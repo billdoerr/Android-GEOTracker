@@ -19,8 +19,6 @@ import com.billdoerr.android.geotracker.R;
  */
 public class PermissionUtils {
 
-    private static final String TAG = "PermissionUtils";
-
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
@@ -29,7 +27,7 @@ public class PermissionUtils {
      * Used in deciding to ask runtime permission
      * */
     @SuppressLint("ObsoleteSdkInt")
-    public static boolean shouldAskPermission() {
+    private static boolean shouldAskPermission() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M);
     }
 

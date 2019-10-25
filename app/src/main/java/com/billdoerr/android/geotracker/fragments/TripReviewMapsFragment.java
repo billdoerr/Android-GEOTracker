@@ -32,20 +32,17 @@ import java.util.Objects;
 
 public class TripReviewMapsFragment extends Fragment {
 
-    public static final String TAG = "TripReviewMapsFragment";
-
     private static final String ARGS_TRIP = "trip";
 
     //  Saved instance state data
-    private static final String SAVED_MAP_TYPE = "map_type";
-    private static final String SAVED_ZOOM = "zoom";
+//    private static final String SAVED_MAP_TYPE = "map_type";
+//    private static final String SAVED_ZOOM = "zoom";
 
     private static final double mZoom = 10.0;  // Range:  2 - 21
 
     private View mView;
     private org.osmdroid.views.MapView mMapView;
     private Trip mTrip;
-    private MapUtils mMapUtils;
 
     /**
      * Required empty public constructor
@@ -54,9 +51,11 @@ public class TripReviewMapsFragment extends Fragment {
         // Pass
     }
 
-    public static TripReviewMapsFragment newInstance() {
-        return new TripReviewMapsFragment();
-    }
+// --Commented out by Inspection START (10/23/2019 2:14 PM):
+//    public static TripReviewMapsFragment newInstance() {
+//        return new TripReviewMapsFragment();
+//    }
+// --Commented out by Inspection STOP (10/23/2019 2:14 PM)
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -70,9 +69,7 @@ public class TripReviewMapsFragment extends Fragment {
         setHasOptionsMenu(false);
 
         Bundle args = getArguments();
-        mTrip = (Trip) args.getSerializable(ARGS_TRIP);
-
-        mMapUtils = new MapUtils();
+        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
     }
 
     @Override
@@ -135,10 +132,10 @@ public class TripReviewMapsFragment extends Fragment {
         super.onDetach();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -185,7 +182,7 @@ public class TripReviewMapsFragment extends Fragment {
         mMapView.setTilesScaleFactor(2);
 
         // Add compass to map
-        CompassOverlay compassOverlay = new CompassOverlay(getActivity(), new InternalCompassOrientationProvider(getActivity()), mMapView);
+        CompassOverlay compassOverlay = new CompassOverlay(Objects.requireNonNull(getActivity()), new InternalCompassOrientationProvider(getActivity()), mMapView);
         compassOverlay.enableCompass();
         mMapView.getOverlays().add(compassOverlay);
 
@@ -209,12 +206,8 @@ public class TripReviewMapsFragment extends Fragment {
      * Draw trip markers, polyline, etc
      */
     private void plotTrip() {
-        List<TripDetails> tripDetails = getTripDetails(mTrip.getId());
-//        MapUtils.plotMarkers(getContext(), mMapView, mTripDetails );
-//        MapUtils.drawPolyLine(getContext(), mMapView, tripDetails);
-//        mMapUtils.drawPolyLine(getContext(), mMapView, tripDetails);
         List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
-        mMapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+        MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
     }
 
     /**
@@ -237,6 +230,7 @@ public class TripReviewMapsFragment extends Fragment {
      * @param permission String Permission being requested
      * @param resultCode int
      */
+    @SuppressWarnings("SameParameterValue")
     private void checkPermissions(final String permission, final int resultCode) {
         PermissionUtils.checkPermission(Objects.requireNonNull(getActivity()), permission,
                 new PermissionUtils.PermissionAskListener() {
@@ -259,7 +253,7 @@ public class TripReviewMapsFragment extends Fragment {
                     @Override
                     public void onPermissionGranted() {
                         //  Init app
-                        //  TODO:  onPermissionGranted NOT BEING CALLED.  initApp()
+                        //  Handled by overriding the fragments onRequestPermissionsResult()
                     }
                 });
     }

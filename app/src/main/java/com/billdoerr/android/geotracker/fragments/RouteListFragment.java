@@ -68,9 +68,11 @@ public class RouteListFragment extends Fragment {
         // Pass
     }
 
-    public static RouteListFragment newInstance() {
-        return new RouteListFragment();
-    }
+// --Commented out by Inspection START (10/23/2019 2:15 PM):
+//    public static RouteListFragment newInstance() {
+//        return new RouteListFragment();
+//    }
+// --Commented out by Inspection STOP (10/23/2019 2:15 PM)
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,30 +112,30 @@ public class RouteListFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_route_list);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -284,7 +286,7 @@ public class RouteListFragment extends Fragment {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(Objects.requireNonNull(getActivity()).getSupportFragmentManager()).beginTransaction();
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(RouteDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
@@ -329,11 +331,12 @@ public class RouteListFragment extends Fragment {
      * FragmentDialog that allows the editing of the trip's details
      * @param requestCode int
      */
+    @SuppressWarnings("SameParameterValue")
     private void showRouteFilterDialog(int requestCode) {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(Objects.requireNonNull(getActivity()).getSupportFragmentManager()).beginTransaction();
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(RouteDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
@@ -356,8 +359,6 @@ public class RouteListFragment extends Fragment {
      * Inner class:  RouteHolder
      */
     private class RouteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private static final String TAG = "RouteHolder";
 
         private final TextView mTextName;
         private final TextView mTextDesc;
@@ -395,11 +396,9 @@ public class RouteListFragment extends Fragment {
      */
     private class RouteAdapter extends RecyclerView.Adapter<RouteHolder> implements Filterable {
 
-        private static final String TAG = "RouteAdapter";
-
         private List<Route> routeListFiltered;
 
-        public RouteAdapter(List<Route> routes) {
+        RouteAdapter(List<Route> routes) {
             mRoutes = routes;
         }
 
@@ -454,7 +453,7 @@ public class RouteListFragment extends Fragment {
             return mRoutes.size();
         }
 
-        public void setRoutes(List<Route> routes) {
+        void setRoutes(List<Route> routes) {
             mRoutes = routes;
         }
 

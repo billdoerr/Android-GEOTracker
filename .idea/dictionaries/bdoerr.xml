@@ -2,26 +2,34 @@
   <dictionary name="bdoerr">
     <words>
       <w>acdefghjklm</w>
+      <w>apikey</w>
       <w>baseactivity</w>
       <w>billdoerr</w>
       <w>curv</w>
+      <w>geopoints</w>
       <w>geotracker</w>
       <w>gnns</w>
       <w>gnss</w>
       <w>latlon</w>
+      <w>mapnik</w>
       <w>mapview</w>
       <w>mgmt</w>
       <w>mgrs</w>
       <w>mgrutm</w>
       <w>muthuraj</w>
       <w>northing</w>
+      <w>osmdroid</w>
+      <w>radiogroup</w>
       <w>recyclerview</w>
       <w>salkosuo</w>
       <w>sami</w>
       <w>sandeeptengale</w>
       <w>sqllite</w>
       <w>startindex</w>
+      <w>thunderforest</w>
+      <w>topo</w>
       <w>ttff</w>
+      <w>usgs</w>
     </words>
   </dictionary>
 </component>

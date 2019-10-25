@@ -9,18 +9,6 @@ import java.io.Serializable;
  */
 public class Route implements Serializable {
 
-    private static final String TAG = "Route";
-
-    // Table name
-    public static final String TABLE = "Route";
-
-    // Columns
-    public static final String KEY_ROUTE_ID = "route_id";
-    public static final String KEY_ROUTE_NAME = "route_name";
-    public static final String KEY_ROUTE_DESC = "route_desc";
-    public static final String KEY_ROUTE_ACTIVE_FLAG = "route_active_flag";
-    public static final String KEY_ROUTE_ACTIVITY_TYPE_ID = "activity_type_id";
-
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
 

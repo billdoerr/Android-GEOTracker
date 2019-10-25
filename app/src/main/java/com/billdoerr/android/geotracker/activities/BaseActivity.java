@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.LayoutRes;
@@ -24,6 +23,8 @@ import com.billdoerr.android.geotracker.fragments.TripListFragment;
 import com.billdoerr.android.geotracker.services.GPSService;
 import com.billdoerr.android.geotracker.settings.SettingsActivity;
 import com.billdoerr.android.geotracker.utils.FileStorageUtils;
+import com.billdoerr.android.geotracker.utils.GeoTrackerSharedPreferences;
+import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -44,19 +45,19 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
  * Main activity which other activities extend from.
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = "BaseActivity";
 
-    private static final String PREF_KEY_KEEP_DEVICE_AWAKE = "com.billdoerr.android.geotracker.settings.PREF_KEY_POWER_SAVINGS_KEEP_DEVICE_ON";
-
     // System log filename
-    public static final String SYS_LOG = "geo_tracker.log";
+    private static final String SYS_LOG = "geo_tracker.log";
 
     private ProgressDialog mProgressDialog;
     private DrawerLayout mDrawerLayout;
@@ -111,6 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -127,10 +129,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
+
     /**
      * Returns layout resource id.  Usage:  setContentView(getLayoutResId());
      * @return int:  Returns layout resource id.
      */
+    @SuppressWarnings("SameReturnValue")
     @LayoutRes
     protected int getLayoutResId() {
         return R.layout.drawer_view;
@@ -157,17 +172,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.navigation_trips:
-//                        startActivity(new Intent(BaseActivity.this, TripsActivity.class));
                         fragment = new TripListFragment();
                         loadFragmentReplace(fragment);
                         return true;
                     case R.id.navigation_track:
-//                        startActivity(new Intent(BaseActivity.this, TrackingActivity.class));
                         fragment = new TrackingFragment();
                         loadFragmentReplace(fragment);
                         return true;
                     case R.id.navigation_maps:
-//                        startActivity(new Intent(BaseActivity.this, MapsActivity.class));
                         fragment = new MapsFragment();
                         loadFragmentReplace(fragment);
                         return true;
@@ -257,6 +269,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Initialize instance of DatabaseManager
      * @return  DatabaseHelper
      */
+    @SuppressWarnings("UnusedReturnValue")
     protected DatabaseHelper initDatabase() {
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         DatabaseManager.initializeInstance(db);
@@ -381,9 +394,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param context Context:  Application context.
      */
     private void initPowerSavings(Context context) {
+        GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(this);
+        boolean keepDeviceAwake = sharedPrefs.isKeepDeviceAwake();
 
-        SharedPreferences appSharedPrefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
-        boolean keepDeviceAwake = appSharedPrefs.getBoolean(PREF_KEY_KEEP_DEVICE_AWAKE, true);
         if (keepDeviceAwake) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
@@ -403,7 +416,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void stopGPSService() {
         if (mGPSServiceIntent != null) {
-            Objects.requireNonNull(stopService(mGPSServiceIntent));
+            stopService(mGPSServiceIntent);
         }
     }
 

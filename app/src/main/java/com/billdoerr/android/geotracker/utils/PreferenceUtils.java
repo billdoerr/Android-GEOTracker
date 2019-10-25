@@ -13,9 +13,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class PreferenceUtils {
 
-    private static final String TAG = "PreferenceUtils";
-
-    private static final String PREFS_NAME = "com.billdoerr.android.geotracker.preferences";
+    private static final String PREFS_NAME = "com.billdoerr.android.geotracker_preferences";
 
     // Shared preferences
     private static final String PREF_KEY_UNITS_METRIC  = "com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_METRIC";
@@ -25,6 +23,8 @@ public class PreferenceUtils {
 //    public static final String PREF_KEY_UNITS_COORDINATE_DATUM  = "com.billdoerr.android.geotracker.settings.PREF_KEY_UNITS_COORDINATE_DATUM";
     private static final String PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL  = "com.billdoerr.android.geotracker.settings.PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL";
     private static final String PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE  = "com.billdoerr.android.geotracker.settings.PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE";
+
+    private static final String PREF_KEY_KEEP_DEVICE_AWAKE = "com.billdoerr.android.geotracker.settings.PREF_KEY_POWER_SAVINGS_KEEP_DEVICE_ON";
 
     private static final String PREF_KEY_ACTIVE_TRIP = "com.billdoerr.android.geotracker.settings.PREF_KEY_ACTIVE_TRIP";
 
@@ -37,6 +37,7 @@ public class PreferenceUtils {
      * ******************************************************************
      */
 
+    @SuppressWarnings("SameParameterValue")
     static void firstTimeAskingPermission(Context context, String permission, boolean isFirstTime){
         SharedPreferences sharedPreference = context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         sharedPreference.edit().putBoolean(permission, isFirstTime).apply();
@@ -77,6 +78,8 @@ public class PreferenceUtils {
 //        // Convert value to float.  Preference is stored as string representative of meters.
         prefs.setLocationServicesUpdateDistance(Float.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE, "2"))));
 
+        prefs.setKeepDeviceAwake(appSharedPrefs.getBoolean(PREF_KEY_KEEP_DEVICE_AWAKE, false));
+
         return prefs;
 
     }
@@ -111,9 +114,9 @@ public class PreferenceUtils {
         prefsEditor.apply();
     }
 
-    public static void clearActiveTripFromSharedPrefs(Context context) {
-        SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        appSharedPrefs.edit().remove(PREF_KEY_ACTIVE_TRIP).apply();
-    }
+//    public static void clearActiveTripFromSharedPrefs(Context context) {
+//        SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//        appSharedPrefs.edit().remove(PREF_KEY_ACTIVE_TRIP).apply();
+//    }
 
 }

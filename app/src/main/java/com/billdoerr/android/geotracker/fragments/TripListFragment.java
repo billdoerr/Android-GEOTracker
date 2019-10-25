@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.billdoerr.android.geotracker.R;
+import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
 import com.billdoerr.android.geotracker.database.repo.RouteRepo;
@@ -71,10 +72,6 @@ public class TripListFragment extends Fragment {
         // Pass
     }
 
-    public static TripListFragment newInstance() {
-        return new TripListFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +106,11 @@ public class TripListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         // Change the toolbar title text
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_trip_list);
+
+        // Check for applied filters
         if (savedInstanceState != null) {
             mActiveFlagFilter = savedInstanceState.getInt(ARGS_FILTER_ACTIVE_FLAG);
             mActivityTypeIdFilter = savedInstanceState.getInt(ARGS_FILTER_ACTIVITY_TYPE_ID);
@@ -120,20 +120,20 @@ public class TripListFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -142,10 +142,10 @@ public class TripListFragment extends Fragment {
         outState.putInt(ARGS_FILTER_ACTIVITY_TYPE_ID, mActivityTypeIdFilter);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -161,7 +161,12 @@ public class TripListFragment extends Fragment {
                     updateTrip(trip);
                     // Save trip name to routes if option selected
                     if (saveTripName) {
-                        RouteRepo.saveTripName(trip.getName());
+                        Route route = new Route();
+                        route.setActive(1);
+                        route.setName(trip.getName());
+                        route.setDesc(trip.getDesc());
+                        route.setActivityTypeId(trip.getActivityTypeId());
+                        RouteRepo.insert(route);
                     }
                 }
                 break;
@@ -180,7 +185,7 @@ public class TripListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
         // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) Objects.requireNonNull(getActivity()).getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setIconifiedByDefault(true);
@@ -250,7 +255,7 @@ public class TripListFragment extends Fragment {
 
             // If active trip, save to shared preferences
             if ((trip.getState() == Trip.TripState.PAUSED) || (trip.getState() == Trip.TripState.STARTED)) {
-                PreferenceUtils.saveActiveTripToSharedPrefs(getContext(), trip);
+                PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), trip);
             }
         } else {
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
@@ -288,11 +293,12 @@ public class TripListFragment extends Fragment {
      * FragmentDialog that allows the filtering of the trip list
      * @param requestCode int
      */
+    @SuppressWarnings("SameParameterValue")
     private void showTripDetailDialog(Trip trip, int requestCode) {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(Objects.requireNonNull(getActivity()).getSupportFragmentManager()).beginTransaction();
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
@@ -337,11 +343,12 @@ public class TripListFragment extends Fragment {
      * FragmentDialog that allows the editing of the trip's details
      * @param requestCode int
      */
+    @SuppressWarnings("SameParameterValue")
     private void showTripFilterDialog(int requestCode) {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = Objects.requireNonNull(getActivity().getSupportFragmentManager()).beginTransaction();
+        FragmentTransaction ft = Objects.requireNonNull(Objects.requireNonNull(getActivity()).getSupportFragmentManager()).beginTransaction();
         Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(TripDetailFragment.TAG);
         if (prev != null) {
             ft.remove(prev);
@@ -366,14 +373,12 @@ public class TripListFragment extends Fragment {
      */
     private class TripHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private static final String TAG = "TripHolder";
-
         private final TextView mTextName;
         private final TextView mTextDesc;
         private final TextView mTextActivity;
         private final TextView mTextViewOption;
 
-        public TripHolder (View itemView) {
+        TripHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
@@ -383,7 +388,7 @@ public class TripListFragment extends Fragment {
             mTextViewOption = itemView.findViewById(R.id.textViewOptions);
         }
 
-        public void bind(Trip trip) {
+        void bind(Trip trip) {
             mTextName.setText(trip.getName());
             mTextDesc.setText(trip.getDesc());
             // Query the ActivityTypeName.  Not sure if I should have perform inner join on query to retrieve this or not.mm
@@ -403,11 +408,9 @@ public class TripListFragment extends Fragment {
      */
     private class TripAdapter extends RecyclerView.Adapter<TripHolder> implements Filterable {
 
-        private static final String TAG = "TripAdapter";
-
         private List<Trip> tripListFiltered;
 
-        public TripAdapter(List<Trip> trips) {
+        TripAdapter(List<Trip> trips) {
             mTrips = trips;
         }
 
@@ -453,7 +456,7 @@ public class TripListFragment extends Fragment {
                                     // Create fragment
                                     TripReviewFragment fragment= new TripReviewFragment();
                                     fragment.setArguments(args);
-                                    getActivity().getSupportFragmentManager().beginTransaction()
+                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
                                             .replace(R.id.fragment_container, fragment, TripReviewFragment.TAG)
                                             .addToBackStack(TripReviewFragment.TAG)
                                             .commit();
@@ -475,7 +478,7 @@ public class TripListFragment extends Fragment {
             return mTrips.size();
         }
 
-        public void setTrips(List<Trip> trips) {
+        void setTrips(List<Trip> trips) {
             mTrips = trips;
         }
 

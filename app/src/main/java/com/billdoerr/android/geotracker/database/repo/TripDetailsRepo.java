@@ -14,14 +14,34 @@ import java.util.List;
 /**
  * Repository class which generates create, insert, delete,etc SQL statements.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class TripDetailsRepo {
 
     private static final String TAG = "TripDetailsRepo";
 
-    private TripDetails mTripDetails;
+//    private final TripDetails mTripDetails;
+//
+//    public TripDetailsRepo() {
+//        mTripDetails = new TripDetails();
+//    }
 
-    public TripDetailsRepo() {
-        mTripDetails = new TripDetails();
+    // Table name
+    private static final String TABLE = "TripDetails";
+
+    // Columns
+    private static final String KEY_TRIP_DETAILS_TRIP_ID = "trip_id";
+    private static final String KEY_TRIP_DETAILS_LATITUDE = "latitude";
+    private static final String KEY_TRIP_DETAILS_LONGITUDE = "longitude";
+    private static final String KEY_TRIP_DETAILS_ALTITUDE = "altitude";
+    private static final String KEY_TRIP_DETAILS_TIME_STAMP = "time_stamp";
+    private static final String KEY_TRIP_DETAILS_RAW_GPS_DATA = "raw_gps_data";
+
+    /**
+     * Returns table name.
+     * @return String
+     */
+    public static String getTableName() {
+        return TABLE;
     }
 
     /**
@@ -29,36 +49,36 @@ public class TripDetailsRepo {
      * @return String:  Database creation SQL string.
      */
     public static String createTable() {
-        return "CREATE TABLE " + TripDetails.TABLE + "("
-                + TripDetails.KEY_TRIP_DETAILS_TRIP_ID + " INTEGER NOT NULL, "
-                + TripDetails.KEY_TRIP_DETAILS_LATITUDE + " REAL, "
-                + TripDetails.KEY_TRIP_DETAILS_LONGITUDE + " REAL, "
-                + TripDetails.KEY_TRIP_DETAILS_ALTITUDE + " REAL, "
-                + TripDetails.KEY_TRIP_DETAILS_TIME_STAMP + " TEXT, "
-                + TripDetails.KEY_TRIP_DETAILS_RAW_GPS_DATA + " TEXT)";
+        return "CREATE TABLE " + TABLE + "("
+                + KEY_TRIP_DETAILS_TRIP_ID + " INTEGER NOT NULL, "
+                + KEY_TRIP_DETAILS_LATITUDE + " REAL, "
+                + KEY_TRIP_DETAILS_LONGITUDE + " REAL, "
+                + KEY_TRIP_DETAILS_ALTITUDE + " REAL, "
+                + KEY_TRIP_DETAILS_TIME_STAMP + " TEXT, "
+                + KEY_TRIP_DETAILS_RAW_GPS_DATA + " TEXT)";
     }
 
     /**
      * Insert record into database.
-     * @param TripDetails  TripDetails:
+     * @param tripDetails  TripDetails:
      * @return Returns -1 if error else returns row id of inserted record.
      */
-    public static int insert(TripDetails TripDetails) {
+    public static int insert(TripDetails tripDetails) {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
-        values.put(TripDetails.KEY_TRIP_DETAILS_TRIP_ID, TripDetails.getTripId());
-        values.put(TripDetails.KEY_TRIP_DETAILS_LATITUDE, TripDetails.getLatitude());
-        values.put(TripDetails.KEY_TRIP_DETAILS_LONGITUDE, TripDetails.getLongitude());
-        values.put(TripDetails.KEY_TRIP_DETAILS_ALTITUDE, TripDetails.getAltitude());
-        values.put(TripDetails.KEY_TRIP_DETAILS_TIME_STAMP, TripDetails.getTimeStamp());
-        values.put(TripDetails.KEY_TRIP_DETAILS_RAW_GPS_DATA, TripDetails.getRawGPSData());
+        values.put(KEY_TRIP_DETAILS_TRIP_ID, tripDetails.getTripId());
+        values.put(KEY_TRIP_DETAILS_LATITUDE, tripDetails.getLatitude());
+        values.put(KEY_TRIP_DETAILS_LONGITUDE, tripDetails.getLongitude());
+        values.put(KEY_TRIP_DETAILS_ALTITUDE, tripDetails.getAltitude());
+        values.put(KEY_TRIP_DETAILS_TIME_STAMP, tripDetails.getTimeStamp());
+//        values.put(KEY_TRIP_DETAILS_RAW_GPS_DATA, tripDetails.getRawGPSData());
 
         // Insert row
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            rowId = (int)db.insert(TripDetails.TABLE, null, values);
+            rowId = (int)db.insert(TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -72,33 +92,33 @@ public class TripDetailsRepo {
 
     /**
      * Delete record(s) from database specified by the index.
-     * @param id int:  Index for the TripDetails.
+     * @param id int:  Index for the
      * @return int:  Number of records deleted.
      */
     public static int delete(int id) {
         int recordsDeleted = 0;
 
-       String whereClause = TripDetails.KEY_TRIP_DETAILS_TRIP_ID + " = ?";
-       String[] whereArgs = new String[]{Integer.toString(id) };
+        String whereClause = KEY_TRIP_DETAILS_TRIP_ID + " = ?";
+        String[] whereArgs = new String[]{Integer.toString(id) };
 
-       // Delete record(s)
-       SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-       try {
-           db.beginTransaction();
-           recordsDeleted = db.delete(TripDetails.TABLE, whereClause, whereArgs);
-           db.setTransactionSuccessful();
-       } catch (Exception e) {
-           Log.e(TAG, e.getMessage());
-       } finally {
-           db.endTransaction();
-           DatabaseManager.getInstance().closeDatabase();
-       }
+        // Delete record(s)
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try {
+            db.beginTransaction();
+            recordsDeleted = db.delete(TABLE, whereClause, whereArgs);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            db.endTransaction();
+            DatabaseManager.getInstance().closeDatabase();
+        }
 
         return recordsDeleted;
     }
 
 //    /**
-//     * Update record in database specified by the TripDetails.id which is the index of the table.
+//     * Update record in database specified by the id which is the index of the table.
 //     * @param TripDetails  TripDetails:
 //     * @return  int:  Number of rows updated.
 //     */
@@ -107,21 +127,21 @@ public class TripDetailsRepo {
 //
 //
 //       ContentValues values = new ContentValues();
-//       values.put(TripDetails.KEY_TRIP_DETAILS_TRIP_ID, TripDetails.getId());
-//       values.put(TripDetails.KEY_TRIP_DETAILS_LATITUDE, TripDetails.getLatitude());
-//       values.put(TripDetails.KEY_TRIP_DETAILS_LONGITUDE, TripDetails.getLongitude());
-//       values.put(TripDetails.KEY_TRIP_DETAILS_ALTITUDE, TripDetails.getAltitude());
-//       values.put(TripDetails.KEY_TRIP_DETAILS_TIME_STAMP, TripDetails.getTimeStamp());
-//       values.put(TripDetails.KEY_TRIP_DETAILS_RAW_GPS_DATA, TripDetails.getRawGPSData());
+//       values.put(KEY_TRIP_DETAILS_TRIP_ID, getId());
+//       values.put(KEY_TRIP_DETAILS_LATITUDE, getLatitude());
+//       values.put(KEY_TRIP_DETAILS_LONGITUDE, getLongitude());
+//       values.put(KEY_TRIP_DETAILS_ALTITUDE, getAltitude());
+//       values.put(KEY_TRIP_DETAILS_TIME_STAMP, getTimeStamp());
+//       values.put(KEY_TRIP_DETAILS_RAW_GPS_DATA, getRawGPSData());
 //
-//       String whereClause = TripDetails.KEY_ACTIVITY_TYPE_ID + " = ?";
-//       String[] whereArgs = new String[]{ Integer.toString(TripDetails.getTripDetailsId()) };
+//       String whereClause = KEY_ACTIVITY_TYPE_ID + " = ?";
+//       String[] whereArgs = new String[]{ Integer.toString(getTripDetailsId()) };
 //
 //       // Update record
 //       SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
 //       try {
 //           db.beginTransaction();
-//           recordsUpdated = db.update(TripDetails.TABLE, values, whereClause, whereArgs);
+//           recordsUpdated = db.update(TABLE, values, whereClause, whereArgs);
 //           db.setTransactionSuccessful();
 //       } catch (Exception e) {
 //           Log.e(TAG, e != null && e.getMessage() != null ? e.getMessage() : "");
@@ -143,13 +163,13 @@ public class TripDetailsRepo {
         TripDetails tripDetail;
 
         String selectQuery = "SELECT "
-                + TripDetails.KEY_TRIP_DETAILS_LATITUDE + ", "
-                + TripDetails.KEY_TRIP_DETAILS_LONGITUDE + ", "
-                + TripDetails.KEY_TRIP_DETAILS_ALTITUDE + ", "
-                + TripDetails.KEY_TRIP_DETAILS_TIME_STAMP
-                + " FROM " + TripDetails.TABLE
-                + " WHERE " + TripDetails.KEY_TRIP_DETAILS_TRIP_ID + " = " + id
-                + " ORDER BY " +  TripDetails.KEY_TRIP_DETAILS_TIME_STAMP + " ASC";
+                + KEY_TRIP_DETAILS_LATITUDE + ", "
+                + KEY_TRIP_DETAILS_LONGITUDE + ", "
+                + KEY_TRIP_DETAILS_ALTITUDE + ", "
+                + KEY_TRIP_DETAILS_TIME_STAMP
+                + " FROM " + TABLE
+                + " WHERE " + KEY_TRIP_DETAILS_TRIP_ID + " = " + id
+                + " ORDER BY " +  KEY_TRIP_DETAILS_TIME_STAMP + " ASC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -160,10 +180,10 @@ public class TripDetailsRepo {
             if (cursor.moveToFirst()) {
                 do {
                     tripDetail = new TripDetails();
-                    tripDetail.setLatitude(cursor.getDouble(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_LATITUDE)));
-                    tripDetail.setLongitude(cursor.getDouble(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_LONGITUDE)));
-                    tripDetail.setAltitude(cursor.getDouble(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_ALTITUDE)));
-                    tripDetail.setTimeStamp(cursor.getLong(cursor.getColumnIndex(TripDetails.KEY_TRIP_DETAILS_TIME_STAMP)));
+                    tripDetail.setLatitude(cursor.getDouble(cursor.getColumnIndex(KEY_TRIP_DETAILS_LATITUDE)));
+                    tripDetail.setLongitude(cursor.getDouble(cursor.getColumnIndex(KEY_TRIP_DETAILS_LONGITUDE)));
+                    tripDetail.setAltitude(cursor.getDouble(cursor.getColumnIndex(KEY_TRIP_DETAILS_ALTITUDE)));
+                    tripDetail.setTimeStamp(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_DETAILS_TIME_STAMP)));
                     tripDetails.add(tripDetail);
                 } while (cursor.moveToNext());
             }

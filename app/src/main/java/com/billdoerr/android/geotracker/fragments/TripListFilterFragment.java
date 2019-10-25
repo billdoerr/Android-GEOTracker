@@ -21,13 +21,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TripListFilterFragment extends DialogFragment {
 
     // Making public since it is used with DialogFragment.show() in calling fragment
     public static final String TAG = "TripListFilterFragment";
-
-    private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
 
     private static final String ARGS_FILTER_ACTIVE_FLAG = "args_filter_active_flag";
     private static final String ARGS_FILTER_ACTIVITY_TYPE_ID = "args_filter_activity_type_id";
@@ -65,18 +64,18 @@ public class TripListFilterFragment extends DialogFragment {
 
         // Set dialog title
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
-        getDialog().setTitle(R.string.dialog_title_trip_list_filter);
+        Objects.requireNonNull(getDialog()).setTitle(R.string.dialog_title_trip_list_filter);
 
         final Spinner spinnerActivity = view.findViewById(R.id.spinnerActivity);
         final RadioButton radioButtonAll = view.findViewById(R.id.radioButtonAll);
         final RadioButton radioButtonActive = view.findViewById(R.id.radioButtonActive);
-        final RadioButton radioButtoninactive = view.findViewById(R.id.radioButtonInactive);
+        final RadioButton radioButtonInactive = view.findViewById(R.id.radioButtonInactive);
         final Button btnOk = view.findViewById(R.id.btn_ok);
         final Button btnCancel = view.findViewById(R.id.btn_cancel);
 
         radioButtonAll.setOnClickListener(onRadioButtonClicked);
         radioButtonActive.setOnClickListener(onRadioButtonClicked);
-        radioButtoninactive.setOnClickListener(onRadioButtonClicked);
+        radioButtonInactive.setOnClickListener(onRadioButtonClicked);
 
         // Initialize which radio button is checked
         switch (mActiveFlagFilter) {
@@ -84,7 +83,7 @@ public class TripListFilterFragment extends DialogFragment {
                 radioButtonActive.setChecked(true);
                 break;
             case Trip.INACTIVE:
-                radioButtoninactive.setChecked(true);
+                radioButtonInactive.setChecked(true);
                 break;
             default:
                 radioButtonAll.setChecked(true);
@@ -112,7 +111,7 @@ public class TripListFilterFragment extends DialogFragment {
          */
         // Fill data in spinner
         List<ActivityType> listActivities = getActivities();
-        ArrayAdapter<ActivityType> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listActivities);
+        ArrayAdapter<ActivityType> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_dropdown_item, listActivities);
         spinnerActivity.setAdapter(adapter);
 
         spinnerActivity.setSelection(getIndex(listActivities, mActivityTypeIdFilter));
@@ -133,15 +132,15 @@ public class TripListFilterFragment extends DialogFragment {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
     /**
      * Handles the RadioButton's click event.  Defined in layout xml.
      */
-    private View.OnClickListener onRadioButtonClicked = new View.OnClickListener() {
+    private final View.OnClickListener onRadioButtonClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             boolean checked = ((RadioButton) view).isChecked();

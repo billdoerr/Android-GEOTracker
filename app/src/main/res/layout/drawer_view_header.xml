@@ -5,8 +5,7 @@
     android:padding="16dp"
     android:orientation="vertical"
     android:gravity="bottom"
-    android:background="?attr/colorPrimaryDark"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark" >
+    android:theme="@style/DrawerTheme" >
 
     <TextView
         android:layout_width="match_parent"

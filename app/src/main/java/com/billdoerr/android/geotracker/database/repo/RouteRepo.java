@@ -14,14 +14,33 @@ import java.util.List;
 /**
  * Repository class which generates create, insert, delete,etc SQL statements.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class RouteRepo {
 
     private static final String TAG = "RouteRepo";
 
-    private Route mRoute;
+    // Table name
+    private static final String TABLE = "Route";
 
-    public RouteRepo() {
-        mRoute = new Route();
+    // Columns
+    private static final String KEY_ROUTE_ID = "route_id";
+    private static final String KEY_ROUTE_NAME = "route_name";
+    private static final String KEY_ROUTE_DESC = "route_desc";
+    private static final String KEY_ROUTE_ACTIVE_FLAG = "route_active_flag";
+    private static final String KEY_ROUTE_ACTIVITY_TYPE_ID = "activity_type_id";
+
+//    private final Route mRoute;
+//
+//    public RouteRepo() {
+//        mRoute = new Route();
+//    }
+
+    /**
+     * Returns table name.
+     * @return String
+     */
+    public static String getTableName() {
+        return TABLE;
     }
 
     /**
@@ -29,33 +48,33 @@ public class RouteRepo {
      * @return String:  Database creation SQL string.
      */
     public static String createTable() {
-        return "CREATE TABLE " + Route.TABLE + "("
-                + Route.KEY_ROUTE_ID + " INTEGER PRIMARY KEY, "
-                + Route.KEY_ROUTE_NAME + " TEXT NOT NULL UNIQUE, "
-                + Route.KEY_ROUTE_DESC + " TEXT, "
-                + Route.KEY_ROUTE_ACTIVE_FLAG + " INT, "
-                + Route.KEY_ROUTE_ACTIVITY_TYPE_ID + " INT)";
+        return "CREATE TABLE " + TABLE + "("
+                + KEY_ROUTE_ID + " INTEGER PRIMARY KEY, "
+                + KEY_ROUTE_NAME + " TEXT NOT NULL UNIQUE, "
+                + KEY_ROUTE_DESC + " TEXT, "
+                + KEY_ROUTE_ACTIVE_FLAG + " INT, "
+                + KEY_ROUTE_ACTIVITY_TYPE_ID + " INT)";
     }
 
     /**
      * Insert record into database.
-     * @param Route  Route:
+     * @param route  Route:
      * @return Returns -1 if error else returns row id of inserted record.
      */
-    public static int insert(Route Route) {
+    public static int insert(Route route) {
         int rowId = -1;
 
         ContentValues values = new ContentValues();
-        values.put(Route.KEY_ROUTE_NAME, Route.getName());
-        values.put(Route.KEY_ROUTE_DESC, Route.getDesc());
-        values.put(Route.KEY_ROUTE_ACTIVE_FLAG, Route.isActive());
-        values.put(Route.KEY_ROUTE_ACTIVITY_TYPE_ID, Route.getActivityTypeId());
+        values.put(KEY_ROUTE_NAME, route.getName());
+        values.put(KEY_ROUTE_DESC, route.getDesc());
+        values.put(KEY_ROUTE_ACTIVE_FLAG, route.isActive());
+        values.put(KEY_ROUTE_ACTIVITY_TYPE_ID, route.getActivityTypeId());
 
         // Insert row
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            rowId = (int)db.insert(Route.TABLE, null, values);
+            rowId = (int)db.insert(TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -69,20 +88,20 @@ public class RouteRepo {
 
     /**
      * Delete record(s) from database specified by the index.
-     * @param id  int:  Index for the Route.
+     * @param id  int:  Index for the
      * @return int:  Number of records deleted.
      */
     public static int delete(int id) {
         int recordsDeleted = 0;
 
-        String whereClause = Route.KEY_ROUTE_ID + " = ?";
+        String whereClause = KEY_ROUTE_ID + " = ?";
         String[] whereArgs = new String[]{Integer.toString(id) };
 
         // Delete record(s)
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            recordsDeleted = db.delete(Route.TABLE, whereClause, whereArgs);
+            recordsDeleted = db.delete(TABLE, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -95,7 +114,7 @@ public class RouteRepo {
     }
 
     /**
-     * Update record in database specified by the Route.id which is the index of the table.
+     * Update record in database specified by the id which is the index of the table.
      * @param route  Route:
      * @return  int:  Number of rows updated.
      */
@@ -103,19 +122,19 @@ public class RouteRepo {
         int recordsUpdated = 0;
 
         ContentValues values = new ContentValues();
-        values.put(Route.KEY_ROUTE_NAME, route.getName());
-        values.put(Route.KEY_ROUTE_DESC, route.getDesc());
-        values.put(Route.KEY_ROUTE_ACTIVE_FLAG, route.isActive());
-        values.put(Route.KEY_ROUTE_ACTIVITY_TYPE_ID, route.getActivityTypeId());
+        values.put(KEY_ROUTE_NAME, route.getName());
+        values.put(KEY_ROUTE_DESC, route.getDesc());
+        values.put(KEY_ROUTE_ACTIVE_FLAG, route.isActive());
+        values.put(KEY_ROUTE_ACTIVITY_TYPE_ID, route.getActivityTypeId());
 
-        String whereClause = Route.KEY_ROUTE_ID + " = ?";
+        String whereClause = KEY_ROUTE_ID + " = ?";
         String[] whereArgs = new String[]{ Integer.toString(route.getId()) };
 
         // Update record
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
             db.beginTransaction();
-            recordsUpdated = db.update(Route.TABLE, values, whereClause, whereArgs);
+            recordsUpdated = db.update(TABLE, values, whereClause, whereArgs);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
@@ -136,13 +155,13 @@ public class RouteRepo {
         Route route;
 
         String selectQuery = "SELECT "
-                + Route.KEY_ROUTE_ID + ", "
-                + Route.KEY_ROUTE_NAME + ", "
-                + Route.KEY_ROUTE_DESC + ", "
-                + Route.KEY_ROUTE_ACTIVE_FLAG + ", "
-                + Route.KEY_ROUTE_ACTIVITY_TYPE_ID
-                + " FROM " + Route.TABLE
-                + " ORDER BY " +  Route.KEY_ROUTE_NAME + " ASC";
+                + KEY_ROUTE_ID + ", "
+                + KEY_ROUTE_NAME + ", "
+                + KEY_ROUTE_DESC + ", "
+                + KEY_ROUTE_ACTIVE_FLAG + ", "
+                + KEY_ROUTE_ACTIVITY_TYPE_ID
+                + " FROM " + TABLE
+                + " ORDER BY " +  KEY_ROUTE_NAME + " ASC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -153,11 +172,11 @@ public class RouteRepo {
             if (cursor.moveToFirst()) {
                 do {
                     route = new Route();
-                    route.setId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ID)));
-                    route.setName(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_NAME)));
-                    route.setDesc(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_DESC)));
-                    route.setActive(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVE_FLAG)));
-                    route.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVITY_TYPE_ID)));
+                    route.setId(cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ID)));
+                    route.setName(cursor.getString(cursor.getColumnIndex(KEY_ROUTE_NAME)));
+                    route.setDesc(cursor.getString(cursor.getColumnIndex(KEY_ROUTE_DESC)));
+                    route.setActive(cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ACTIVE_FLAG)));
+                    route.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ACTIVITY_TYPE_ID)));
                     routes.add(route);
                 } while (cursor.moveToNext());
             }
@@ -174,34 +193,6 @@ public class RouteRepo {
     }
 
     /**
-     * Saves trip name to routes table.
-     * @param tripName String
-     * @return Returns -1 if error else returns row id of inserted record.
-     */
-
-    public static int saveTripName(String tripName) {
-        int rowId = -1;
-
-        ContentValues values = new ContentValues();
-        values.put(Route.KEY_ROUTE_NAME, tripName);
-
-        // Insert row
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
-        try {
-            db.beginTransaction();
-            rowId = (int)db.insert(Route.TABLE, null, values);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
-        } finally {
-            db.endTransaction();
-            DatabaseManager.getInstance().closeDatabase();
-        }
-
-        return rowId;
-    }
-
-    /**
      * Returns array of route names.
      * @return List<Route>
      */
@@ -209,9 +200,9 @@ public class RouteRepo {
         List<String> array = new ArrayList<>();
 
         String selectQuery = "SELECT "
-                + Route.KEY_ROUTE_NAME
-                + " FROM " + Route.TABLE
-                + " ORDER BY " +  Route.KEY_ROUTE_NAME + " ASC";
+                + KEY_ROUTE_NAME
+                + " FROM " + TABLE
+                + " ORDER BY " +  KEY_ROUTE_NAME + " ASC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -221,7 +212,7 @@ public class RouteRepo {
             // Loop through all rows and add to list
             if (cursor.moveToFirst()) {
                 do {
-                    array.add(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_NAME)));
+                    array.add(cursor.getString(cursor.getColumnIndex(KEY_ROUTE_NAME)));
                 } while (cursor.moveToNext());
             }
 
@@ -249,10 +240,10 @@ public class RouteRepo {
         String s2 = "";
         String where = "";
         if (activeFlag >= 0) {
-            s1 = Route.KEY_ROUTE_ACTIVE_FLAG + " = " + activeFlag;
+            s1 = KEY_ROUTE_ACTIVE_FLAG + " = " + activeFlag;
         }
         if (activityId > 0) {
-            s2 = Route.KEY_ROUTE_ACTIVITY_TYPE_ID + " = " + activityId;
+            s2 = KEY_ROUTE_ACTIVITY_TYPE_ID + " = " + activityId;
         }
         if (s1.length() > 0) {
             where = " WHERE " + s1;
@@ -264,14 +255,14 @@ public class RouteRepo {
         }
 
         String selectQuery = "SELECT "
-                + Route.KEY_ROUTE_ID + ", "
-                + Route.KEY_ROUTE_NAME + ", "
-                + Route.KEY_ROUTE_DESC + ", "
-                + Route.KEY_ROUTE_ACTIVE_FLAG + ", "
-                + Route.KEY_ROUTE_ACTIVITY_TYPE_ID
-                + " FROM " + Route.TABLE
+                + KEY_ROUTE_ID + ", "
+                + KEY_ROUTE_NAME + ", "
+                + KEY_ROUTE_DESC + ", "
+                + KEY_ROUTE_ACTIVE_FLAG + ", "
+                + KEY_ROUTE_ACTIVITY_TYPE_ID
+                + " FROM " + TABLE
                 + where
-                + " ORDER BY " +  Route.KEY_ROUTE_NAME + " ASC";
+                + " ORDER BY " +  KEY_ROUTE_NAME + " ASC";
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
@@ -282,11 +273,11 @@ public class RouteRepo {
             if (cursor.moveToFirst()) {
                 do {
                     route = new Route();
-                    route.setId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ID)));
-                    route.setName(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_NAME)));
-                    route.setDesc(cursor.getString(cursor.getColumnIndex(Route.KEY_ROUTE_DESC)));
-                    route.setActive(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVE_FLAG)));
-                    route.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(Route.KEY_ROUTE_ACTIVITY_TYPE_ID)));
+                    route.setId(cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ID)));
+                    route.setName(cursor.getString(cursor.getColumnIndex(KEY_ROUTE_NAME)));
+                    route.setDesc(cursor.getString(cursor.getColumnIndex(KEY_ROUTE_DESC)));
+                    route.setActive(cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ACTIVE_FLAG)));
+                    route.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ACTIVITY_TYPE_ID)));
                     routes.add(route);
                 } while (cursor.moveToNext());
             }

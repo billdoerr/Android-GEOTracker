@@ -7,17 +7,6 @@ import androidx.annotation.NonNull;
  */
 public class ActivityType {
 
-    private static final String TAG = "ActivityType";
-
-    // Table name
-    public static final String TABLE = "ActivityType";
-
-    // Columns
-    public static final String KEY_ACTIVITY_TYPE_ID = "activity_type_id";
-    public static final String KEY_ACTIVITY_TYPE_NAME = "activity_type_name";
-    public static final String KEY_ACTIVITY_TYPE_DESC = "activity_type_desc";
-    public static final String KEY_ACTIVITY_TYPE_ACTIVE_FLAG = "activity_type_active_flag";
-
     public static final int INACTIVE = 0;
     public static final int ACTIVE = 1;
 

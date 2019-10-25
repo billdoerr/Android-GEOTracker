@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 public class GeoTrackerSharedPreferences  implements Serializable {
 
-    private static final String TAG = "GeoTrackerSharedPreferences";
-
     private boolean mUnitsMetric;
     private boolean mUnitsNautical;
     private int mCoordinateType;
@@ -13,6 +11,8 @@ public class GeoTrackerSharedPreferences  implements Serializable {
     private float mLocationServicesUpdateDistance;
     // Feature supporting this has not been implemented
 //    private static int mCoordinateDatum;
+    private boolean mKeepDeviceAwake;
+
 
     public GeoTrackerSharedPreferences() {
         // Pass
@@ -109,5 +109,19 @@ public class GeoTrackerSharedPreferences  implements Serializable {
 //    }
 
 
+    /**
+     * Check preferences whether to keep screen on
+     * @return boolean
+     */
+    public boolean isKeepDeviceAwake() {
+        return mKeepDeviceAwake;
+    }
 
+    /**
+     * Check preferences whether to keep screen on
+     * @param keepDeviceAwake boolean
+     */
+    public void setKeepDeviceAwake(boolean keepDeviceAwake) {
+        mKeepDeviceAwake = keepDeviceAwake;
+    }
 }

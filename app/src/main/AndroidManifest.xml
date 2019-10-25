@@ -44,18 +44,6 @@
         </activity>
 
         <activity
-            android:name=".activities.MapsActivity"
-            android:label="@string/activity_title_maps"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
-            android:name=".activities.TrackingActivity"
-            android:label="@string/activity_title_trips"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/activity_title_settings"
             android:theme="@style/AppTheme">

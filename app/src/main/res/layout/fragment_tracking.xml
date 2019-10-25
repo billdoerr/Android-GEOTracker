@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:fillViewport="true"
-    android:paddingBottom="?attr/actionBarSize"
-    android:scrollbars="vertical">
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="?attr/actionBarSize">
+    android:paddingTop="?attr/actionBarSize" >
 
         <TableRow
             android:layout_width="match_parent"
@@ -54,456 +46,449 @@
 
         </TableRow>
 
-        <TableRow
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"
+            android:paddingBottom="?attr/actionBarSize" >
 
-            <EditText
-                android:id="@+id/textTripTitle"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/textTripTitle"
-                android:hint="@string/textTripTitle"
-                android:inputType="textCapWords"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:importantForAutofill="no" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textLatitudeLongitude"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/textLatitudeLongitude"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textLatitudeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="center_vertical"
-                android:text="@string/textLatitude"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textLatitudeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textLatitudeUnits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".15"
-                android:text=""
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </TableRow>
-
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textLongitudeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="center_vertical"
-                android:text="@string/textLongitude"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textLongitudeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textLongitudeUnits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".15"
-                android:text=""
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textElevationLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="center_vertical"
-                android:text="@string/textElevation"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textElevationData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textElevationUnits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".15"
-                android:text=""
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textBearingLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="center_vertical"
-                android:text="@string/textBearing"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textBearingData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textBearingUnits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".15"
-                android:text="@string/textBearingUnits"
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </TableRow>
-
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textSpeedLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="center_vertical"
-                android:text="@string/textSpeed"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textSpeedData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textSpeedUnits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".15"
-                android:text=""
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textAccuracyLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".25"
-                android:gravity="center_vertical"
-                android:text="@string/textAccuracy"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textAccuracyData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".6"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textAccuracyUnits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".15"
-                android:text=""
-                android:textAlignment="viewStart"
-                android:textSize="14sp" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textEmptyRow0"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=""
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textCurrentTimeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:text="@string/textCurrentTime"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textCurrentTimeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textStartTimeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:text="@string/textStartTime"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textStartTimeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textEndTimeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:text="@string/textEndTime"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textEndTimeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textTrackingTimeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:text="@string/textMovingTime"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textTrackingTimeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textPausedTimeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:text="@string/textPausedTime"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textPausedTimeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textTotalTimeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:gravity="center_vertical"
-                android:text="@string/textTotalTime"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textTotalTimeData"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".7"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/cell_border">
-
-            <TextView
-                android:id="@+id/textEmptyRow1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=""
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-
-    </TableLayout>
-
-</ScrollView>
+                android:orientation="vertical" >
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="2dp">
+
+                    <EditText
+                        android:id="@+id/textTripTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/textTripTitle"
+                        android:hint="@string/textTripTitle"
+                        android:inputType="textCapWords"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:importantForAutofill="no" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:id="@+id/textLatitudeLongitude"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/textLatitudeLongitude"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:gravity="center_vertical"
+                        android:text="@string/textLatitude"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textLatitudeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".15"
+                        android:text=""
+                        android:textAlignment="viewStart"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:gravity="center_vertical"
+                        android:text="@string/textLongitude"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textLongitudeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".15"
+                        android:text=""
+                        android:textAlignment="viewStart"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:gravity="center_vertical"
+                        android:text="@string/textElevation"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textElevationData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textElevationUnits"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".15"
+                        android:text=""
+                        android:textAlignment="viewStart"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:gravity="center_vertical"
+                        android:text="@string/textBearing"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textBearingData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".15"
+                        android:text="@string/textBearingUnits"
+                        android:textAlignment="viewStart"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:gravity="center_vertical"
+                        android:text="@string/textSpeed"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textSpeedData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textSpeedUnits"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".15"
+                        android:text=""
+                        android:textAlignment="viewStart"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".25"
+                        android:gravity="center_vertical"
+                        android:text="@string/textAccuracy"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textAccuracyData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textAccuracyUnits"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".15"
+                        android:text=""
+                        android:textAlignment="viewStart"
+                        android:textSize="14sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="center_vertical"
+                        android:text="@string/textCurrentTime"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textCurrentTimeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="center_vertical"
+                        android:text="@string/textStartTime"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textStartTimeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="center_vertical"
+                        android:text="@string/textEndTime"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textEndTimeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="center_vertical"
+                        android:text="@string/textMovingTime"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textTrackingTimeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="center_vertical"
+                        android:text="@string/textPausedTime"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textPausedTimeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="center_vertical"
+                        android:text="@string/textTotalTime"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textTotalTimeData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+            </LinearLayout>
+        </ScrollView>
+</TableLayout>
+

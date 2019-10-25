@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static java.lang.Math.abs;
 
+@SuppressWarnings("ALL")
 public class CoordinateConversionUtils
 {
 
@@ -718,6 +719,7 @@ public class CoordinateConversionUtils
       return -1;
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     public String getDigraph1(int longZone, double easting)
     {
       int a1 = longZone;
@@ -728,6 +730,7 @@ public class CoordinateConversionUtils
       return (String) digraph1.get((int) Math.floor(a4));
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     public String getDigraph2(int longZone, double northing)
     {
       int a1 = longZone;
@@ -765,6 +768,7 @@ public class CoordinateConversionUtils
 
     private final int[] posDegrees = { 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 84 };
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final int arrayLength = 22;
 
     public LatZones()
@@ -784,6 +788,7 @@ public class CoordinateConversionUtils
       return -100;
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public String getLatZone(double latitude)
     {
       int latIndex = -2;

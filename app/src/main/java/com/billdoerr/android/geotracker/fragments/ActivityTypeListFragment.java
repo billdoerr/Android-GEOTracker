@@ -32,8 +32,6 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class ActivityTypeListFragment extends Fragment {
 
-    private static final String TAG = "ActivityTypeListFragment";
-
     private List<ActivityType> mActivityTypes;
     private ActivityTypeAdapter mActivityTypeAdapter;
 
@@ -58,7 +56,7 @@ public class ActivityTypeListFragment extends Fragment {
         });
 
         // Get data
-        mActivityTypes = new ActivityTypeRepo().getActivities();
+        mActivityTypes = ActivityTypeRepo.getActivities();
 
         RecyclerView activityTypeRecyclerView = view.findViewById(R.id.activityTypeList);
         activityTypeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,30 +77,30 @@ public class ActivityTypeListFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_activity_type_list);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//    }
 
     // We are disabling the options menu in this fragment.  Must also set
     // setHasOptionsMenu(true); in onCreate()
@@ -126,8 +124,6 @@ public class ActivityTypeListFragment extends Fragment {
      * Inner class:  ActivityTypeHolder
      */
     private class ActivityTypeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private static final String TAG = "ActivityTypeHolder";
 
         private final TextView mTextName;
         private final TextView mTextDesc;
@@ -158,8 +154,6 @@ public class ActivityTypeListFragment extends Fragment {
      */
     private class ActivityTypeAdapter extends RecyclerView.Adapter<ActivityTypeHolder> {
 
-            private static final String TAG = "ActivityTypeAdapter";
-
             private ActivityTypeAdapter(List<ActivityType> activityTypes) {
                 mActivityTypes = activityTypes;
             }
@@ -189,7 +183,7 @@ public class ActivityTypeListFragment extends Fragment {
 
             private void updateList() {
                 mActivityTypes.clear();
-                mActivityTypes = new ActivityTypeRepo().getActivities();
+                mActivityTypes = ActivityTypeRepo.getActivities();
             }
 
         }
@@ -225,14 +219,14 @@ public class ActivityTypeListFragment extends Fragment {
                     at.setName(textName.getText().toString());
                     at.setDesc(textDesc.getText().toString());
                     at.setActive(checkActive.isChecked() ? 1 : 0);
-                    new ActivityTypeRepo().insert(at);
+                    ActivityTypeRepo.insert(at);
                     mActivityTypeAdapter.updateList();
                 } else {
                     // Update current record
                     activityType.setName(textName.getText().toString());
                     activityType.setDesc(textDesc.getText().toString());
                     activityType.setActive(checkActive.isChecked() ? 1 : 0);
-                    new ActivityTypeRepo().update(activityType);
+                    ActivityTypeRepo.update(activityType);
                 }
 
                 mActivityTypeAdapter.notifyDataSetChanged();

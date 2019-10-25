@@ -7,40 +7,27 @@ import android.location.Location;
  */
 public class TripDetails {
 
-    private static final String TAG = "TripDetails";
-
-    // Table name
-    public static final String TABLE = "TripDetails";
-
-    // Columns
-    public static final String KEY_TRIP_DETAILS_TRIP_ID = "trip_id";
-    public static final String KEY_TRIP_DETAILS_LATITUDE = "latitude";
-    public static final String KEY_TRIP_DETAILS_LONGITUDE = "longitude";
-    public static final String KEY_TRIP_DETAILS_ALTITUDE = "altitude";
-    public static final String KEY_TRIP_DETAILS_TIME_STAMP = "time_stamp";
-    public static final String KEY_TRIP_DETAILS_RAW_GPS_DATA = "raw_gps_data";
-
-    private Location mLocation;
+//    private Location mLocation;
     private int tripId;
     private double latitude;
     private double longitude;
     private double altitude;
     private long timeStamp;
-    private String rawGPSData;
+//    private String rawGPSData;
 
     public void setLocation(Location location) {
-        mLocation = location;
+//        mLocation = location;
 //        tripId = location;
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         altitude = location.getAltitude();
         timeStamp = location.getTime();
-//        rawGPSData = location.getR;
+//        rawGPSData = location.
     }
 
-    public Location getLocation() {
-        return mLocation;
-    }
+//    public Location getLocation() {
+//        return mLocation;
+//    }
 
     public int getTripId() {
         return tripId;
@@ -82,11 +69,12 @@ public class TripDetails {
         this.timeStamp = timeStamp;
     }
 
-    public String getRawGPSData() {
-        return rawGPSData;
-    }
+//    public String getRawGPSData() {
+//        return rawGPSData;
+//    }
 
-    public void setRawGPSData(String rawGPSData) {
-        this.rawGPSData = rawGPSData;
-    }
+//    public void setRawGPSData(String rawGPSData) {
+//        this.rawGPSData = rawGPSData;
+//    }
+
 }

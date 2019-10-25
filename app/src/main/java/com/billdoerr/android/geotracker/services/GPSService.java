@@ -53,10 +53,10 @@ public class GPSService extends Service implements LocationListener {
         // Pass
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -164,15 +164,15 @@ public class GPSService extends Service implements LocationListener {
         mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
         GnssStatus.Callback gnssStatusListener = new GnssStatus.Callback() {
-            @Override
-            public void onStarted() {
-                super.onStarted();
-            }
+//            @Override
+//            public void onStarted() {
+//                super.onStarted();
+//            }
 
-            @Override
-            public void onStopped() {
-                super.onStopped();
-            }
+//            @Override
+//            public void onStopped() {
+//                super.onStopped();
+//            }
 
             @Override
             public void onFirstFix(int ttffMillis) {

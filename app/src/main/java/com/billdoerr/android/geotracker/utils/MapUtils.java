@@ -17,11 +17,9 @@ import java.util.List;
 
 public class MapUtils {
 
-    private static final String TAG = "MapUtils";
-
-    private static List<Marker> sMarkers;
-    private static Marker mStartMarker;
-    private static Marker mEndMarker;
+//    private static List<Marker> sMarkers;
+//    private static Marker mStartMarker;
+//    private static Marker mEndMarker;
 
     /**
      * Draws PolyLine
@@ -60,7 +58,7 @@ public class MapUtils {
      * @param start boolean True if starting point
      * @param end boolean True if ending point
      */
-    public static void drawMarker(Context context, MapView map, GeoPoint geoPoint, boolean animate, boolean start, boolean end) {
+    private static void drawMarker(Context context, MapView map, GeoPoint geoPoint, boolean animate, boolean start, boolean end) {
         if (map == null || context == null) return;
 
         Marker marker = new Marker(map);
@@ -71,10 +69,10 @@ public class MapUtils {
         // Set marker icon.
         if (start) {
             marker.setIcon(context.getDrawable(R.drawable.marker_default));
-            mStartMarker = marker;
+//            mStartMarker = marker;
         } else if (end) {
             marker.setIcon(context.getDrawable(R.drawable.person));
-            mEndMarker = marker;
+//            mEndMarker = marker;
         } else {
             marker.setIcon(context.getDrawable(R.drawable.marker_default));
         }
@@ -90,35 +88,35 @@ public class MapUtils {
         map.invalidate();
     }
 
-    /**
-     * Draws a list of points on map
-     * @param context Context
-     * @param map Mapview
-     * @param geoPoints List<GeoPoint>
-     * @return int Number of markers drawn
-     */
-    public static int plotMarkers(Context context, MapView map, List<GeoPoint> geoPoints) {
-        // Loop through and add markers
-        final int size = geoPoints.size() - 1;
-        boolean start = false;
-        boolean end = false;
-        boolean animate = false;
-        int i = 0;
-        for (GeoPoint geoPoint : geoPoints) {
-//        for (int i = 0; i <= size; i++) {
-            if (i ==0) {
-                start = true;
-            }
-            if (i == size) {
-                end = animate = true;
-            }
-            drawMarker(context, map, geoPoint, animate, start, end);
-            start = end = animate = false;
-            i++;
-        }
-        map.invalidate();
-        return i;
-    }
+//    /**
+//     * Draws a list of points on map
+//     * @param context Context
+//     * @param map Mapview
+//     * @param geoPoints List<GeoPoint>
+//     * @return int Number of markers drawn
+//     */
+//    public static int plotMarkers(Context context, MapView map, List<GeoPoint> geoPoints) {
+//        // Loop through and add markers
+//        final int size = geoPoints.size() - 1;
+//        boolean start = false;
+//        boolean end = false;
+//        boolean animate = false;
+//        int i = 0;
+//        for (GeoPoint geoPoint : geoPoints) {
+////        for (int i = 0; i <= size; i++) {
+//            if (i ==0) {
+//                start = true;
+//            }
+//            if (i == size) {
+//                end = animate = true;
+//            }
+//            drawMarker(context, map, geoPoint, animate, start, end);
+//            start = end = animate = false;
+//            i++;
+//        }
+//        map.invalidate();
+//        return i;
+//    }
 
     /**
      * Converts Android Location to osmdroid GeoPoint
@@ -143,12 +141,12 @@ public class MapUtils {
         return track;
     }
 
-    public static Marker getStartMarker() {
-        return mStartMarker;
-    }
+//    public static Marker getStartMarker() {
+//        return mStartMarker;
+//    }
 
-    public static Marker getEndMarker() {
-        return mEndMarker;
-    }
+//    public static Marker getEndMarker() {
+//        return mEndMarker;
+//    }
 
 }
