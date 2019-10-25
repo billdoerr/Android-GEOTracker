@@ -165,7 +165,6 @@ public class RouteRepo {
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
-            Log.d(TAG, selectQuery);
             Cursor cursor = db.rawQuery(selectQuery, null);
 
             // Loop through all rows and add to list
@@ -206,7 +205,6 @@ public class RouteRepo {
 
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         try {
-            Log.d(TAG, selectQuery);
             Cursor cursor = db.rawQuery(selectQuery, null);
 
             // Loop through all rows and add to list

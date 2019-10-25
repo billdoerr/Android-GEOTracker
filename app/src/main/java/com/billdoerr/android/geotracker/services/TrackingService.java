@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Location;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.activities.MainActivity;
@@ -36,13 +35,11 @@ import java.util.Objects;
 @SuppressWarnings("UnusedReturnValue")
 public class TrackingService extends Service {
 
-    private static final String TAG = "TrackingService";
-
     private static final String TRACKING_SERVICE_CHANNEL_ID = "TrackingService";
     private static final int TRACKING_SERVICE_NOTIFICATION_ID = 2;
 
     // Indicates invalid table index
-    private static final int INVALID_INDEX = -1;
+//    private static final int INVALID_INDEX = -1;
 
     private Trip mTrip;
 
@@ -58,8 +55,6 @@ public class TrackingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-
-        Log.i(TAG, getResources().getString(R.string.msg_tracking_service_starting));
 
         Context context = getApplicationContext();
 
@@ -151,7 +146,6 @@ public class TrackingService extends Service {
      * @param location Location
      */
     private void insertLocationIntoDatabase(Location location) {
-        int ret = INVALID_INDEX;
         if (mTrip.getId() >= 0) {
             // Set location
             TripDetails tripDetail = new TripDetails();
@@ -159,10 +153,8 @@ public class TrackingService extends Service {
             tripDetail.setLocation(location);
 
             // Insert a new record
-            ret = TripDetailsRepo.insert(tripDetail);
+            TripDetailsRepo.insert(tripDetail);
         }
-        Log.i(TAG, "Trip ID:  " + mTrip.getId());
-        Log.i(TAG, getString(R.string.msg_trip_details_insert) + ret);
     }
 
     // TODO:  Generate error if no trip id
@@ -175,8 +167,6 @@ public class TrackingService extends Service {
         if (trip != null) {
             // Assign to global variable
             mTrip = trip;
-        } else {
-            Log.d(TAG, getString(R.string.msg_trip_not_found));
         }
     }
 
@@ -190,6 +180,5 @@ public class TrackingService extends Service {
         DatabaseManager.initializeInstance(db);
         return db;
     }
-
 
 }

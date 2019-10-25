@@ -29,13 +29,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //  Not called from your constructor; it’s called by the Android framework when you try to access your database.
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i(TAG, "Creating database tables.");
         db.execSQL(ActivityTypeRepo.createTable());
         db.execSQL(RouteRepo.createTable());
         db.execSQL(TripRepo.createTable());
         db.execSQL(TripDetailsRepo.createTable());
 
-        Log.d(TAG, "Inserting default values.");
         ActivityTypeRepo.insertDefaultData(db);
     }
 

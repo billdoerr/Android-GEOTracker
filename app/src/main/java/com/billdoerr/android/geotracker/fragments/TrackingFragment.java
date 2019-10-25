@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.billdoerr.android.geotracker.BuildConfig;
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.model.Trip;
@@ -133,8 +134,10 @@ public class TrackingFragment extends Fragment {
             if (mTrip.getState() == Trip.TripState.STARTED) {
                 long diffInMillis = mCurrentTime.getTime() - mTrip.getStartTime();
                 mTrip.setTotalTimeInMillis( diffInMillis - mTrip.getPausedTimeInMillis() );
-                Log.d(TAG, "Total time in millis:  " + mTrip.getTotalTimeInMillis());
-                Log.d(TAG, "Total paused time in millis:  " + mTrip.getPausedTimeInMillis());
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "Total time in millis:  " + mTrip.getTotalTimeInMillis());
+                    Log.d(TAG, "Total paused time in millis:  " + mTrip.getPausedTimeInMillis());
+                }
             }
 
             // Update UI.
@@ -218,46 +221,31 @@ public class TrackingFragment extends Fragment {
         //  Data grid
         mTextLatitudeLongitude = view.findViewById(R.id.textLatitudeLongitude);
 
-//        final TextView textLatitudeLabel = view.findViewById(R.id.textLatitudeLabel);
-//        final TextView textLatitudeUnits = view.findViewById(R.id.textLatitudeUnits);
         mTextLatitudeData = view.findViewById(R.id.textLatitudeData);
 
-//        final TextView textLongitudeLabel = view.findViewById(R.id.textLongitudeLabel);
-//        final TextView textLongitudeUnits = view.findViewById(R.id.textLongitudeUnits);
         mTextLongitudeData = view.findViewById(R.id.textLongitudeData);
 
-//        final TextView textElevationLabel = view.findViewById(R.id.textElevationLabel);
         mTextElevationUnits = view.findViewById(R.id.textElevationUnits);
         mTextElevationData = view.findViewById(R.id.textElevationData);
 
-//        final TextView textBearingLabel = view.findViewById(R.id.textBearingLabel);
-//        final TextView textBearingUnits = view.findViewById(R.id.textBearingUnits);
         mTextBearingData = view.findViewById(R.id.textBearingData);
 
-//        final TextView textSpeedLabel = view.findViewById(R.id.textSpeedLabel);
         mTextSpeedUnits = view.findViewById(R.id.textSpeedUnits);
         mTextSpeedData = view.findViewById(R.id.textSpeedData);
 
-//        final TextView textAccuracyLabel = view.findViewById(R.id.textAccuracyLabel);
         mTextAccuracyUnits = view.findViewById(R.id.textAccuracyUnits);
         mTextAccuracyData = view.findViewById(R.id.textAccuracyData);
 
-//        final TextView textCurrentTimeLabel = view.findViewById(R.id.textCurrentTimeLabel);
         mTextCurrentTimeData = view.findViewById(R.id.textCurrentTimeData);
 
-//        final TextView textStartTimeLabel = view.findViewById(R.id.textStartTimeLabel);
         mTextStartTimeData = view.findViewById(R.id.textStartTimeData);
 
-//        final TextView textEndTimeLabel = view.findViewById(R.id.textEndTimeLabel);
         mTextEndTimeData = view.findViewById(R.id.textEndTimeData);
 
-//        final TextView textTrackingTimeLabel = view.findViewById(R.id.textTrackingTimeLabel);
         mTextMovingTimeData = view.findViewById(R.id.textTrackingTimeData);
 
-//        final TextView textPausedTimeLabel = view.findViewById(R.id.textPausedTimeLabel);
         mTextPausedTimeData = view.findViewById(R.id.textPausedTimeData);
 
-//        final TextView textTotalTimeLabel = view.findViewById(R.id.textTotalTimeLabel);
         mTextTotalTimeData = view.findViewById(R.id.textTotalTimeData);
 
         //  Data logging buttons
@@ -550,13 +538,11 @@ public class TrackingFragment extends Fragment {
 
         // Returns -1 if error
         if (ret == INVALID_INDEX) {
+            //  TODO:  Should raise error
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
         } else {
             PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
         }
-
-        Log.i(TAG, getString(R.string.msg_trip_inserted) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_trip_inserted) + ": " + mTrip.toString());
 
         return  ret;
     }
@@ -882,12 +868,10 @@ public class TrackingFragment extends Fragment {
                 new PermissionUtils.PermissionAskListener() {
                     @Override
                     public void onNeedPermission() {
-                        Log.i(TAG, "checkPermissions -> onNeedPermission");
                         requestPermissions(new String[]{permission},resultCode);
                     }
                     @Override
                     public void onPermissionPreviouslyDenied() {
-                        Log.i(TAG, "checkPermissions -> onPermissionPreviouslyDenied");
                         // Show a dialog explaining permission and then request permission
                         PermissionUtils.displayPermissionsRequestDialog(getActivity(),
                                 permission,
@@ -897,12 +881,10 @@ public class TrackingFragment extends Fragment {
                     }
                     @Override
                     public void onPermissionDisabled() {
-                        Log.i(TAG, "checkPermissions -> onPermissionDisabled");
                         PermissionUtils.displayAppPermissionDialog(getActivity());
                     }
                     @Override
                     public void onPermissionGranted() {
-                        Log.i(TAG, "checkPermissions -> initApp");
                         //  Init app
                         initApp();
                     }

@@ -67,7 +67,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract Fragment createFragment();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,10 +124,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
+        // Stop GPSService when app is closed. If tracking in progress, TrackingService will restart the GPSService
         stopGPSService();
         super.onDestroy();
     }
 
+    // Add onRequestPermissionsResult() in fragment
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

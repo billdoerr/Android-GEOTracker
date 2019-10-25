@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +43,6 @@ import java.util.Objects;
 
 
 public class MapsFragment extends Fragment {
-
-    private static final String TAG = MapsFragment.class.getSimpleName();
 
     //  Saved instance state data
     private static final String SAVED_GEO_P0INTS = "geopoints";
@@ -202,7 +199,6 @@ public class MapsFragment extends Fragment {
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionsResult");
         switch(requestCode) {
             case PermissionUtils.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -332,7 +328,6 @@ public class MapsFragment extends Fragment {
             mTrip = trip;
             return true;
         } else {
-            Log.d(TAG, getString(R.string.msg_trip_not_found));
             return false;
         }
     }

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,8 +43,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class TripListFragment extends Fragment {
-
-    private static final String TAG = "TripListFragment";
 
     private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
     private static final int REQUEST_CODE_TRIP_DIALOG_FILTER = 3;
@@ -261,8 +258,6 @@ public class TripListFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(TAG, getString(R.string.msg_trip_update) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_trip_update) + ": " + trip.toString());
     }
 
     /**
@@ -285,8 +280,6 @@ public class TripListFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.toast_database_delete_error), Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(TAG, getString(R.string.msg_trip_delete) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_trip_delete) + ": " + trip.toString());
     }
 
     /**

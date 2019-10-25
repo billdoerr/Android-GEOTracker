@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,8 +37,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class RouteListFragment extends Fragment {
-
-    private static final String TAG = "RouteListFragment";
 
     private static final String ARGS_ROUTE = "route";
 
@@ -226,8 +223,6 @@ public class RouteListFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(TAG, getString(R.string.msg_route_inserted) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_route_inserted) + ": " + route.toString());
     }
 
     /**
@@ -248,8 +243,6 @@ public class RouteListFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(TAG, getString(R.string.msg_route_update) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_route_update) + ": " + route.toString());
     }
 
     /**
@@ -274,8 +267,6 @@ public class RouteListFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.toast_database_delete_error), Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(TAG, getString(R.string.msg_route_delete) + ": " + ret);
-        Log.i(TAG, getString(R.string.msg_route_delete) + ": " + route.toString());
     }
 
     /**

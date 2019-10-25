@@ -7,7 +7,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
 
-import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.services.GPSService;
 import com.billdoerr.android.geotracker.services.LocationMessageEvent;
 
@@ -38,7 +37,6 @@ public class GPSUtils {
     public static void startGPSService(Context context) {
         boolean isGPSService = ServiceUtils.isMyServiceRunning(context, GPSService.class);
         if (!isGPSService) {
-            Log.i(TAG, context.getString(R.string.msg_gps_service_restart));
             context.startService(new Intent(context, GPSService.class));
         }
     }

@@ -62,8 +62,6 @@ public class GPSService extends Service implements LocationListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        Log.i(TAG, getResources().getString(R.string.msg_gps_service_starting));
-
         mContext = getApplicationContext();
 
         // We need some preference settings
@@ -134,7 +132,7 @@ public class GPSService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged: " + location);
+        Log.d(TAG, "onLocationChanged: " + location);
         // Post location to event bus
         EventBus.getDefault().post(new LocationMessageEvent(location));
     }
