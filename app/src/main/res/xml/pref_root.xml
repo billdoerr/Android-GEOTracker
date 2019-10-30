@@ -45,7 +45,7 @@
 
         <ListPreference
             app:enabled="true"
-            app:defaultValue="2"
+            app:defaultValue="900"
             app:entries="@array/listArrayLocationServicesUpdateInterval"
             app:entryValues="@array/listValuesLocationServicesUpdateInterval"
             app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL"
@@ -54,7 +54,7 @@
 
         <ListPreference
             app:enabled="true"
-            app:defaultValue="1"
+            app:defaultValue="5"
             app:entries="@array/listArrayLocationServicesUpdateDistance"
             app:entryValues="@array/listValuesLocationServicesUpdateDistance"
             app:key="com.billdoerr.android.geotracker.settings.PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE"

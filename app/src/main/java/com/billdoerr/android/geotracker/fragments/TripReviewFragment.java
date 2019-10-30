@@ -77,11 +77,17 @@ public class TripReviewFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable(ARGS_TRIP, mTrip);
 
-        TripReviewMapsFragment fragment = new TripReviewMapsFragment();
-        fragment.setArguments(args);
+        TripReviewMapsFragment tripReviewMapsFragment = new TripReviewMapsFragment();
+        tripReviewMapsFragment.setArguments(args);
 
         // Add fragment to adapter
-        adapter.addFragment(fragment, getResources().getString(R.string.activity_title_maps));
+        adapter.addFragment(tripReviewMapsFragment, getResources().getString(R.string.fragment_title_maps));
+
+        TrackDetailFragment trackDetailFragment = new TrackDetailFragment();
+        trackDetailFragment.setArguments(args);
+
+        // Add fragment to adapter
+        adapter.addFragment(trackDetailFragment, getResources().getString(R.string.fragment_tile_track_detail));
 
         //  Set adapter to view pager
         viewPager.setAdapter(adapter);

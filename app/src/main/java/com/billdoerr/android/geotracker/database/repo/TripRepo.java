@@ -28,6 +28,7 @@ public class TripRepo {
     private static final String KEY_TRIP_STATE = "trip_state";
     private static final String KEY_TRIP_START_TIME = "start_time";
     private static final String KEY_TRIP_END_TIME = "end_time";
+    private static final String KEY_TRIP_MOVING_TIME = "moving_time";
     private static final String KEY_TRIP_PAUSED_TIME = "paused_time";
     private static final String KEY_TRIP_TOTAL_TIME = "total_time";
     private static final String KEY_TRIP_ACTIVITY_TYPE_ID = "activity_id";
@@ -59,6 +60,7 @@ public class TripRepo {
                 + KEY_TRIP_STATE + " INT, "
                 + KEY_TRIP_START_TIME + " INT, "
                 + KEY_TRIP_END_TIME + " INT, "
+                + KEY_TRIP_MOVING_TIME + " INT, "
                 + KEY_TRIP_PAUSED_TIME + " INT, "
                 + KEY_TRIP_TOTAL_TIME + " INT, "
                 + KEY_TRIP_ACTIVE_FLAG + " INT, "
@@ -79,6 +81,7 @@ public class TripRepo {
         values.put(KEY_TRIP_STATE, trip.getState());
         values.put(KEY_TRIP_START_TIME, trip.getStartTime());
         values.put(KEY_TRIP_END_TIME, trip.getEndTime());
+        values.put(KEY_TRIP_MOVING_TIME, trip.getMovingTimeInMillis());
         values.put(KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
         values.put(KEY_TRIP_TOTAL_TIME, trip.getTotalTimeInMillis());
         values.put(KEY_TRIP_ACTIVE_FLAG, trip.isActive());
@@ -144,6 +147,7 @@ public class TripRepo {
         values.put(KEY_TRIP_STATE, trip.getState());
         values.put(KEY_TRIP_START_TIME, trip.getStartTime());
         values.put(KEY_TRIP_END_TIME, trip.getEndTime());
+        values.put(KEY_TRIP_MOVING_TIME, trip.getMovingTimeInMillis());
         values.put(KEY_TRIP_PAUSED_TIME, trip.getPausedTimeInMillis());
         values.put(KEY_TRIP_TOTAL_TIME, trip.getTotalTimeInMillis());
         values.put(KEY_TRIP_ACTIVE_FLAG, trip.isActive());
@@ -183,6 +187,7 @@ public class TripRepo {
                 + KEY_TRIP_STATE + ", "
                 + KEY_TRIP_START_TIME + ", "
                 + KEY_TRIP_END_TIME + ", "
+                + KEY_TRIP_MOVING_TIME + ", "
                 + KEY_TRIP_PAUSED_TIME + ", "
                 + KEY_TRIP_TOTAL_TIME + ", "
                 + KEY_TRIP_ACTIVE_FLAG + ", "
@@ -205,6 +210,7 @@ public class TripRepo {
                     trip.setState(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_STATE)));
                     trip.setStartTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_START_TIME)));
                     trip.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_END_TIME)));
+                    trip.setMovingTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_MOVING_TIME)));
                     trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_PAUSED_TIME)));
                     trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_TOTAL_TIME)));
                     trip.setActive(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVE_FLAG)));
@@ -257,6 +263,7 @@ public class TripRepo {
                 + KEY_TRIP_STATE + ", "
                 + KEY_TRIP_START_TIME + ", "
                 + KEY_TRIP_END_TIME + ", "
+                + KEY_TRIP_MOVING_TIME + ", "
                 + KEY_TRIP_PAUSED_TIME + ", "
                 + KEY_TRIP_TOTAL_TIME + ", "
                 + KEY_TRIP_ACTIVE_FLAG + ", "
@@ -279,6 +286,7 @@ public class TripRepo {
                     trip.setState(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_STATE)));
                     trip.setStartTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_START_TIME)));
                     trip.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_END_TIME)));
+                    trip.setMovingTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_MOVING_TIME)));
                     trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_PAUSED_TIME)));
                     trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_TOTAL_TIME)));
                     trip.setActive(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVE_FLAG)));

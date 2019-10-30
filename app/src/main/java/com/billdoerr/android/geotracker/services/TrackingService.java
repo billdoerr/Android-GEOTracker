@@ -157,7 +157,6 @@ public class TrackingService extends Service {
         }
     }
 
-    // TODO:  Generate error if no trip id
     /**
      * Retrieve active Trip object from Shared Preferences
      * @param context Context Application context.
@@ -169,7 +168,6 @@ public class TrackingService extends Service {
             mTrip = trip;
         }
     }
-
 
     /**
      * Initialize instance of DatabaseManager

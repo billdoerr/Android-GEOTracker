@@ -187,7 +187,7 @@ public class ActivityTypeRepo {
     }
 
     /**
-     * Returns activity name give activity id.
+     * Returns activity name given activity id.
      * @return String
      */
     public static String getActivityName(int id) {

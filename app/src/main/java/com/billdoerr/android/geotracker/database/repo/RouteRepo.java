@@ -225,7 +225,40 @@ public class RouteRepo {
         return array;
     }
 
-    //  TODO:  This is crap, big pile of!
+    /**
+     * Returns activity id given route name
+     * @return int
+     */
+    public static int getActivityId(String routeName) {
+        int id = -1;
+
+        String selectQuery = "SELECT "
+                + KEY_ROUTE_ACTIVITY_TYPE_ID
+                + " FROM " + TABLE
+                + " WHERE " +  KEY_ROUTE_NAME + " = '" + routeName + "'";
+
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try {
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            // Loop through all rows and add to list
+            if (cursor.moveToFirst()) {
+                do {
+                    id = cursor.getInt(cursor.getColumnIndex(KEY_ROUTE_ACTIVITY_TYPE_ID));
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
+        } finally {
+            DatabaseManager.getInstance().closeDatabase();
+        }
+
+        return id;
+    }
+
     /**
      * Returns list of routes.
      * @return List<ActivityType>

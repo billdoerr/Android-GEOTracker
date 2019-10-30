@@ -68,7 +68,6 @@ public class PermissionUtils {
         }
     }
 
-
     /*
      * Callback on various cases on checking permission
      *

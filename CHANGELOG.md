@@ -14,12 +14,25 @@ All notable changes to this Android application will be documented in this file.
 ## [Unreleased]
 ### v1.x.x (TBD)
 #### Added
+- [ ] Have location marker change based on compass direction.
 - [ ] Get map overlay's to display in high resolution.
-- [ ] Add photos.   
+- [ ] Add map geo markers.   
+    - [ ] Add photos
+    - [ ] Add notes
+    - [ ] Add video
 - [ ] Analytics. 
 - [ ] Sync data.  Upload data to cloud or most likely a local database. Cloud would cost money. 
 #### Changed
-- [ ] Have location move based on compass direction.
+- [ ] Migrate unit conversions to a utils call (ie. Toolbox)
+#### Removed
+- [ ]
+
+## [Unreleased]
+### v1.1 (TBD)
+#### Added
+- [ ]  
+#### Changed
+- [ ]
 #### Removed
 - [ ]
 

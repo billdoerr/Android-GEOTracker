@@ -19,7 +19,7 @@
 ### Planned Features    
     - Add photos.   
     - Analytics. 
-    - Sync data.  Upload data to cloud.
+    - Sync data. Upload data to cloud.
 
 
 ### Known Issues 
@@ -27,12 +27,4 @@
 
 
 
-An application in production, you must not have any log statements. To enable your logs statements calls only during development phase, 
-Android offers you the BuildConfig.DEBUG property. This flag is set automatically to false when an application if deployed into an APK 
-for production and then, it’s set to true during development.
-
-To use it, you must write your log statements like that :
-
-if (BuildConfig.DEBUG) {
-    Log.d(TAG + "message");
-}    
+ <img src="image.PNG" />

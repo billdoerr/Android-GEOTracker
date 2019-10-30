@@ -1,0 +1,78 @@
+# Android GEOTracker project
+
+## GEOTracker project
+
+
+
+<img src="images/about.png" width="100"/>
+
+
+<img src="images/activities.png" width="100"/>
+
+
+<img src="images/add_activity.png" width="100"/>
+
+
+<img src="images/add_route.png" width="100"/>
+
+
+<img src="images/add_trip.png" width="100"/>
+
+
+<img src="images/dir.txt" width="100"/>
+
+
+<img src="images/drawer_menu.png" width="100"/>
+
+
+<img src="images/filter_routes.png" width="100"/>
+
+
+<img src="images/filter_trip.png" width="100"/>
+
+
+<img src="images/home.png" width="100"/>
+
+
+<img src="images/location_permissions.png" width="100"/>
+
+
+<img src="images/routes.png" width="100"/>
+
+
+<img src="images/save_trip.png" width="100"/>
+
+
+<img src="images/settings.png" width="100"/>
+
+
+<img src="images/storage_permissions.png" width="100"/>
+
+
+<img src="images/tracking.png" width="100"/>
+
+
+<img src="images/trips.png" width="100"/>
+
+
+<img src="images/trip_review.png" width="100"/>
+
+
+<img src="images/trip_review_detail.png" width="100"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.billdoerr.android.geotracker.BuildConfig;
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.model.Trip;
@@ -55,8 +53,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class TrackingFragment extends Fragment {
 
-    private static final String TAG = "TrackingFragment";
-
     private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
     private static final int REQUEST_CODE_TRIP_DIALOG_CONTINUE = 2;
 
@@ -86,6 +82,7 @@ public class TrackingFragment extends Fragment {
     private Intent mTrackingServiceIntent;
     private Trip mTrip;
     private Date mCurrentTime;
+    private long mPausedTimeInMillis;
 
     // Preference settings
     private static boolean mIsMetric = false;
@@ -130,28 +127,29 @@ public class TrackingFragment extends Fragment {
             mCurrentTime = Calendar.getInstance().getTime();
             mTextCurrentTimeData.setText(sDateFormat.format(mCurrentTime));
 
-            // Are we collecting data?
-            if (mTrip.getState() == Trip.TripState.STARTED) {
-                long diffInMillis = mCurrentTime.getTime() - mTrip.getStartTime();
-                mTrip.setTotalTimeInMillis( diffInMillis - mTrip.getPausedTimeInMillis() );
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "Total time in millis:  " + mTrip.getTotalTimeInMillis());
-                    Log.d(TAG, "Total paused time in millis:  " + mTrip.getPausedTimeInMillis());
-                }
-            }
-
-            // Update UI.
-            // Update only if we are either STARTED or PAUSED.
+            // Update these UI widgets only if we are either STARTED or PAUSED.
             if ( (mTrip.getState() == Trip.TripState.STARTED) || (mTrip.getState() == Trip.TripState.PAUSED) ) {
+
+                // Update paused time
+                if (mTrip.getState() == Trip.TripState.PAUSED) {
+                    mPausedTimeInMillis = mCurrentTime.getTime() - mTrip.getPausedTime();
+                }
+                else {
+                    // Moving time
+                    mTrip.setMovingTimeInMillis( mTrip.getTotalTimeInMillis() - mTrip.getPausedTimeInMillis() );
+                }
+                mTextPausedTimeData.setText(DateUtils.formatElapsedTime(   (mTrip.getPausedTimeInMillis() + mPausedTimeInMillis) / 1000 ) );
+
+                // Moving time
+                mTextMovingTimeData.setText(DateUtils.formatElapsedTime( ( mTrip.getMovingTimeInMillis() ) / 1000 ) );
+
+                // Total time
+                mTrip.setTotalTimeInMillis(mCurrentTime.getTime() - mTrip.getStartTime());
+                mTextTotalTimeData.setText(DateUtils.formatElapsedTime(  ( mCurrentTime.getTime() - mTrip.getStartTime() ) /  1000 ) );
+
+                // Start time
                 mTextStartTimeData.setText(sDateFormat.format(mTrip.getStartTime()));
-                mTextMovingTimeData.setText(DateUtils.formatElapsedTime(mTrip.getTotalTimeInMillis() / 1000));
-                mTextTotalTimeData.setText(DateUtils.formatElapsedTime( (mCurrentTime.getTime() - mTrip.getStartTime() ) /  1000 ) );
-                mTextPausedTimeData.setText(DateUtils.formatElapsedTime(mTrip.getPausedTimeInMillis() / 1000));
-            }
-            // If paused, update paused time.
-            if (mTrip.getState() == Trip.TripState.PAUSED) {
-                long pausedTime = mTrip.getPausedTimeInMillis() + mCurrentTime.getTime() - mTrip.getPausedTime();
-                mTextPausedTimeData.setText(DateUtils.formatElapsedTime(pausedTime / 1000));
+
             }
 
             // Wait just a gosh darn second
@@ -166,10 +164,6 @@ public class TrackingFragment extends Fragment {
     public TrackingFragment() {
         // Pass
     }
-
-//    public static TrackingFragment newInstance() {
-//        return new TrackingFragment();
-//    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -219,39 +213,27 @@ public class TrackingFragment extends Fragment {
         });
 
         //  Data grid
-        mTextLatitudeLongitude = view.findViewById(R.id.textLatitudeLongitude);
-
-        mTextLatitudeData = view.findViewById(R.id.textLatitudeData);
-
-        mTextLongitudeData = view.findViewById(R.id.textLongitudeData);
-
-        mTextElevationUnits = view.findViewById(R.id.textElevationUnits);
-        mTextElevationData = view.findViewById(R.id.textElevationData);
-
-        mTextBearingData = view.findViewById(R.id.textBearingData);
-
-        mTextSpeedUnits = view.findViewById(R.id.textSpeedUnits);
-        mTextSpeedData = view.findViewById(R.id.textSpeedData);
-
-        mTextAccuracyUnits = view.findViewById(R.id.textAccuracyUnits);
-        mTextAccuracyData = view.findViewById(R.id.textAccuracyData);
-
-        mTextCurrentTimeData = view.findViewById(R.id.textCurrentTimeData);
-
-        mTextStartTimeData = view.findViewById(R.id.textStartTimeData);
-
-        mTextEndTimeData = view.findViewById(R.id.textEndTimeData);
-
-        mTextMovingTimeData = view.findViewById(R.id.textTrackingTimeData);
-
-        mTextPausedTimeData = view.findViewById(R.id.textPausedTimeData);
-
-        mTextTotalTimeData = view.findViewById(R.id.textTotalTimeData);
+        mTextLatitudeLongitude  = view.findViewById(R.id.textLatitudeLongitude);
+        mTextLatitudeData       = view.findViewById(R.id.textLatitudeData);
+        mTextLongitudeData      = view.findViewById(R.id.textLongitudeData);
+        mTextElevationUnits     = view.findViewById(R.id.textElevationUnits);
+        mTextElevationData      = view.findViewById(R.id.textElevationData);
+        mTextBearingData        = view.findViewById(R.id.textBearingData);
+        mTextSpeedUnits         = view.findViewById(R.id.textSpeedUnits);
+        mTextSpeedData          = view.findViewById(R.id.textSpeedData);
+        mTextAccuracyUnits      = view.findViewById(R.id.textAccuracyUnits);
+        mTextAccuracyData       = view.findViewById(R.id.textAccuracyData);
+        mTextCurrentTimeData    = view.findViewById(R.id.textCurrentTimeData);
+        mTextStartTimeData      = view.findViewById(R.id.textStartTimeData);
+        mTextEndTimeData        = view.findViewById(R.id.textEndTimeData);
+        mTextMovingTimeData     = view.findViewById(R.id.textTrackingTimeData);
+        mTextPausedTimeData     = view.findViewById(R.id.textPausedTimeData);
+        mTextTotalTimeData      = view.findViewById(R.id.textTotalTimeData);
 
         //  Data logging buttons
-        mBtnStartTracking = view.findViewById(R.id.btnStartTracking);
-        mBtnPauseTracking = view.findViewById(R.id.btnPauseTracking);
-        mBtnStopTracking = view.findViewById(R.id.btnStopTracking);
+        mBtnStartTracking   = view.findViewById(R.id.btnStartTracking);
+        mBtnPauseTracking   = view.findViewById(R.id.btnPauseTracking);
+        mBtnStopTracking    = view.findViewById(R.id.btnStopTracking);
 
         // Disable all buttons
         setImageButtonState(mBtnStartTracking, false);
@@ -270,8 +252,8 @@ public class TrackingFragment extends Fragment {
                     if (mTrip.getState() != Trip.TripState.PAUSED) {
                         showTripDetailDialog(REQUEST_CODE_TRIP_DIALOG_CONTINUE);
                     } else {
-                        // Resume tracking
-                        startTracking();
+                        // Resume tracking location data
+                        resumeTracking();
                     }
                 }
             }
@@ -280,11 +262,8 @@ public class TrackingFragment extends Fragment {
         mBtnPauseTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setState(Trip.TripState.PAUSED);
-                mTrip.setPausedTime(Calendar.getInstance().getTimeInMillis());
-
-                // Stop location updates.  Will be resumed in play is clicked
-                stopTrackingService();
+                // Pause tracking location data
+                pauseTracking();
             }
         });
 
@@ -389,8 +368,16 @@ public class TrackingFragment extends Fragment {
         if( requestCode == REQUEST_CODE_TRIP_DIALOG_SAVE) {
             // Save trip
             if (trip != null) {
-                setState(Trip.TripState.STOPPED);
+                // If trip data changed apply globally
                 mTrip = trip;
+
+                if (mTrip.getState() == Trip.TripState.PAUSED) {
+                    mTrip.setPausedTimeInMillis( mTrip.getPausedTimeInMillis() + mPausedTimeInMillis );
+                }
+
+                // End of the road for this trip
+                setState(Trip.TripState.STOPPED);
+
                 // Save trip name to routes if option selected
                 if (saveTripName) {
                     Route route = new Route();
@@ -417,7 +404,6 @@ public class TrackingFragment extends Fragment {
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionsResult");
         switch(requestCode) {
             case PermissionUtils.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -455,6 +441,66 @@ public class TrackingFragment extends Fragment {
     }
 
     /**
+     * Stop TrackingService
+     */
+    private void stopTrackingService() {
+        if (mTrackingServiceIntent != null) {
+            Objects.requireNonNull(getActivity()).stopService(mTrackingServiceIntent);
+        }
+    }
+
+    /*
+     * Begin tracking location data
+     */
+    private void startTracking() {
+
+        // Trip paused, update paused time
+        if (mTrip.getStartTime() == 0) {
+            mTrip.setStartTime(Calendar.getInstance().getTimeInMillis());
+        }
+
+        // Update display with start time
+        mTextStartTimeData.setText(sDateFormat.format(mTrip.getStartTime()));
+
+        // Some initialization
+        mTrip.setPausedTime(0);
+        setState(Trip.TripState.STARTED);
+
+        //  Have location permissions, begin updates
+        startTrackingService();
+
+    }
+
+    /**
+     * Resume tracking location data
+     */
+    private void resumeTracking() {
+        if (mTrip.getState() != Trip.TripState.PAUSED) return;
+
+        mTrip.setPausedTimeInMillis( mTrip.getPausedTimeInMillis() + mPausedTimeInMillis );
+        mTrip.setPausedTime(0);
+        mPausedTimeInMillis = 0;
+
+        // Update trip state
+        setState(Trip.TripState.STARTED);
+
+        //  Resume tracking
+        startTrackingService();
+    }
+
+    /**
+     * Pause tracking location data
+     */
+    private void pauseTracking() {
+        setState(Trip.TripState.PAUSED);
+        mTrip.setPausedTime(Calendar.getInstance().getTimeInMillis());
+        mPausedTimeInMillis = 0;
+
+        // Stop location updates.  Will be resumed in play is clicked
+        stopTrackingService();
+    }
+
+    /**
      * Initialize Trip object
      */
     private void initTrip() {
@@ -483,6 +529,8 @@ public class TrackingFragment extends Fragment {
     private void newTrip() {
         mTrip = new Trip();
         mTrip.setState(Trip.TripState.NOT_STARTED);
+        mTrip.setPausedTime(0);
+        mTrip.setMovingTimeInMillis(0);
         mTrip.setPausedTimeInMillis(0);
         mTrip.setActive(1);
         mTrip.setId(INVALID_INDEX);
@@ -538,7 +586,6 @@ public class TrackingFragment extends Fragment {
 
         // Returns -1 if error
         if (ret == INVALID_INDEX) {
-            //  TODO:  Should raise error
             Toast.makeText(getContext(), getString(R.string.toast_database_update_error), Toast.LENGTH_SHORT).show();
         } else {
             PreferenceUtils.saveActiveTripToSharedPrefs(Objects.requireNonNull(getContext()), mTrip);
@@ -570,40 +617,6 @@ public class TrackingFragment extends Fragment {
     }
 
     /**
-     * Stop TrackingService
-     */
-    private void stopTrackingService() {
-        if (mTrackingServiceIntent != null) {
-            Objects.requireNonNull(getActivity()).stopService(mTrackingServiceIntent);
-        }
-    }
-
-    /**
-     * Begin tracking location data
-     */
-    private void startTracking() {
-        //  Have location permissions, begin updates
-        startTrackingService();
-
-        // Trip paused, update paused time
-        if (mTrip.getState() == Trip.TripState.PAUSED) {
-            mTrip.setPausedTimeInMillis( mTrip.getPausedTimeInMillis() + mCurrentTime.getTime() - mTrip.getPausedTime() );
-        }
-        // Start trip time
-        else {
-            if (mTrip.getStartTime() == 0) {
-                mTrip.setStartTime(Calendar.getInstance().getTimeInMillis());
-            }
-            mTrip.setPausedTime(0);
-        }
-
-        // Update display with start time and update trip state
-        mTextStartTimeData.setText(sDateFormat.format(mTrip.getStartTime()));
-        setState(Trip.TripState.STARTED);
-
-    }
-
-    /**
      * This method will be called when a MessageEvent is posted
      * @param locationMessageEvent LocationMessageEvent
      */
@@ -629,6 +642,9 @@ public class TrackingFragment extends Fragment {
         float bearing = location.getBearing();          // In degrees
         float speed = location.getSpeed();              // In meters/second over ground
         float accuracy = location.getAccuracy();        // In meters
+
+        // Kind of a hack to update units if change in shared preferences
+        getSharedPreferences();
 
         String unit = (mIsMetric ? " m" : " ft");
         String lat_lon = "";
@@ -662,7 +678,6 @@ public class TrackingFragment extends Fragment {
                 break;
         }
 
-        //  TODO:  Need to perform QA on speed conversion
         // Convert imperial/metric/nautical
         if (mIsMetric) {
             // Convert m/s -> knots
@@ -682,11 +697,10 @@ public class TrackingFragment extends Fragment {
                 speed *= 2.236936;
             }
             // Convert m -> ft
-            altitude *= 3.28084;
+            altitude /= 0.3048;
             // Convert m -> ft
-            accuracy *= 3.28084;
+            accuracy /= 0.3048;
         }
-
 
         //  If Coordinate Type is UTM or MGRS then only display full lat/lon string
         if ( (mCoordinateType == CoordinateType.UTM_COORDINATES)

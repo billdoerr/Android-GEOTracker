@@ -26,6 +26,7 @@ public class Trip implements Serializable {
     private int mState;
     private long mPausedTime;
     private long mTotalTimeInMillis;
+    private long mMovingTimeInMillis;
     private long mPausedTimeInMillis;
     private int mActivityTypeId;
     private int mActiveFlag;
@@ -60,6 +61,14 @@ public class Trip implements Serializable {
 
     public void setPausedTimeInMillis(long pausedTimeInMillis) {
         mPausedTimeInMillis = pausedTimeInMillis;
+    }
+
+    public long getMovingTimeInMillis() {
+        return mMovingTimeInMillis;
+    }
+
+    public void setMovingTimeInMillis(long movingTimeInMillis) {
+        mMovingTimeInMillis = movingTimeInMillis;
     }
 
     public int getId() {

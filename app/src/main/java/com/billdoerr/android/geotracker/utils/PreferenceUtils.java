@@ -73,10 +73,10 @@ public class PreferenceUtils {
 ////        prefs.setCoordinateDatum(Integer.valueOf(appSharedPrefs.getString(PREF_KEY_UNITS_COORDINATE_DATUM, "0")));
 //
         // Convert to long and multiply my 1000 to convert from integer seconds to long milliseconds
-        prefs.setLocationServicesUpdateInterval( Long.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL, "2"))) * 1000 );
+        prefs.setLocationServicesUpdateInterval( Long.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_INTERVAL, "900"))) * 1000 );
 //
 //        // Convert value to float.  Preference is stored as string representative of meters.
-        prefs.setLocationServicesUpdateDistance(Float.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE, "2"))));
+        prefs.setLocationServicesUpdateDistance(Float.valueOf(Objects.requireNonNull(appSharedPrefs.getString(PREF_KEY_LOCATION_SERVICES_UPDATE_DISTANCE, "5"))));
 
         prefs.setKeepDeviceAwake(appSharedPrefs.getBoolean(PREF_KEY_KEEP_DEVICE_AWAKE, false));
 

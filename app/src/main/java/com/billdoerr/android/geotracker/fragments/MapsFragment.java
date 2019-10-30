@@ -51,8 +51,11 @@ public class MapsFragment extends Fragment {
     private org.osmdroid.views.MapView mMapView;
     private Trip mTrip;
     private List<GeoPoint> mGeoPoints = new ArrayList<>();
+    private View mView;
 
     private double mZoom = 18.0;  // Range:  2 - 21
+
+    private boolean mIsAppInitialized = false;
 
     /**
      * Required empty public constructor
@@ -83,7 +86,7 @@ public class MapsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        mView = inflater.inflate(R.layout.fragment_maps, container, false);
 
         /* Important! Set your user agent to prevent getting banned from the osm servers.
          * Background: This setting identifies your app uniquely to tile servers. It's not the end user's identity,
@@ -92,10 +95,7 @@ public class MapsFragment extends Fragment {
          */
         Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
-        // Initialize the MapView
-        initMapView(view);
-
-        return view;
+        return mView;
     }
 
     @Override
@@ -117,9 +117,6 @@ public class MapsFragment extends Fragment {
             mZoom = savedInstanceState.getDouble(SAVED_ZOOM);
         }
 
-        IMapController mapController = mMapView.getController();
-        mapController.setZoom(mZoom);
-
     }
 
     @Override
@@ -128,27 +125,8 @@ public class MapsFragment extends Fragment {
 
         // Check location permissions, if granted 'initApp()' will be called
         // https://github.com/permissions-dispatcher/PermissionsDispatcher/issues/90
-        checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
         // Check for location permissions
         checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION, PermissionUtils.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-        // Get current location
-        getCurrentLocation(getContext());
-
-        // Is there an active trip?
-        if ( initTrip(getContext()) ) {
-            // Plot markers
-//            List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
-//            MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
-            if ( (mTrip == null) || (mTrip.getState() < 0) ) {
-                MapUtils.drawPolyLine(getContext(), mMapView, mGeoPoints);
-            } else {
-                List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
-                MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
-            }
-        }
-
     }
 
     @Override
@@ -190,8 +168,11 @@ public class MapsFragment extends Fragment {
             String jsonString = gson.toJson(mGeoPoints);
             outState.putString(SAVED_GEO_P0INTS, jsonString);
         }
+
         // Save zoom level
-        outState.putDouble(SAVED_ZOOM, mMapView.getZoomLevelDouble());
+        if (mMapView != null) {
+            outState.putDouble(SAVED_ZOOM, mMapView.getZoomLevelDouble());
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -205,6 +186,12 @@ public class MapsFragment extends Fragment {
                     initApp();
                 }
                 break;
+//            case PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    // Initialize the MapView
+////                    initMapView(mView);
+//                }
+//                break;
         }
     }
 
@@ -212,11 +199,22 @@ public class MapsFragment extends Fragment {
      * Module initialization steps
      */
     private void initApp() {
+
+        // Flag to indicate app has been initialized
+        mIsAppInitialized = true;
+
+        // Maps need storage permissions
+        checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+        // Initialize the MapView
+        initMapView(mView);
+
         // Start GPSService if not running
         GPSUtils.startGPSService(getContext());
 
         // Get current location
         getCurrentLocation(getContext());
+
     }
 
     private void getCurrentLocation(Context context) {
@@ -282,6 +280,19 @@ public class MapsFragment extends Fragment {
         8k 	                        16
         */
         mapController.setZoom(mZoom);
+
+        // Is there an active trip?
+        if ( initTrip(getContext()) ) {
+            // Plot markers
+//            List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+//            MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+            if ( (mTrip == null) || (mTrip.getState() < 0) ) {
+                MapUtils.drawPolyLine(getContext(), mMapView, mGeoPoints);
+            } else {
+                List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
+                MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+            }
+        }
 
     }
 
@@ -425,109 +436,13 @@ public class MapsFragment extends Fragment {
                     public void onPermissionGranted() {
                         //  Init app
                         //  Handled by overriding the fragments onRequestPermissionsResult()
+
+                        // Check if app has already been initialized
+                        if (!mIsAppInitialized) {
+                            initApp();
+                        }
                     }
                 });
     }
-
-    /*
-     * ******************************************************************
-     * Google Maps
-     * ******************************************************************
-     */
-    /*
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        Log.i(TAG, "onMapReady");
-//        mMap = googleMap;
-//
-//        //  Update the map type
-//        updateMapType();
-//
-//        updateMapCurrentLocation(new LatLng(47.3159d, -121.5040d));
-//
-//        //  Add a marker for the destination
-//        updateMapDestination(new LatLng(47.3159d, -121.5040d));
-//
-//        // Zoom in
-//        zoom(new LatLng(47.3159d, -121.5040d), mZoom);
-//
-//    }
-
-//    private void initMapType(Menu menu) {
-//        //  Set default map type
-//        if (mMapType == GoogleMap.MAP_TYPE_HYBRID) {
-//            menu.findItem(R.id.action_map_type_hybrid).setChecked(true);
-//        }
-//        if (mMapType == GoogleMap.MAP_TYPE_NORMAL) {
-//            menu.findItem(R.id.action_map_type_normal).setChecked(true);
-//        }
-//        if (mMapType == GoogleMap.MAP_TYPE_SATELLITE) {
-//            menu.findItem(R.id.action_map_type_satellite).setChecked(true);
-//        }
-//        if (mMapType == GoogleMap.MAP_TYPE_TERRAIN) {
-//            menu.findItem(R.id.action_map_type_terrain).setChecked(true);
-//        }
-//        updateMapType();
-//    }
-
-//    private void updateMapType() {
-//        mMap.setMapType(mMapType);
-//    }
-//
-//    private void updateMapCurrentLocation(LatLng location) {
-//        // Add a marker to current location
-//        mMap.drawMarker(new MarkerOptions()
-//                .position(location)
-//                .title(getString(R.string.maps_you_are_here))
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-//        );
-//    }
-//
-//    private void updateMapDestination(LatLng location) {
-//        // Add a marker for the destination
-//        mMap.drawMarker(new MarkerOptions()
-//                .position(location)
-//                .title(getString(R.string.maps_destination))
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-//        );
-//    }
-//
-//    private void zoom(LatLng location, float zoom) {
-//        // mMap.moveCamera(CameraUpdateFactory.newLatLng(mLocation));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom));
-//    }
-//
-//    private void setDestination(LatLng location) {
-//        //  47°31′59″N 121°50′40″W
-//        mDestination = location;
-//    }
-//
-//    private void setCurrentLocation(LatLng location) {
-//        mCurrentLocation = location;
-//    }
-//
-//    // **********************************************************************
-//    //  SYSTEM RELATED
-//    //  *********************************************************************
-//    //  Restoring values from saved instance state
-//    private void restoreValuesFromBundle(Bundle savedInstanceState) {
-//        if (savedInstanceState != null) {
-//            if (savedInstanceState.containsKey(SAVED_MAP_TYPE)) {
-//                mMapType = savedInstanceState.getInt(SAVED_MAP_TYPE);
-//            }
-//
-//            if (savedInstanceState.containsKey(SAVED_ZOOM)) {
-////                mZoom = savedInstanceState.getFloat(SAVED_ZOOM);
-//            }
-//        }
-//    }
 
 }

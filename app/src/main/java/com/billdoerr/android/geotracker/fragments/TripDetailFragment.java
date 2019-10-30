@@ -39,6 +39,7 @@ public class TripDetailFragment extends DialogFragment {
     private static final String ARGS_SAVE_TRIP_NAME_TO_ROUTES = "save_trip_name_to_routes";
 
     private Trip mTrip;
+    private List<ActivityType> mListActivities;
 
     public TripDetailFragment() {
         // Required empty public constructor
@@ -80,6 +81,15 @@ public class TripDetailFragment extends DialogFragment {
         ArrayAdapter<String> adapterAutoComplete = new ArrayAdapter<> (Objects.requireNonNull(getContext()), android.R.layout.select_dialog_item, array);
         textName.setThreshold(1);
         textName.setAdapter(adapterAutoComplete);
+        textName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View arg1, int position, long id) {
+                int activityId = RouteRepo.getActivityId(parent.getItemAtPosition(position).toString());
+                if (activityId != -1) {
+                    spinnerActivity.setSelection(getListActivityIndex(mListActivities, activityId));
+                }
+            }
+        });
 
         // Only show if end of trip
         int requestCode = getTargetRequestCode();
@@ -137,10 +147,9 @@ public class TripDetailFragment extends DialogFragment {
         * Configure spinner.  Ripped from:  https://stackoverflow.com/questions/24712540/set-key-and-value-in-spinner
          */
         // Fill data in spinner
-        List<ActivityType> listActivities = getActivities();
-        ArrayAdapter<ActivityType> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, listActivities);
+        mListActivities = getActivities();
+        ArrayAdapter<ActivityType> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, mListActivities);
         spinnerActivity.setAdapter(adapter);
-
         spinnerActivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -154,7 +163,6 @@ public class TripDetailFragment extends DialogFragment {
             }
         });
 
-
         // Disable Cancel and enable Continue
         if (getTargetRequestCode() == REQUEST_CODE_TRIP_DIALOG_CONTINUE) {
             btnSave.setVisibility(View.GONE);
@@ -167,7 +175,7 @@ public class TripDetailFragment extends DialogFragment {
             // Boolean stored as integer in SQLite, so convert to integer.
             checkActive.setChecked(mTrip.isActive() == Trip.ACTIVE);
             // Set trip's activity
-            spinnerActivity.setSelection(adapter.getPosition(getActivity(listActivities, mTrip.getActivityTypeId())));
+            spinnerActivity.setSelection(adapter.getPosition(getActivity(mListActivities, mTrip.getActivityTypeId())));
         }
 
         return view;
@@ -214,6 +222,21 @@ public class TripDetailFragment extends DialogFragment {
             }
         }
         return null;
+    }
+
+    /**
+     * Get index of List<ActivityType> that contains the activity id
+     * @param activities List<ActivityType>
+     * @param activityId int
+     * @return int
+     */
+    private int getListActivityIndex(List<ActivityType> activities, int activityId) {
+        for (int i=0; i <= activities.size() - 1; i++) {
+            if (activities.get(i).getId() == activityId) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }
