@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,8 +27,10 @@ import com.billdoerr.android.geotracker.database.repo.RouteRepo;
 import com.billdoerr.android.geotracker.database.repo.TripRepo;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -43,6 +46,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class TripListFragment extends Fragment {
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final SimpleDateFormat sDateFormat = new SimpleDateFormat( "ddMMMyyyy hh:mm:ss a" , Locale.US);
 
     private static final int REQUEST_CODE_TRIP_DIALOG_SAVE = 1;
     private static final int REQUEST_CODE_TRIP_DIALOG_FILTER = 3;
@@ -370,6 +376,8 @@ public class TripListFragment extends Fragment {
         private final TextView mTextDesc;
         private final TextView mTextActivity;
         private final TextView mTextViewOption;
+        private final TextView mTextTotalTimeData;
+        private final TextView mTextStartTimeData;
 
         TripHolder(View itemView) {
             super(itemView);
@@ -379,6 +387,9 @@ public class TripListFragment extends Fragment {
             mTextDesc = itemView.findViewById(R.id.textDesc);
             mTextActivity = itemView.findViewById(R.id.textActivity);
             mTextViewOption = itemView.findViewById(R.id.textViewOptions);
+            mTextTotalTimeData = itemView.findViewById(R.id.textTotalTimeData);
+            mTextStartTimeData = itemView.findViewById(R.id.textStartTimeData);
+
         }
 
         void bind(Trip trip) {
@@ -386,6 +397,8 @@ public class TripListFragment extends Fragment {
             mTextDesc.setText(trip.getDesc());
             // Query the ActivityTypeName.  Not sure if I should have perform inner join on query to retrieve this or not.mm
             mTextActivity.setText(ActivityTypeRepo.getActivityName(trip.getActivityTypeId()));
+            mTextTotalTimeData.setText(DateUtils.formatElapsedTime(  ( trip.getTotalTimeInMillis() ) /  1000 ) );
+            mTextStartTimeData.setText(sDateFormat.format(trip.getStartTime()));
         }
 
         @Override

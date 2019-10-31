@@ -21,7 +21,6 @@
     - Analytics. 
     - Sync data. Upload data to cloud.
 
-
 ### Known Issues 
     - osmdroid thunderforest overlay isn't high resolution. Don't know how GAIA gps has such high resolution.   
 
@@ -30,7 +29,7 @@ ___
 ___
 **Grant Permissions**<br>
 When GEOTracker is first launch it will request the user to grant Location and Storage permissions.  
-The app is useless without these two permissions.  
+The app is useless without these two permissions.<br>  
 <img src="images/location_permissions.png" width="200"/>
 <img src="images/storage_permissions.png" width="200"/>
 
