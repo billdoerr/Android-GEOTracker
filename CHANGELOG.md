@@ -49,7 +49,7 @@ All notable changes to this Android application will be documented in this file.
 #### Removed
 - [ ]
 
-## [In Testing]
+## [Released]
 ### v1.0 (RELEASED) (31Oct2019)
 - [x] Track GPS data for different activities.
 - [x] Users will have the ability to create different activities.  App will have default activities of bike, run, hike, walk.
