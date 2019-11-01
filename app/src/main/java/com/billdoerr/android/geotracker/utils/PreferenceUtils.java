@@ -57,11 +57,11 @@ public class PreferenceUtils {
      * Get shared preferences.
      * @param context Context:  Application context.
      */
-    public static GeoTrackerSharedPreferences getSharedPreferences(Context context) {
+    public static SharedPreferencesUtils getSharedPreferences(Context context) {
 
         SharedPreferences appSharedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        GeoTrackerSharedPreferences prefs = new GeoTrackerSharedPreferences();
+        SharedPreferencesUtils prefs = new SharedPreferencesUtils();
 
         prefs.setMetric(appSharedPrefs.getBoolean(PREF_KEY_UNITS_METRIC, false));
         prefs.setNautical(appSharedPrefs.getBoolean(PREF_KEY_UNITS_NAUTICAL, false));
@@ -85,7 +85,7 @@ public class PreferenceUtils {
     }
 
     /**
-     * Read active tracking to GeoTrackerSharedPreferences as a JSON string.
+     * Read active tracking to SharedPreferencesUtils as a JSON string.
      * @param context Context
      * @return Trip
      */
@@ -102,7 +102,7 @@ public class PreferenceUtils {
 
 
     /**
-     * Save active tracking to GeoTrackerSharedPreferences as a JSON string.
+     * Save active tracking to SharedPreferencesUtils as a JSON string.
      * @param context Context:  Application context.
      */
     public static void saveActiveTripToSharedPrefs(Context context, Trip trip) {

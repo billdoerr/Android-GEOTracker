@@ -35,6 +35,52 @@ public class CoordinateConversionUtils
    */
 
   /**
+   * Converts meters per second to knots.
+    * @param speed float
+   * @return float Value in knots
+   */
+  public static float mpsToKnots(float speed) {
+    // knots = meters per second × 1.943844
+    return speed *= 1.943844;
+  }
+
+  /**
+   * Converts meters per second to kilometers per hour.
+   * @param speed float
+   * @return float Value in kilometers per hour
+   */
+  public static float mpsToKmHr(float speed) {
+    return speed *= 3.6;
+  }
+
+  /**
+   * Converst meters per second to miles per hour.
+   * @param speed float
+   * @return float Value in miles per hour
+   */
+  public static float mpsToMph(float speed) {
+    return speed *= 2.236936;
+  }
+
+  /**
+   * Converts meters to feet.
+   * @param meters double
+   * @return double Value in feet
+   */
+  public static double mToFt(double meters) {
+    return meters /= 0.3048;
+  }
+
+  /**
+   * Converts meters to feet.
+   * @param meters float
+   * @return float Value in feet
+   */
+  public static float mToFt(float meters) {
+    return meters /= 0.3048;
+  }
+
+  /**
    * Converts decimal degrees to degrees, minutes, seconds.  Returns a coordinate as a String representation.
    *
    * @param latitude double

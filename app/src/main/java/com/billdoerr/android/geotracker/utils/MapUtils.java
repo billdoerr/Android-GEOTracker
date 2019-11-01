@@ -7,19 +7,90 @@ import android.location.Location;
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 
+import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MapUtils {
 
 //    private static List<Marker> sMarkers;
 //    private static Marker mStartMarker;
 //    private static Marker mEndMarker;
+
+    private static final float SCALE_FACTOR = 1.0f;
+    private static final int TILE_SIZE = 512;
+    private static final double ZOOM_LEVEL = 18.0;  // Range:  2 - 21
+
+    /**
+     * Initializes the MapView
+     */
+    public static void initMapView(Context context, MapView mapView) {
+
+        final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors/"};
+
+        final ITileSource tileSource =
+                new XYTileSource("Outdoors",
+                        0,
+                        (int) ZOOM_LEVEL,
+                        256,
+                        ".png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716",
+                        tileUrlOutdoor,
+                        "from thunderforest.com");
+
+//        mapView = view.findViewById(R.id.mapview);
+//        mapView.setTileSource(TileSourceFactory.USGS_TOPO);
+        mapView.setTileSource(tileSource);
+
+        // Add multi-touch capability
+        mapView.setMultiTouchControls(true);
+
+        final float density = context.getResources().getDisplayMetrics().density;
+        TileSystem.setTileSize(Math.round(TILE_SIZE*density));
+
+        /* If true, tiles are scaled to the current DPI of the display. This effectively
+         * makes it easier to read labels, how it may appear pixelated depending on the map
+         * source.<br>
+         * If false, tiles are rendered in their real size.
+         */
+        mapView.setTilesScaledToDpi(false);
+
+        /*
+         * Setting an additional scale factor both for ScaledToDpi and standard size
+         * > 1.0 enlarges map display, < 1.0 shrinks map display
+         */
+        mapView.setTilesScaleFactor(SCALE_FACTOR);
+
+        // Add compass to map
+        CompassOverlay compassOverlay = new CompassOverlay(Objects.requireNonNull(context), new InternalCompassOrientationProvider(context), mapView);
+        compassOverlay.enableCompass();
+        mapView.getOverlays().add(compassOverlay);
+
+        IMapController mapController = mapView.getController();
+        /*
+        Approximate Map Scale 	OSM Zoom Level
+        5M 	                        5
+        2M 	                        8
+        1M 	                        9
+        500k 	                    10
+        250k 	                    11-12
+        50 	                        13-14
+        25k 	                    15
+        8k 	                        16
+        */
+        mapController.setZoom(ZOOM_LEVEL);
+
+    }
 
     /**
      * Draws PolyLine

@@ -13,7 +13,7 @@ import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
 import com.billdoerr.android.geotracker.utils.CoordinateConversionUtils;
-import com.billdoerr.android.geotracker.utils.GeoTrackerSharedPreferences;
+import com.billdoerr.android.geotracker.utils.SharedPreferencesUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
 import java.text.SimpleDateFormat;
@@ -188,7 +188,8 @@ public class TrackDetailFragment extends Fragment {
 
         // Convert imperial/metric/nautical
         if (!mIsMetric) {
-            altitude /= 0.3048;
+            // Convert m -> ft
+            altitude = CoordinateConversionUtils.mToFt(altitude);
         }
 
         //  If Coordinate Type is UTM or MGRS then only display full lat/lon string
@@ -208,7 +209,7 @@ public class TrackDetailFragment extends Fragment {
      * Get required Shared Preferences
      */
     private void getSharedPreferences() {
-        GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(Objects.requireNonNull(getContext()));
+        SharedPreferencesUtils sharedPrefs = PreferenceUtils.getSharedPreferences(Objects.requireNonNull(getContext()));
         mIsMetric = sharedPrefs.isMetric();
         mCoordinateType = sharedPrefs.getCoordinateType();
         // Feature supporting this has not been implemented

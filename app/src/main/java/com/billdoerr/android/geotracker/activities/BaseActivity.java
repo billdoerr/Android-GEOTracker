@@ -22,8 +22,7 @@ import com.billdoerr.android.geotracker.fragments.TrackingFragment;
 import com.billdoerr.android.geotracker.fragments.TripListFragment;
 import com.billdoerr.android.geotracker.services.GPSService;
 import com.billdoerr.android.geotracker.settings.SettingsActivity;
-import com.billdoerr.android.geotracker.utils.FileStorageUtils;
-import com.billdoerr.android.geotracker.utils.GeoTrackerSharedPreferences;
+import com.billdoerr.android.geotracker.utils.SharedPreferencesUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -383,19 +382,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Writes message to app defined log file.
-     * @param msg  String:  Message to be written to file.
-     */
-    private void writeSystemLog(String msg) {
-        FileStorageUtils.writeSystemLog(this.getApplicationContext(), SYS_LOG,TAG + FileStorageUtils.TABS + msg + FileStorageUtils.LINE_SEPARATOR);
-    }
-
-    /**
      * Check preferences whether to keep screen on.
      * @param context Context:  Application context.
      */
     private void initPowerSavings(Context context) {
-        GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(this);
+        SharedPreferencesUtils sharedPrefs = PreferenceUtils.getSharedPreferences(this);
         boolean keepDeviceAwake = sharedPrefs.isKeepDeviceAwake();
 
         if (keepDeviceAwake) {

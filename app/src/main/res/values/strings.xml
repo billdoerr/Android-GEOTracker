@@ -200,7 +200,6 @@
     <string name="text_app_version">%1$s (%2$s)</string>
 
     <!--  Exceptions -->
-    <string name="exception_file_write_failed">File write failed:</string>
     <string name="exception_error_hiding_keyboard">Error hiding keyboard.</string>
     <string name="exception_register_gnns_status_callback">Unable to register Gnss Status Callback</string>
 

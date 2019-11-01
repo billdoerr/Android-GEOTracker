@@ -31,7 +31,7 @@ import com.billdoerr.android.geotracker.services.TrackingService;
 import com.billdoerr.android.geotracker.utils.GPSUtils;
 import com.billdoerr.android.geotracker.services.LocationMessageEvent;
 import com.billdoerr.android.geotracker.utils.CoordinateConversionUtils;
-import com.billdoerr.android.geotracker.utils.GeoTrackerSharedPreferences;
+import com.billdoerr.android.geotracker.utils.SharedPreferencesUtils;
 import com.billdoerr.android.geotracker.utils.PermissionUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 import com.billdoerr.android.geotracker.utils.ServiceUtils;
@@ -682,24 +682,23 @@ public class TrackingFragment extends Fragment {
         if (mIsMetric) {
             // Convert m/s -> knots
             if (mIsNautical) {
-                // knots = meters per second × 1.943844
-                speed *= 1.943844;
+                speed = CoordinateConversionUtils.mpsToKnots(speed);
             // Convert m/s -> km/hr
             } else {
-                speed *= 3.6;
+                speed = CoordinateConversionUtils.mpsToKmHr(speed);
             }
         } else {
             if (mIsNautical) {
                 // knots = meters per second × 1.943844
-                speed *= 1.943844;
+                speed = CoordinateConversionUtils.mpsToKnots(speed);
             } else {
                 // Convert m/s -> mi/hr
-                speed *= 2.236936;
+                speed = CoordinateConversionUtils.mpsToMph(speed);
             }
             // Convert m -> ft
-            altitude /= 0.3048;
+            altitude = CoordinateConversionUtils.mToFt(altitude);
             // Convert m -> ft
-            accuracy /= 0.3048;
+            accuracy = CoordinateConversionUtils.mToFt(accuracy);
         }
 
         //  If Coordinate Type is UTM or MGRS then only display full lat/lon string
@@ -857,7 +856,7 @@ public class TrackingFragment extends Fragment {
      * Get required Shared Preferences
      */
     private void getSharedPreferences() {
-        GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(Objects.requireNonNull(getContext()));
+        SharedPreferencesUtils sharedPrefs = PreferenceUtils.getSharedPreferences(Objects.requireNonNull(getContext()));
         mIsMetric = sharedPrefs.isMetric();
         mIsNautical = sharedPrefs.isNautical();
         mCoordinateType = sharedPrefs.getCoordinateType();

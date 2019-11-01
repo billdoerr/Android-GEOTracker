@@ -14,14 +14,6 @@ All notable changes to this Android application will be documented in this file.
 ## [Unreleased]
 ### v1.x.x (TBD)
 #### Added
-- [ ] Sync data.  Upload data to cloud or most likely a local database. Cloud would cost money. 
-#### Changed
-#### Removed
-- [ ]
-
-## [Unreleased]
-### v1.x.x (TBD)
-#### Added
 - [ ] Add map geo markers.   
     - [ ] Add photos
     - [ ] Add notes
@@ -40,12 +32,14 @@ All notable changes to this Android application will be documented in this file.
 - [ ]
 
 ## [Unreleased]
-### v1.1 (TBD) (30Nov2019)
+### v1.1 (In Progress) (30Nov2019)
 #### Added
-- [ ] Get map overlay's to display in high resolution.
+- [x] Get map overlay's to display in high resolution. Significant improvement.
 - [ ] Have location marker change based on compass direction.
 #### Changed
-- [ ] Migrate unit conversions to a utils call (ie. Toolbox)
+- [x] Remove FileStorageUtils class
+- [x] Renamed GeoTrackerSharedPreferences to SharedPreferencesUtils
+- [x] Migrate unit conversions to CoordinateConversionUtils
 #### Removed
 - [ ]
 

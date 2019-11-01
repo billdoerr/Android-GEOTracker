@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.billdoerr.android.geotracker.R;
 import com.billdoerr.android.geotracker.activities.MainActivity;
-import com.billdoerr.android.geotracker.utils.GeoTrackerSharedPreferences;
+import com.billdoerr.android.geotracker.utils.SharedPreferencesUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,7 +65,7 @@ public class GPSService extends Service implements LocationListener {
         mContext = getApplicationContext();
 
         // We need some preference settings
-        GeoTrackerSharedPreferences sharedPrefs = PreferenceUtils.getSharedPreferences(mContext);
+        SharedPreferencesUtils sharedPrefs = PreferenceUtils.getSharedPreferences(mContext);
 
         mUpdateInterval = sharedPrefs.getLocationServicesUpdateInterval();
         mUpdateDistance = sharedPrefs.getLocationServicesUpdateDistance();

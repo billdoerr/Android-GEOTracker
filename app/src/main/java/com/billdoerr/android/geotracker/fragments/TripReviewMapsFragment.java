@@ -18,14 +18,8 @@ import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
 import com.billdoerr.android.geotracker.utils.MapUtils;
 import com.billdoerr.android.geotracker.utils.PermissionUtils;
 
-import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.util.TileSystem;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,9 +32,6 @@ public class TripReviewMapsFragment extends Fragment {
 //    private static final String SAVED_MAP_TYPE = "map_type";
 //    private static final String SAVED_ZOOM = "zoom";
 
-    private static final double mZoom = 10.0;  // Range:  2 - 21
-
-    private View mView;
     private org.osmdroid.views.MapView mMapView;
     private Trip mTrip;
 
@@ -50,12 +41,6 @@ public class TripReviewMapsFragment extends Fragment {
     public TripReviewMapsFragment() {
         // Pass
     }
-
-// --Commented out by Inspection START (10/23/2019 2:14 PM):
-//    public static TripReviewMapsFragment newInstance() {
-//        return new TripReviewMapsFragment();
-//    }
-// --Commented out by Inspection STOP (10/23/2019 2:14 PM)
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -75,7 +60,9 @@ public class TripReviewMapsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_maps_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_maps_review, container, false);
+
+        mMapView = view.findViewById(R.id.mapview);
 
         /* Important! Set your user agent to prevent getting banned from the osm servers.
          * Background: This setting identifies your app uniquely to tile servers. It's not the end user's identity,
@@ -85,9 +72,9 @@ public class TripReviewMapsFragment extends Fragment {
         Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
         // Initialize the MapView
-        initMapView(mView);
+        MapUtils.initMapView(getActivity(), mMapView);
 
-        return mView;
+        return view;
     }
 
     @Override
@@ -109,7 +96,7 @@ public class TripReviewMapsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        initMapView(mView);
+        MapUtils.initMapView(Objects.requireNonNull(getActivity()), mMapView);
         if (mMapView != null) {
             mMapView.onResume();
             plotTrip();
@@ -140,66 +127,6 @@ public class TripReviewMapsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * Initializes the MapView
-     * @param view View
-     */
-    private void initMapView(View view) {
-
-        final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors/"};
-
-        final ITileSource tileSource =
-                new XYTileSource("Outdoors",
-                        0,
-                        (int)mZoom,
-                        256,
-                        ".png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716",
-                        tileUrlOutdoor,
-                        "from thunderforest.com");
-
-        mMapView = view.findViewById(R.id.mapview);
-        mMapView.setTileSource(tileSource);
-
-        // Add multi-touch capability
-        mMapView.setMultiTouchControls(true);
-
-        final float density = getResources().getDisplayMetrics().density;
-        TileSystem.setTileSize(Math.round(256*density));
-
-        /* If true, tiles are scaled to the current DPI of the display. This effectively
-         * makes it easier to read labels, how it may appear pixelated depending on the map
-         * source.<br>
-         * If false, tiles are rendered in their real size.
-         */
-        mMapView.setTilesScaledToDpi(true);
-
-        /*
-         * Setting an additional scale factor both for ScaledToDpi and standard size
-         * > 1.0 enlarges map display, < 1.0 shrinks map display
-         */
-        mMapView.setTilesScaleFactor(2);
-
-        // Add compass to map
-        CompassOverlay compassOverlay = new CompassOverlay(Objects.requireNonNull(getActivity()), new InternalCompassOrientationProvider(getActivity()), mMapView);
-        compassOverlay.enableCompass();
-        mMapView.getOverlays().add(compassOverlay);
-
-        IMapController mapController = mMapView.getController();
-        /*
-        Approximate Map Scale 	OSM Zoom Level
-        5M 	                        5
-        2M 	                        8
-        1M 	                        9
-        500k 	                    10
-        250k 	                    11-12
-        50 	                        13-14
-        25k 	                    15
-        8k 	                        16
-        */
-        mapController.setZoom(mZoom);
-
     }
 
     /**

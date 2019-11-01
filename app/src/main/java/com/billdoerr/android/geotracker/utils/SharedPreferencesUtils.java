@@ -2,7 +2,7 @@ package com.billdoerr.android.geotracker.utils;
 
 import java.io.Serializable;
 
-public class GeoTrackerSharedPreferences  implements Serializable {
+public class SharedPreferencesUtils implements Serializable {
 
     private boolean mUnitsMetric;
     private boolean mUnitsNautical;
@@ -14,7 +14,7 @@ public class GeoTrackerSharedPreferences  implements Serializable {
     private boolean mKeepDeviceAwake;
 
 
-    public GeoTrackerSharedPreferences() {
+    public SharedPreferencesUtils() {
         // Pass
     }
 

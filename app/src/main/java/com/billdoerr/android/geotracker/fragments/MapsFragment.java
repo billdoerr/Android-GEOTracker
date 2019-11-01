@@ -28,14 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.util.TileSystem;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +45,6 @@ public class MapsFragment extends Fragment {
     private org.osmdroid.views.MapView mMapView;
     private Trip mTrip;
     private List<GeoPoint> mGeoPoints = new ArrayList<>();
-    private View mView;
-
-    private double mZoom = 18.0;  // Range:  2 - 21
 
     private boolean mIsAppInitialized = false;
 
@@ -86,7 +77,9 @@ public class MapsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_maps, container, false);
+        View view = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        mMapView = view.findViewById(R.id.mapview);
 
         /* Important! Set your user agent to prevent getting banned from the osm servers.
          * Background: This setting identifies your app uniquely to tile servers. It's not the end user's identity,
@@ -95,7 +88,7 @@ public class MapsFragment extends Fragment {
          */
         Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
-        return mView;
+        return view;
     }
 
     @Override
@@ -113,8 +106,9 @@ public class MapsFragment extends Fragment {
                 mGeoPoints = gson.fromJson(jsonString, new TypeToken<List<GeoPoint>>(){}.getType());
             }
 
+            //  TODO:  Fix this
             // Get zoom level
-            mZoom = savedInstanceState.getDouble(SAVED_ZOOM);
+//            mZoom = savedInstanceState.getDouble(SAVED_ZOOM);
         }
 
     }
@@ -207,7 +201,10 @@ public class MapsFragment extends Fragment {
         checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, PermissionUtils.PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
         // Initialize the MapView
-        initMapView(mView);
+        MapUtils.initMapView(Objects.requireNonNull(getActivity()), mMapView);
+
+        // If active trip, plot points
+        plotActiveTrip();
 
         // Start GPSService if not running
         GPSUtils.startGPSService(getContext());
@@ -223,64 +220,9 @@ public class MapsFragment extends Fragment {
     }
 
     /**
-     * Initializes the mapping component
-     * @param view View
+     * Plot geopoints if active trip
      */
-    private void initMapView(View view) {
-
-        final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors-v2/"};
-
-        final ITileSource tileSourceThunderforest =
-                new XYTileSource("Outdoors",
-                        0,
-                        (int)mZoom,
-                        256,
-                        ".png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716",
-                        tileUrlOutdoor,
-                        "from thunderforest.com");
-
-        mMapView = view.findViewById(R.id.mapview);
-//        mMapView.setTileSource(TileSourceFactory.USGS_TOPO);
-        mMapView.setTileSource(tileSourceThunderforest);
-//        mMapView.setTileSource(TileSourceFactory.MAPNIK);
-        // Add multi-touch capability
-        mMapView.setMultiTouchControls(true);
-
-        final float density = getResources().getDisplayMetrics().density;
-        TileSystem.setTileSize(Math.round(256*density));
-
-        /* If true, tiles are scaled to the current DPI of the display. This effectively
-        * makes it easier to read labels, how it may appear pixelated depending on the map
-        * source.<br>
-        * If false, tiles are rendered in their real size.
-        */
-        mMapView.setTilesScaledToDpi(true);
-
-        /*
-         * Setting an additional scale factor both for ScaledToDpi and standard size
-         * > 1.0 enlarges map display, < 1.0 shrinks map display
-         */
-        mMapView.setTilesScaleFactor(2);
-
-        // Add compass to map
-        CompassOverlay compassOverlay = new CompassOverlay(Objects.requireNonNull(getActivity()), new InternalCompassOrientationProvider(getActivity()), mMapView);
-        compassOverlay.enableCompass();
-        mMapView.getOverlays().add(compassOverlay);
-
-        IMapController mapController = mMapView.getController();
-        /*
-        Approximate Map Scale 	OSM Zoom Level
-        5M 	                        5
-        2M 	                        8
-        1M 	                        9
-        500k 	                    10
-        250k 	                    11-12
-        50 	                        13-14
-        25k 	                    15
-        8k 	                        16
-        */
-        mapController.setZoom(mZoom);
-
+    private void plotActiveTrip() {
         // Is there an active trip?
         if ( initTrip(getContext()) ) {
             // Plot markers
@@ -293,7 +235,6 @@ public class MapsFragment extends Fragment {
                 MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
             }
         }
-
     }
 
     /**
