@@ -3,21 +3,20 @@ All notable changes to this Android application will be documented in this file.
 
 
 ## [Unreleased]
-### v1.x.x (TBD)
+### v1.4 (TBD)
 #### Added
-- [ ]  
+- [ ] Add map geo markers.   
+    - [ ] Add photos
+    - [ ] Add notes
+    - [ ] Add video  
 #### Changed
 - [ ]
 #### Removed
 - [ ]
 
 ## [Unreleased]
-### v1.x.x (TBD)
+### v1.3 (TBD)
 #### Added
-- [ ] Add map geo markers.   
-    - [ ] Add photos
-    - [ ] Add notes
-    - [ ] Add video 
 - [ ] Sync data.  Upload data to cloud or most likely a local database. Cloud would cost money. 
 #### Changed
 - [ ]
@@ -34,7 +33,7 @@ All notable changes to this Android application will be documented in this file.
 - [ ]
 
 ## [Unreleased]
-### v1.1 (In Beta) (30Nov2019)
+### v1.1 (In Beta) (8Nov2019)
 #### Added
 - [x] Get map overlay's to display in high resolution. Significant improvement.
 - [x] Charts (MPAndroidCharts)
