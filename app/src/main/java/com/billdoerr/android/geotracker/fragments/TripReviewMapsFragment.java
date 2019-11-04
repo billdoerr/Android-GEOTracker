@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -51,7 +53,7 @@ public class TripReviewMapsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
 
         Bundle args = getArguments();
         mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
@@ -127,6 +129,18 @@ public class TripReviewMapsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    // We are disabling the options menu in this fragment.  Must also set
+    // setHasOptionsMenu(true); in onCreate()
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.clear();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Pass
     }
 
     /**

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -66,7 +68,7 @@ public class TrackDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
 
         // Get trip data
         Bundle args = getArguments();
@@ -127,6 +129,19 @@ public class TrackDetailFragment extends Fragment {
 
         // Update UI, if unit preferences have changed
         updateUI();
+
+    }
+
+    // We are disabling the options menu in this fragment.  Must also set
+    // setHasOptionsMenu(true); in onCreate()
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.clear();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Pass
     }
 
     /*

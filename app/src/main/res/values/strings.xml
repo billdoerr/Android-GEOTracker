@@ -5,6 +5,7 @@
     <string name="activity_title_geotracker">GEO Tracker</string>
     <string name="activity_title_settings">Settings</string>
     <string name="activity_title_about">About</string>
+    <string name="activity_title_trip_review">Trip Review</string>
 
     <!--  Fragment Titles -->
     <string name="fragment_title_trip_list">Trips</string>
@@ -13,7 +14,10 @@
     <string name="fragment_title_about">About GEOTracker</string>
     <string name="fragment_title_maps">Maps</string>
     <string name="fragment_title_track">Tracking</string>
-    <string name="fragment_tile_track_detail">Track Detail</string>
+    <string name="fragment_tile_track_detail">Summary</string>
+    <string name="fragment_title_track_chart_altitude">Altitude</string>
+    <string name="fragment_title_track_chart_speed">Speed</string>
+    <string name="fragment_title_route_history_chart">History</string>
 
     <!--  Dialog -->
     <string name="dialog_title_activity_type_new">New Activity</string>
@@ -112,6 +116,19 @@
     <string name="text_no_routes">No routes found</string>
     <string name="text_add_routes">Click + to add route</string>
 
+    <!-- Charting -->
+    <string name="text_chart_profile_altitude">Altitude Profile</string>
+    <string name="text_chart_profile_speed">Speed Profile</string>
+    <string name="text_chart_profile_route_history">Route History</string>
+    <string name="text_chart_time">Time (minutes)</string>
+    <string name="text_chart_distance_english">Miles</string>
+    <string name="text_chart_distance_metric">Km</string>
+    <string name="text_chart_elevation_english">ft</string>
+    <string name="text_chart_elevation_metric">m</string>
+    <string name="text_chart_speed_english">mi/h</string>
+    <string name="text_chart_speed_metric">km/h</string>
+    <string name="text_chart_speed_nautical">knots</string>
+
     <string name="radiogroup_trip_list_filter_active">Trip</string>
     <string name="radiobutton_trip_list_filter_active_all">All</string>
     <string name="radiobutton_trip_list_filter_active_active">Active</string>
@@ -145,6 +162,9 @@
     <string name="action_filter">Filter</string>
     <string name="action_filter_apply">Apply Filter</string>
     <string name="action_filter_clear">Clear Filter</string>
+
+    <string name="action_chart_x_axis_distance">Distance</string>
+    <string name="action_chart_x_axis_time">Time</string>
 
 
     <!-- Notifications -->

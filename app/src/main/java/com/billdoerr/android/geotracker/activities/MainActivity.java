@@ -5,7 +5,7 @@ import com.billdoerr.android.geotracker.fragments.MapsFragment;
 import androidx.fragment.app.Fragment;
 
 /**
- * About this application activity which extends from BaseActivity.
+ * Main application activity which extends from BaseActivity.
  */
 @SuppressWarnings("unused")
 public class MainActivity extends BaseActivity {

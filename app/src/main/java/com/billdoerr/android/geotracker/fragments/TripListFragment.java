@@ -20,6 +20,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.billdoerr.android.geotracker.R;
+import com.billdoerr.android.geotracker.activities.TripReviewActivity;
 import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
@@ -184,6 +185,7 @@ public class TripListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_trip_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -460,12 +462,15 @@ public class TripListFragment extends Fragment {
                                     args.putSerializable(ARGS_TRIP, trip);
 
                                     // Create fragment
-                                    TripReviewFragment fragment= new TripReviewFragment();
-                                    fragment.setArguments(args);
-                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.TAG)
-                                            .addToBackStack(TripReviewFragment.TAG)
-                                            .commit();
+//                                    TripReviewFragment fragment= new TripReviewFragment();
+//                                    fragment.setArguments(args);
+//                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
+//                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.TAG)
+//                                            .addToBackStack(TripReviewFragment.TAG)
+//                                            .commit();
+                                    Intent intent = new Intent(getContext(), TripReviewActivity.class);
+                                    intent.putExtra(ARGS_TRIP, trip);
+                                    startActivity(intent);
                                     return true;
                                 default:
                                     return false;

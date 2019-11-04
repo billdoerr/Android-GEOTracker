@@ -24,18 +24,30 @@ import java.util.Objects;
 @SuppressWarnings("WeakerAccess")
 public class TripReviewFragment extends Fragment {
 
-    public static final String TAG = "TripReviewFragment";
-
     private static final String ARGS_TRIP = "trip";
 
     private Trip mTrip;
+
+    /**
+     * Required empty public constructor
+     */
+    public TripReviewFragment() {
+        // Pass
+    }
+
+    public static TripReviewFragment newInstance() {
+        return new TripReviewFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
-        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
+        setHasOptionsMenu(true);
+
+//        Bundle args = getArguments();
+//        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
+        mTrip = (Trip) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra(ARGS_TRIP);
     }
 
     @Override
@@ -80,14 +92,24 @@ public class TripReviewFragment extends Fragment {
         TripReviewMapsFragment tripReviewMapsFragment = new TripReviewMapsFragment();
         tripReviewMapsFragment.setArguments(args);
 
-        // Add fragment to adapter
-        adapter.addFragment(tripReviewMapsFragment, getResources().getString(R.string.fragment_title_maps));
-
         TrackDetailFragment trackDetailFragment = new TrackDetailFragment();
         trackDetailFragment.setArguments(args);
 
-        // Add fragment to adapter
-        adapter.addFragment(trackDetailFragment, getResources().getString(R.string.fragment_tile_track_detail));
+        TrackChartAltitudeFragment trackChartAltitudeFragment = new TrackChartAltitudeFragment();
+        trackChartAltitudeFragment.setArguments(args);
+
+        TrackChartSpeedFragment trackChartSpeedFragment = new TrackChartSpeedFragment();
+        trackChartSpeedFragment.setArguments(args);
+
+        RouteHistoryChartFragment routeHistoryChartFragment = new RouteHistoryChartFragment();
+        routeHistoryChartFragment.setArguments(args);
+
+        // Add fragments to adapter
+        adapter.addFragment(tripReviewMapsFragment, getString(R.string.fragment_title_maps));
+        adapter.addFragment(trackDetailFragment, getString(R.string.fragment_tile_track_detail));
+        adapter.addFragment(trackChartAltitudeFragment, getString(R.string.fragment_title_track_chart_altitude));
+        adapter.addFragment(trackChartSpeedFragment, getString(R.string.fragment_title_track_chart_speed));
+        adapter.addFragment(routeHistoryChartFragment, getString(R.string.fragment_title_route_history_chart));
 
         //  Set adapter to view pager
         viewPager.setAdapter(adapter);

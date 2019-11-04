@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -71,7 +73,7 @@ public class MapsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -187,6 +189,18 @@ public class MapsFragment extends Fragment {
 //                }
 //                break;
         }
+    }
+
+    // We are disabling the options menu in this fragment.  Must also set
+    // setHasOptionsMenu(true); in onCreate()
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.clear();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Pass
     }
 
     /**

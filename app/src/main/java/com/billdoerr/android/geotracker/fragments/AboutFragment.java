@@ -2,6 +2,8 @@ package com.billdoerr.android.geotracker.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,6 +34,8 @@ public class AboutFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -48,12 +52,23 @@ public class AboutFragment extends Fragment {
         return v;
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // Change the toolbar title text
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_about);
+    }
+
+    // We are disabling the options menu in this fragment.  Must also set
+    // setHasOptionsMenu(true); in onCreate()
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.clear();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Pass
     }
 
 }

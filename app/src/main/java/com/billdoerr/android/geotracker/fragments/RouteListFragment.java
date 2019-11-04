@@ -163,6 +163,7 @@ public class RouteListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.menu_route_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

@@ -43,6 +43,12 @@
         </activity>
 
         <activity
+            android:name=".activities.TripReviewActivity"
+            android:label="@string/activity_title_trip_review"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/activity_title_settings"
             android:theme="@style/AppTheme">

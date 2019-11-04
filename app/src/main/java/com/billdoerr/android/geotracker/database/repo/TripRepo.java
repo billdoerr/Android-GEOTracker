@@ -231,6 +231,64 @@ public class TripRepo {
     }
 
     /**
+     * Returns list of trips that only has an end time set. End time of zero indicates running trip.
+     * @return List<ActivityType>
+     */
+    public static List<Trip> getTripsByTripName(String name) {
+        List<Trip> trips = new ArrayList<>();
+        Trip trip;
+
+        String selectQuery = "SELECT "
+                + KEY_TRIP_ID + ", "
+                + KEY_TRIP_NAME + ", "
+                + KEY_TRIP_DESC + ", "
+                + KEY_TRIP_STATE + ", "
+                + KEY_TRIP_START_TIME + ", "
+                + KEY_TRIP_END_TIME + ", "
+                + KEY_TRIP_MOVING_TIME + ", "
+                + KEY_TRIP_PAUSED_TIME + ", "
+                + KEY_TRIP_TOTAL_TIME + ", "
+                + KEY_TRIP_ACTIVE_FLAG + ", "
+                + KEY_TRIP_ACTIVITY_TYPE_ID
+                + " FROM " + TABLE
+                + " WHERE " + KEY_TRIP_NAME + " = '" + name + "'"
+                + " ORDER BY " +  KEY_TRIP_START_TIME + " ASC";
+
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        try {
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            // Loop through all rows and add to list
+            if (cursor.moveToFirst()) {
+                do {
+                    trip = new Trip();
+                    trip.setId(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ID)));
+                    trip.setName(cursor.getString(cursor.getColumnIndex(KEY_TRIP_NAME)));
+                    trip.setDesc(cursor.getString(cursor.getColumnIndex(KEY_TRIP_DESC)));
+                    trip.setState(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_STATE)));
+                    trip.setStartTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_START_TIME)));
+                    trip.setEndTime(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_END_TIME)));
+                    trip.setMovingTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_MOVING_TIME)));
+                    trip.setPausedTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_PAUSED_TIME)));
+                    trip.setTotalTimeInMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRIP_TOTAL_TIME)));
+                    trip.setActive(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVE_FLAG)));
+                    trip.setActivityTypeId(cursor.getInt(cursor.getColumnIndex(KEY_TRIP_ACTIVITY_TYPE_ID)));
+                    trips.add(trip);
+                } while (cursor.moveToNext());
+            }
+
+            cursor.close();
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() != null ? e.getMessage() : "");
+        } finally {
+            DatabaseManager.getInstance().closeDatabase();
+        }
+
+        return trips;
+    }
+
+    /**
      * Returns list of trips.
      * @return List<ActivityType>
      */

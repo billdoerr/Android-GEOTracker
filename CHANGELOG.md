@@ -20,22 +20,27 @@ All notable changes to this Android application will be documented in this file.
     - [ ] Add video 
 - [ ] Sync data.  Upload data to cloud or most likely a local database. Cloud would cost money. 
 #### Changed
+- [ ]
 #### Removed
 - [ ]
 
 ## [Unreleased]
 ### v1.2 (TBD) (31Dec2019)
 #### Added
-- [ ] Analytics.
+- [ ] Have location marker change based on compass direction.
 #### Changed
+- [ ]
 #### Removed
 - [ ]
 
 ## [Unreleased]
-### v1.1 (In Progress) (30Nov2019)
+### v1.1 (In Beta) (30Nov2019)
 #### Added
 - [x] Get map overlay's to display in high resolution. Significant improvement.
-- [ ] Have location marker change based on compass direction.
+- [x] Charts (MPAndroidCharts)
+    - [x] Altitude LineChart
+    - [x] Speed LineChart
+    - [x] Route History implemented as BarChart
 #### Changed
 - [x] Remove FileStorageUtils class
 - [x] Renamed GeoTrackerSharedPreferences to SharedPreferencesUtils

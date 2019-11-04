@@ -13,7 +13,7 @@
         app:tabGravity="fill"
         android:background="?android:attr/colorPrimary"
         app:tabMaxWidth="0dp"
-        app:tabMode="fixed" />
+        app:tabMode="scrollable" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"

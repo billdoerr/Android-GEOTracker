@@ -81,6 +81,16 @@ public class CoordinateConversionUtils
   }
 
   /**
+   * Converts meters to miles.
+   * @param meters float
+   * @return float Value in miles
+   */
+  public static float mToMiles(float meters) {
+    return meters *= 0.000621371;
+  }
+
+
+  /**
    * Converts decimal degrees to degrees, minutes, seconds.  Returns a coordinate as a String representation.
    *
    * @param latitude double
