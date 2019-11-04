@@ -3,7 +3,6 @@
 ## GEOTracker
 
 ### Develop Android application to track GPS data for hikes, bikes, car trips, etc.
-
 	- Simple Android app that tracks GPS location.
 	- Use for bike/hike/car/etc.
 	- Write to SQLite database.
@@ -16,13 +15,13 @@
     - Data saved to sqllite database.
     - User will have the ability to filter view by activity and routes.
     - Display GPS data on map.
+    - Trip Review now contains charts with v1.1.
 ### Planned Features    
-    - Add photos.   
-    - Analytics. 
+    - Add photos.    
     - Sync data. Upload data to cloud.
 
 ### Known Issues 
-    - osmdroid thunderforest overlay isn't high resolution. Don't know how GAIA gps has such high resolution.   
+    - osmdroid thunderforest overlay isn't high resolution. Don't know how GAIA gps has such high resolution. This has been improved with v1.1  
 
 ___
 ### HowTo
@@ -30,7 +29,7 @@ ___
 **Grant Permissions**<br>
 When GEOTracker is first launch it will request the user to grant Location and Storage permissions.  
 The app is useless without these two permissions.<br>  
-<img src="images/location_permissions.png" width="200"/>
+<img src="images/location_permissions.png" width="200"/>&nbsp;&nbsp;
 <img src="images/storage_permissions.png" width="200"/>
 
 **Map**<br>
@@ -44,7 +43,7 @@ Contains a list of trips that have been saved. You have the ability Edit, Delete
 
 **Filter** the list list by click the <img src="images/filter_icon.png" width="10"/> icon. Click **Apply Filter** to select your filter criteria. Clicking **Clear Filter** resets the view.<br>
 **Search** the list list by click the <img src="images/search_icon.png" width="10"/> icon.<br>
-<img src="images/filter_routes.png" width="200"/>
+<img src="images/filter_routes.png" width="200"/>&nbsp;&nbsp;
 <img src="images/trip_search.png" width="200"/><br>
 
 **Delete** a trip by selecting **Trip delete**.<br>
@@ -53,9 +52,18 @@ Contains a list of trips that have been saved. You have the ability Edit, Delete
 <img src="images/add_trip.png" width="200"/><br>
 
 **Trip Review**<br>
-Selecting **Review Trip** provides the user the ability to the tracking and mapped data.<br>
-<img src="images/trip_review.png" width="200"/>
-<img src="images/trip_review_detail.png" width="200"/><br>
+Selecting **Review Trip** provides the user the ability to review a saved trip.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**Maps** tab displays the tracked route.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**Summary** tab displays the the trip summary.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**Altitude** tab displays a line chart of Altitude vs Distance or Altitude vs Time.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**Speed** tab displays a line chart of Speed vs Distance or Speed vs Time.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**History** tab displays a bar chart showing the trip times that have the same trip name of the trip being reviewed.<br>
+<img src="images/trip_review.png" width="200"/>&nbsp;&nbsp;
+<img src="images/trip_review_detail.png" width="200"/>&nbsp;&nbsp;
+<img src="images/trip_review_chart_altitude.png" width="200"/>&nbsp;&nbsp;
+<img src="images/trip_review_chart_speed.png" width="200"/>&nbsp;&nbsp;
+<img src="images/trip_review_chart_history.png" width="200"/>
+<br>
 
 **Track**<br>
 This is the heart of the app. This tracks the device location.<br>
