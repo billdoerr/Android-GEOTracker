@@ -28,12 +28,12 @@ All notable changes to this Android application will be documented in this file.
 #### Added
 - [ ] Have location marker change based on compass direction.
 #### Changed
-- [ ]
+- [ ] Try and resolve issue where user must press Back Button on TripReview screen for options menu to display on Routes screen.
 #### Removed
 - [ ]
 
-## [Unreleased]
-### v1.1 (In Beta) (8Nov2019)
+## [Released]
+### v1.1 (6Nov2019)
 #### Added
 - [x] Get map overlay's to display in high resolution. Significant improvement.
 - [x] Charts (MPAndroidCharts)
@@ -44,6 +44,9 @@ All notable changes to this Android application will be documented in this file.
 - [x] Remove FileStorageUtils class
 - [x] Renamed GeoTrackerSharedPreferences to SharedPreferencesUtils
 - [x] Migrate unit conversions to CoordinateConversionUtils
+- [x] Disabled BottomNavigationView when navigating to Trip List->Trip Review
+- [x] Updated build.gradle to use osmdroid v6.1.1. This corrects an exception generated when osmdroid calls 'mMapViewRepository.getDefaultMarkerIcon()'
+- [x] Changed launch icon, not the best but it was free. Was using default Android icon.
 #### Removed
 - [ ]
 

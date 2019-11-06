@@ -77,33 +77,15 @@ public class ActivityTypeListFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_activity_type_list);
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//    }
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//    }
-
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//    }
-
-    // We are disabling the options menu in this fragment.  Must also set
-    // setHasOptionsMenu(true); in onCreate()
+    /*
+     We are disabling the options menu in this fragment.  Must also set
+     setHasOptionsMenu(true); in onCreate()
+     */
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();

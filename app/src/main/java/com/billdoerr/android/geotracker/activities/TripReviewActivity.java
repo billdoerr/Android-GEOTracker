@@ -1,5 +1,7 @@
 package com.billdoerr.android.geotracker.activities;
 
+import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import com.billdoerr.android.geotracker.fragments.TripReviewFragment;
 
@@ -15,4 +17,13 @@ public class TripReviewActivity extends BaseActivity {
     protected Fragment createFragment() {
         return TripReviewFragment.newInstance();
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Display BottomNavigationView
+        setBottomNavigationViewVisibility(false);
+    }
+
 }

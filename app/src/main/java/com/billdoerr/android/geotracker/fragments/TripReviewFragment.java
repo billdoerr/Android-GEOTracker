@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 @SuppressWarnings("WeakerAccess")
 public class TripReviewFragment extends Fragment {
 
@@ -45,14 +46,16 @@ public class TripReviewFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        // Used when fragment is instantiated via fragment transaction
 //        Bundle args = getArguments();
 //        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
+
+        // Used when fragment is instantiated via startActivity().
         mTrip = (Trip) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra(ARGS_TRIP);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_trip_review, container, false);
 
         //  Setup action bar
@@ -76,6 +79,39 @@ public class TripReviewFragment extends Fragment {
 
         // Change the toolbar title text
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        // Having issues with fragments added via PageAdapter remaining in FragmentManager.
+        clearStack();
+        super.onSaveInstanceState(outState);
+    }
+
+    /*
+    * Having issues with fragments added via PageAdapter remaining in FragmentManager.
+    * This helps resolve this issue.
+     */
+    private void clearStack() {
+        FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+//        //Here we are clearing back stack fragment entries
+//        int backStackEntry = fm.getBackStackEntryCount();
+//        if (backStackEntry > 0) {
+//            for (int i = 0; i < backStackEntry; i++) {
+//                fm.popBackStackImmediate();
+//            }
+//        }
+
+        //Here we are removing all the fragment that are shown here
+        fm.getFragments();
+        if (fm.getFragments().size() > 0) {
+            for (int i = 0; i < fm.getFragments().size(); i++) {
+                Fragment fragment = fm.getFragments().get(i);
+                if (fragment != null) {
+                    fm.beginTransaction().remove(fragment).commit();
+                }
+            }
+        }
     }
 
     /**
@@ -175,25 +211,7 @@ public class TripReviewFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
     }
-
-//    @Override
-//    public void destroyItem(ViewGroup container, int position, Object object) {
-//
-//        final long itemId = getItemId(position);
-//
-//        // Do we already have this fragment?
-////        String name = makeFragmentName(container.getId(), itemId);
-//        Fragment fragment = mFragmentManager.findFragmentByTag(name);
-//        if (fragment != null) {
-//            mCurTransaction.attach(fragment);
-//        } else {
-//            fragment = getItem(position);
-//            mCurTransaction.add(container.getId(), fragment,
-//                    makeFragmentName(container.getId(), itemId));
-//        }
-//    }
-
-
 
 }

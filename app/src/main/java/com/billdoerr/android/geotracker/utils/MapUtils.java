@@ -108,8 +108,8 @@ public class MapUtils {
 
         // Create polyline
         final Polyline line = new Polyline(map);
-        line.setColor(Color.RED);
-        line.setWidth(5.0f);
+        line.getOutlinePaint().setColor(Color.RED);
+        line.getOutlinePaint().setStrokeWidth(5.0f);
         line.setVisible(true);
         line.setPoints(geoPoints);
         map.getOverlayManager().add(line);

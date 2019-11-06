@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -87,6 +88,8 @@ public class TripListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_trip_list, container, false);
 
+        setHasOptionsMenu(true);
+
         // Get trips. Only returns list where end time != 0.
         mTrips = TripRepo.getTrips();
 
@@ -122,22 +125,8 @@ public class TripListFragment extends Fragment {
             // Retrieve filter results
             filterResults();
         }
+
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//    }
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//    }
-
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -145,11 +134,6 @@ public class TripListFragment extends Fragment {
         outState.putInt(ARGS_FILTER_ACTIVE_FLAG, mActiveFlagFilter);
         outState.putInt(ARGS_FILTER_ACTIVITY_TYPE_ID, mActivityTypeIdFilter);
     }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -185,7 +169,6 @@ public class TripListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        menu.clear();
         inflater.inflate(R.menu.menu_trip_list, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -233,6 +216,12 @@ public class TripListFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        Log.i("TripListFragment", "onDetach");
+        super.onDetach();
     }
 
     /**
@@ -374,12 +363,12 @@ public class TripListFragment extends Fragment {
      */
     private class TripHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final TextView mTextName;
-        private final TextView mTextDesc;
-        private final TextView mTextActivity;
-        private final TextView mTextViewOption;
-        private final TextView mTextTotalTimeData;
-        private final TextView mTextStartTimeData;
+        final private TextView mTextName;
+        final private TextView mTextDesc;
+        final private TextView mTextActivity;
+        final private TextView mTextViewOption;
+        final private TextView mTextTotalTimeData;
+        final private TextView mTextStartTimeData;
 
         TripHolder(View itemView) {
             super(itemView);
@@ -461,16 +450,20 @@ public class TripListFragment extends Fragment {
                                     Bundle args = new Bundle();
                                     args.putSerializable(ARGS_TRIP, trip);
 
-                                    // Create fragment
+                                    // Start with Fragment Transaction
+                                    // This method causes issues with options menu in other fragments
 //                                    TripReviewFragment fragment= new TripReviewFragment();
 //                                    fragment.setArguments(args);
 //                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-//                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.TAG)
-//                                            .addToBackStack(TripReviewFragment.TAG)
+//                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.class.getSimpleName())
+//                                            .addToBackStack(null)
 //                                            .commit();
+
+                                    // Start with Activity
                                     Intent intent = new Intent(getContext(), TripReviewActivity.class);
                                     intent.putExtra(ARGS_TRIP, trip);
                                     startActivity(intent);
+
                                     return true;
                                 default:
                                     return false;

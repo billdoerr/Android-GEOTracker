@@ -40,6 +40,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
+    private BottomNavigationView bottomNavigationView;
 
     private Intent mGPSServiceIntent;
 
@@ -77,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (fragment == null) {
             fragment = createFragment();
             fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, fragment)
                     .commit();
         }
 
@@ -162,10 +164,57 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Creates the NavigationView for use with DrawerLayout
+     */
+    protected void createNavigationView() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                        Fragment fragment;
+
+                        // Set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // Close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+
+                        // Launch activity/fragment
+                        switch (menuItem.getItemId()) {
+                            // Fragment:  Activities
+                            case R.id.drawer_activities:
+                                fragment = new ActivityTypeListFragment();
+                                loadFragmentReplace(fragment);
+                                return true;
+                            // Fragment:  Routes
+                            case R.id.drawer_routes:
+                                fragment = new RouteListFragment();
+//                               fr.setArguments(args);
+                                loadFragmentReplace(fragment);
+                                return true;
+                            // Activity:  Settings
+                            case R.id.drawer_settings:
+                                startActivity(new Intent(BaseActivity.this, SettingsActivity.class));
+                                return true;
+                            // Fragment:  About
+                            case R.id.drawer_about:
+//                               startActivity(new Intent(BaseActivity.this, MainActivity.class));
+                                fragment = new AboutFragment();
+                                loadFragmentReplace(fragment);
+                                return true;
+                            default:
+                                return true;
+                        }
+                    }
+                });
+    }
+
+    /**
      * Creates the Bottom Navigation View
      */
     protected void createBottomNavigationView() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -190,79 +239,65 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates the NavigationView for use with DrawerLayout
+     * Enable/Disable the visibility of the BottomNavigationView
+     * @param visible boolean
      */
-    protected void createNavigationView() {
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                        Fragment fragment;
-
-                        // Set item as selected to persist highlight
-                        menuItem.setChecked(true);
-                        // Close drawer when item is tapped
-                        mDrawerLayout.closeDrawers();
-
-                        // Launch activity/fragment
-                        switch (menuItem.getItemId()) {
-                            // Fragment:  Activities
-                            case R.id.drawer_activities:
-                                fragment = new ActivityTypeListFragment();
-                                return loadFragmentReplace(fragment);
-                            // Fragment:  Routes
-                            case R.id.drawer_routes:
-                                fragment = new RouteListFragment();
-//                               fr.setArguments(args);
-                                return loadFragmentReplace(fragment);
-                            // Activity:  Settings
-                            case R.id.drawer_settings:
-                                startActivity(new Intent(BaseActivity.this, SettingsActivity.class));
-                                return true;
-                            // Fragment:  About
-                            case R.id.drawer_about:
-//                               startActivity(new Intent(BaseActivity.this, MainActivity.class));
-                                fragment = new AboutFragment();
-                                return loadFragmentReplace(fragment);
-                            default:
-                                return true;
-                        }
-                    }
-                });
+    protected void setBottomNavigationViewVisibility(boolean visible) {
+        if (visible) {
+            bottomNavigationView.setVisibility(View.VISIBLE);
+        } else {
+            bottomNavigationView.setVisibility(View.GONE);
+        }
     }
 
     /**
      * Creates fragment.  https://www.simplifiedcoding.net/bottom-navigation-android-example/
      * @param fragment Fragment
-     * @return  boolean:  Returns true if fragment created
      */
-    private boolean loadFragmentAdd(Fragment fragment) {
+    private void loadFragmentAdd(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
-            return true;
         }
-        return false;
     }
 
     /**
      * Creates fragment.  https://www.simplifiedcoding.net/bottom-navigation-android-example/
      * @param fragment Fragment
-     * @return  boolean:  Returns true if fragment created
      */
-    private boolean loadFragmentReplace(Fragment fragment) {
+    private void loadFragmentReplace(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+//        clearBackStack(fm);
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
+//                    .remove(getSupportFragmentManager().findFragmentById(R.id.fragment_container))
                     .replace(R.id.fragment_container, fragment)
+//                    .addToBackStack( fragment.getClass().getSimpleName() )
                     .commit();
-            return true;
         }
-        return false;
+    }
+
+    public void clearBackStack(FragmentManager fm) {
+        //Here we are clearing back stack fragment entries
+        int backStackEntry = fm.getBackStackEntryCount();
+        if (backStackEntry > 0) {
+            for (int i = 0; i < backStackEntry; i++) {
+                fm.popBackStackImmediate();
+            }
+        }
+
+//        //Here we are removing all the fragment that are shown here
+//        if (fm.getFragments() != null && fm.getFragments().size() > 0) {
+//            for (int i = 0; i < fm.getFragments().size(); i++) {
+//                Fragment fragment = fm.getFragments().get(i);
+//                if (fragment != null) {
+//                    fm.beginTransaction().remove(fragment).commit();
+//                }
+//            }
+//        }
     }
 
     /**

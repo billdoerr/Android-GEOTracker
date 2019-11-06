@@ -65,12 +65,6 @@ public class RouteListFragment extends Fragment {
         // Pass
     }
 
-// --Commented out by Inspection START (10/23/2019 2:15 PM):
-//    public static RouteListFragment newInstance() {
-//        return new RouteListFragment();
-//    }
-// --Commented out by Inspection STOP (10/23/2019 2:15 PM)
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,30 +103,10 @@ public class RouteListFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_route_list);
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//    }
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//    }
-
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

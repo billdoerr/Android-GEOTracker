@@ -27,14 +27,12 @@ public class AboutFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    public static AboutFragment newInstance() {
-//        return new AboutFragment();
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // We are disabling the options menu.  Refer to onPrepareOptionsMenu()
         setHasOptionsMenu(true);
     }
 
@@ -59,8 +57,10 @@ public class AboutFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_about);
     }
 
-    // We are disabling the options menu in this fragment.  Must also set
-    // setHasOptionsMenu(true); in onCreate()
+    /*
+     We are disabling the options menu in this fragment.  Must also set
+     setHasOptionsMenu(true); in onCreate()
+     */
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();

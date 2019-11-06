@@ -167,6 +167,8 @@ public class TrackChartAltitudeFragment extends Fragment {
         lineDataSet.setColors(Color.BLACK);
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setValueTextSize(8f);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet .setDrawValues(false);
 
         // Disable chart legend
         Legend legend = lineChart.getLegend();
