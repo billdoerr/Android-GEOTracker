@@ -62,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView mBottomNavigationView;
 
     private Intent mGPSServiceIntent;
 
@@ -154,6 +154,42 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Create Toolbar
+     */
+    protected Toolbar createToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        try {
+//           actionbar.setDisplayHomeAsUpEnabled(true);
+            showBackArrow();
+            Objects.requireNonNull(actionbar).setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return toolbar;
+    }
+
+    /**
+     * actionBar.setHomeButtonEnabled(true) will just make the icon clickable,
+     * with the color at the background of the icon as a feedback of the click.
+     *
+     * actionBar.setDisplayHomeAsUpEnabled(true) will make the icon clickable
+     * and add the < at the left of the icon.
+     */
+    protected void showBackArrow() {
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            // Set whether to include the application home affordance in the action bar.
+            // (and put a back mark at icon in ActionBar for "up" navigation)
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            // Enable or disable the "home" button in the corner of the action bar.
+            // (clickable or not)
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    /**
      * Implements Drawer View
      */
     protected void createDrawerView() {
@@ -214,8 +250,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Creates the Bottom Navigation View
      */
     protected void createBottomNavigationView() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        mBottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;
@@ -244,9 +280,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setBottomNavigationViewVisibility(boolean visible) {
         if (visible) {
-            bottomNavigationView.setVisibility(View.VISIBLE);
+            mBottomNavigationView.setVisibility(View.VISIBLE);
         } else {
-            bottomNavigationView.setVisibility(View.GONE);
+            mBottomNavigationView.setVisibility(View.GONE);
         }
     }
 
@@ -309,42 +345,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         DatabaseManager.initializeInstance(db);
         return db;
-    }
-
-    /**
-     * Create Toolbar
-     */
-    protected Toolbar createToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionbar = getSupportActionBar();
-        try {
-//           actionbar.setDisplayHomeAsUpEnabled(true);
-            showBackArrow();
-            Objects.requireNonNull(actionbar).setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return toolbar;
-    }
-
-    /**
-     * actionBar.setHomeButtonEnabled(true) will just make the icon clickable,
-     * with the color at the background of the icon as a feedback of the click.
-     *
-     * actionBar.setDisplayHomeAsUpEnabled(true) will make the icon clickable
-     * and add the < at the left of the icon.
-     */
-    protected void showBackArrow() {
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            // Set whether to include the application home affordance in the action bar.
-            // (and put a back mark at icon in ActionBar for "up" navigation)
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            // Enable or disable the "home" button in the corner of the action bar.
-            // (clickable or not)
-            supportActionBar.setDisplayShowHomeEnabled(true);
-        }
     }
 
     /**

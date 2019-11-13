@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.billdoerr.android.geotracker.R;
-import com.billdoerr.android.geotracker.activities.TripReviewActivity;
 import com.billdoerr.android.geotracker.database.model.Route;
 import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.repo.ActivityTypeRepo;
@@ -216,12 +214,6 @@ public class TripListFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onDetach() {
-        Log.i("TripListFragment", "onDetach");
-        super.onDetach();
     }
 
     /**
@@ -452,17 +444,17 @@ public class TripListFragment extends Fragment {
 
                                     // Start with Fragment Transaction
                                     // This method causes issues with options menu in other fragments
-//                                    TripReviewFragment fragment= new TripReviewFragment();
-//                                    fragment.setArguments(args);
-//                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
-//                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.class.getSimpleName())
-//                                            .addToBackStack(null)
-//                                            .commit();
+                                    TripReviewFragment fragment= new TripReviewFragment();
+                                    fragment.setArguments(args);
+                                    Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, fragment, TripReviewFragment.class.getSimpleName())
+                                            .addToBackStack(null)
+                                            .commit();
 
-                                    // Start with Activity
-                                    Intent intent = new Intent(getContext(), TripReviewActivity.class);
-                                    intent.putExtra(ARGS_TRIP, trip);
-                                    startActivity(intent);
+//                                    // Start with Activity
+//                                    Intent intent = new Intent(getContext(), TripReviewActivity.class);
+//                                    intent.putExtra(ARGS_TRIP, trip);
+//                                    startActivity(intent);
 
                                     return true;
                                 default:

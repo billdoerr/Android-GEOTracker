@@ -14,6 +14,7 @@ All notable changes to this Android application will be documented in this file.
 #### Removed
 - [ ]
 
+
 ## [Unreleased]
 ### v1.3 (TBD)
 #### Added
@@ -23,14 +24,23 @@ All notable changes to this Android application will be documented in this file.
 #### Removed
 - [ ]
 
+
 ## [Unreleased]
-### v1.2 (TBD) (31Dec2019)
+### v1.2 (15Nov2019) (BETA)
 #### Added
-- [ ] Have location marker change based on compass direction.
+- [x] Have location marker change based on compass direction.
 #### Changed
-- [ ] Try and resolve issue where user must press Back Button on TripReview screen for options menu to display on Routes screen.
+- [x] **RESOLVED:**  Try and resolve issue where user must press Back Button on TripReview screen for options menu to display on Routes screen. 
+Undid this change in v1.1 (Disabled BottomNavigationView when navigating to Trip List->Trip Review). Issue solve by using 'getChildFragmentManager()' 
+when initializing the PageViewAdapter instead of 'getSupportFragmentManager()'.
+- [x] Enable auto backup which was set to false in previous releases.<br>
+        android:allowBackup="true"<br>
+        android:fullBackupContent="true"<br>
+- [x] TrackDetailFragment
+    - [x] Add data row:  Pace:  distance/time
 #### Removed
-- [ ]
+- [x] Disabled BottomNavigationView when navigating to Trip List->Trip Review.
+
 
 ## [Released]
 ### v1.1 (6Nov2019)
@@ -41,7 +51,7 @@ All notable changes to this Android application will be documented in this file.
     - [x] Speed LineChart
     - [x] Route History implemented as BarChart
 #### Changed
-- [x] Remove FileStorageUtils class
+- [x] Removed FileStorageUtils class
 - [x] Renamed GeoTrackerSharedPreferences to SharedPreferencesUtils
 - [x] Migrate unit conversions to CoordinateConversionUtils
 - [x] Disabled BottomNavigationView when navigating to Trip List->Trip Review
@@ -49,6 +59,7 @@ All notable changes to this Android application will be documented in this file.
 - [x] Changed launch icon, not the best but it was free. Was using default Android icon.
 #### Removed
 - [ ]
+
 
 ## [Released]
 ### v1.0 (RELEASED) (31Oct2019)

@@ -1,7 +1,6 @@
 package com.billdoerr.android.geotracker.fragments;
 
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -233,7 +232,7 @@ public class TrackChartSpeedFragment extends Fragment {
         float totalDistance = 0;
         float xAxis;
         for (int i=0; i<tripDetails.size() - 2; i++) {
-            float distance = getDistance(
+            float distance = CoordinateConversionUtils.getDistance(
                     tripDetails.get(i).getLatitude(),
                     tripDetails.get(i).getLongitude(),
                     tripDetails.get(i+1).getLatitude(),
@@ -283,22 +282,6 @@ public class TrackChartSpeedFragment extends Fragment {
         }
 
         return listData;
-    }
-
-    /**
-     * Computes the approximate distance in meters between two locations,
-     * and optionally the initial and final bearings of the shortest path between them.
-     *
-     * @param startLatitude double Starting latitude
-     * @param startLongitude double Starting longitude
-     * @param endLatitude double Ending latitude
-     * @param endLongitude double Ending longitude
-     * @return float Distance between two geopoints
-     */
-    private float getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
-        float[] distance = new float[1];
-        Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, distance);
-        return distance[0];
     }
 
     /**

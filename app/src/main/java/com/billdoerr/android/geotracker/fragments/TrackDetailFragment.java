@@ -15,6 +15,7 @@ import com.billdoerr.android.geotracker.database.model.Trip;
 import com.billdoerr.android.geotracker.database.model.TripDetails;
 import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
 import com.billdoerr.android.geotracker.utils.CoordinateConversionUtils;
+import com.billdoerr.android.geotracker.utils.Physics;
 import com.billdoerr.android.geotracker.utils.SharedPreferencesUtils;
 import com.billdoerr.android.geotracker.utils.PreferenceUtils;
 
@@ -27,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-@SuppressWarnings("FieldCanBeLocal")
 public class TrackDetailFragment extends Fragment {
 
     private static final String ARGS_TRIP = "trip";
@@ -49,12 +49,16 @@ public class TrackDetailFragment extends Fragment {
 //    }
 
     private Trip mTrip;
-    private List<TripDetails> mTripDetails;
+//    private List<TripDetails> mTripDetails;
     private TextView mTextStartLocation;
     private TextView mTextEndLocation;
+    private TextView mTextTotalDistance;
+    private TextView mTextGPSTotalTime;
+    private TextView mTextPace;
 
     // Preference settings
     private static boolean mIsMetric = false;
+    private static boolean mIsNautical = false;
     private static int mCoordinateType;
 
     /**
@@ -84,15 +88,19 @@ public class TrackDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_track_detail, container, false);
 
-        mTextStartLocation = view.findViewById(R.id.textStartLocation);
-        mTextEndLocation = view.findViewById(R.id.textEndLocation);
-
         TextView textTripTitle = view.findViewById(R.id.textTripTitle);
         TextView textStartTime = view.findViewById(R.id.textStartTimeData);
         TextView textEndTime = view.findViewById(R.id.textEndTimeData);
         TextView textMovingTime = view.findViewById(R.id.textTrackingTimeData);
         TextView textPausedTime = view.findViewById(R.id.textPausedTimeData);
         TextView textTotalTime = view.findViewById(R.id.textTotalTimeData);
+
+        mTextStartLocation = view.findViewById(R.id.textStartLocation);
+        mTextEndLocation = view.findViewById(R.id.textEndLocation);
+
+        mTextTotalDistance = view.findViewById(R.id.txtTotalDistanceData);
+        mTextGPSTotalTime = view.findViewById(R.id.txtGPSTotalTimeData);
+        mTextPace = view.findViewById(R.id.textPaceData);
 
         if (mTrip != null) {
             textTripTitle.setText(mTrip.getName());
@@ -105,7 +113,7 @@ public class TrackDetailFragment extends Fragment {
             textTotalTime.setText(DateUtils.formatElapsedTime(mTrip.getTotalTimeInMillis() / 1000) );
 
             // Update UI
-            updateUI();
+            updateData();
 
         }
 
@@ -128,12 +136,13 @@ public class TrackDetailFragment extends Fragment {
         getSharedPreferences();
 
         // Update UI, if unit preferences have changed
-        updateUI();
+        updateData();
 
     }
 
-    // We are disabling the options menu in this fragment.  Must also set
-    // setHasOptionsMenu(true); in onCreate()
+    /*
+    * We are disabling the options menu in this fragment.  Must also set setHasOptionsMenu(true); in onCreate()
+     */
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();
@@ -147,15 +156,75 @@ public class TrackDetailFragment extends Fragment {
     /*
     * Update UI, if preferences change
      */
-    private void updateUI() {
-        mTripDetails = TripDetailsRepo.getTripDetails(mTrip.getId());
+    private void updateData() {
+        List<TripDetails> mTripDetails = TripDetailsRepo.getTripDetails(mTrip.getId());
         String s;
+
         if ( (mTripDetails != null) && (!mTripDetails.isEmpty()) ) {
             s = formatLocation(mTripDetails.get(0));
             mTextStartLocation.setText(s);
             s = formatLocation(mTripDetails.get(mTripDetails.size()-1));
             mTextEndLocation.setText(s);
+
+            // GPS:  total time, total distance, velocity
+            Physics physics = CoordinateConversionUtils.getPhysics(mTripDetails);
+
+            s = DateUtils.formatElapsedTime( (long)physics.getTime());
+            mTextGPSTotalTime.setText(s);
+
+            s = formatDistance(physics.getDistance());
+            mTextTotalDistance.setText(s);
+
+            s = formatVelocity(physics.getVelocity());
+            mTextPace.setText(s);
         }
+    }
+
+    /**
+     * Returns a formatted string containing the velocity and units
+     * @param distance float
+     * @return String
+     */
+    @SuppressLint("DefaultLocale")
+    private String formatDistance(float distance) {
+        String unit;
+        float f;
+
+        // Get units
+        if (mIsMetric) {
+            unit = " km";
+            f = CoordinateConversionUtils.mpsToKmHr(distance)/1000;
+        } else {
+            unit = " miles";
+            f = CoordinateConversionUtils.mToMiles(distance);
+        }
+
+        return String.format("%.2f", f) + unit;
+    }
+
+    /**
+     * Returns a formatted string containing the velocity and units
+     * @param velocity float
+     * @return String
+     */
+    @SuppressLint("DefaultLocale")
+    private String formatVelocity(float velocity) {
+        String unit;
+        float f;
+
+        // Get units
+        if (mIsNautical) {
+            unit = " knots";
+            f = CoordinateConversionUtils.mpsToKnots(velocity);
+        } else if (mIsMetric) {
+            unit = " km/hr";
+            f = CoordinateConversionUtils.mpsToKmHr(velocity);
+        } else {
+            unit = " mph";
+            f = CoordinateConversionUtils.mpsToMph(velocity);
+        }
+
+        return String.format("%.2f", f) + unit;
     }
 
     /**
@@ -167,7 +236,7 @@ public class TrackDetailFragment extends Fragment {
 
         double latitude = tripDetails.getLatitude();       // In decimal degrees
         double longitude = tripDetails.getLongitude();     // In decimal degrees
-        double altitude = tripDetails.getAltitude();        // In meters
+        double altitude = tripDetails.getAltitude();       // In meters
 
         String unit = (mIsMetric ? " m" : " ft");
         String lat_lon = "";
@@ -227,6 +296,7 @@ public class TrackDetailFragment extends Fragment {
         SharedPreferencesUtils sharedPrefs = PreferenceUtils.getSharedPreferences(Objects.requireNonNull(getContext()));
         mIsMetric = sharedPrefs.isMetric();
         mCoordinateType = sharedPrefs.getCoordinateType();
+        mIsNautical = sharedPrefs.isNautical();
         // Feature supporting this has not been implemented
 //        mCoordinateDatum = prefs.getCoordinateDatum();
     }

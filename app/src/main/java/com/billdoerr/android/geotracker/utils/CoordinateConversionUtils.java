@@ -11,7 +11,10 @@ import android.location.Location;
 
 import androidx.annotation.NonNull;
 
+import com.billdoerr.android.geotracker.database.model.TripDetails;
+
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.Math.abs;
@@ -33,6 +36,62 @@ public class CoordinateConversionUtils
    * prime meridian (a north-south line that runs through a point in England).
    *
    */
+
+  /**
+   * Returns the total distance, total time, and velocity from a set of GPS coordinates
+   * @param tripDetails List<TripDetails>
+   * @return Physics
+   */
+  public static Physics getPhysics(List<TripDetails> tripDetails) {
+
+    Physics physics = new Physics();
+    float velocity = 0;
+    float totalDistance = 0;
+
+    int size = tripDetails.size();
+
+    // Get total time and convert to seconds
+    float timeDelta = ( tripDetails.get(size-1).getTimeStamp() - tripDetails.get(0).getTimeStamp() )/1000;
+
+    for (int i=0; i< (size - 2); i++) {
+      float distance = getDistance(
+              tripDetails.get(i).getLatitude(),
+              tripDetails.get(i).getLongitude(),
+              tripDetails.get(i+1).getLatitude(),
+              tripDetails.get(i+1).getLongitude()
+      );
+
+      // Distance unit conversion already applied
+      totalDistance += distance;
+    }
+
+    if (timeDelta > 0) {
+      velocity = totalDistance/timeDelta;
+    }
+
+    physics.setDistance(totalDistance);
+    physics.setTime(timeDelta);
+    physics.setVelocity(velocity);
+
+    return physics;
+
+  }
+
+  /**
+   * Computes the approximate distance in meters between two locations,
+   * and optionally the initial and final bearings of the shortest path between them.
+   *
+   * @param startLatitude double Starting latitude
+   * @param startLongitude double Starting longitude
+   * @param endLatitude double Ending latitude
+   * @param endLongitude double Ending longitude
+   * @return float Distance between two geopoints
+   */
+  public static float getDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+    float[] distance = new float[1];
+    Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, distance);
+    return distance[0];
+  }
 
   /**
    * Converts meters per second to knots.

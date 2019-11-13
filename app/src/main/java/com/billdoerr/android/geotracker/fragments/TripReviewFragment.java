@@ -36,10 +36,6 @@ public class TripReviewFragment extends Fragment {
         // Pass
     }
 
-    public static TripReviewFragment newInstance() {
-        return new TripReviewFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +43,11 @@ public class TripReviewFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // Used when fragment is instantiated via fragment transaction
-//        Bundle args = getArguments();
-//        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
+        Bundle args = getArguments();
+        mTrip = (Trip) Objects.requireNonNull(args).getSerializable(ARGS_TRIP);
 
         // Used when fragment is instantiated via startActivity().
-        mTrip = (Trip) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra(ARGS_TRIP);
+//        mTrip = (Trip) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra(ARGS_TRIP);
     }
 
     @Override
@@ -81,45 +77,12 @@ public class TripReviewFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) Objects.requireNonNull(getActivity())).getSupportActionBar()).setTitle(R.string.fragment_title_maps);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        // Having issues with fragments added via PageAdapter remaining in FragmentManager.
-        clearStack();
-        super.onSaveInstanceState(outState);
-    }
-
-    /*
-    * Having issues with fragments added via PageAdapter remaining in FragmentManager.
-    * This helps resolve this issue.
-     */
-    private void clearStack() {
-        FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-//        //Here we are clearing back stack fragment entries
-//        int backStackEntry = fm.getBackStackEntryCount();
-//        if (backStackEntry > 0) {
-//            for (int i = 0; i < backStackEntry; i++) {
-//                fm.popBackStackImmediate();
-//            }
-//        }
-
-        //Here we are removing all the fragment that are shown here
-        fm.getFragments();
-        if (fm.getFragments().size() > 0) {
-            for (int i = 0; i < fm.getFragments().size(); i++) {
-                Fragment fragment = fm.getFragments().get(i);
-                if (fragment != null) {
-                    fm.beginTransaction().remove(fragment).commit();
-                }
-            }
-        }
-    }
-
     /**
      * Add fragments to tabs.
      * @param viewPager ViewPager: Layout manager adapter will be assigned.
      */
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(Objects.requireNonNull(getActivity()).getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(Objects.requireNonNull(getChildFragmentManager()));
 
         // Maps fragment
         Bundle args = new Bundle();

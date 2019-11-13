@@ -20,19 +20,26 @@ import com.billdoerr.android.geotracker.database.repo.TripDetailsRepo;
 import com.billdoerr.android.geotracker.utils.MapUtils;
 import com.billdoerr.android.geotracker.utils.PermissionUtils;
 
+import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.TileSystem;
+import org.osmdroid.views.MapView;
 
 import java.util.List;
 import java.util.Objects;
 
 public class TripReviewMapsFragment extends Fragment {
 
-    private static final String ARGS_TRIP = "trip";
+    // Map constants
+    private static final int TILE_SIZE_PIXELS = 256;
+    private static final float SCALE_FACTOR = 1.0f;
+    private static final int TILE_SIZE = 512;
+    private static final double ZOOM_LEVEL = 18.0;  // Range:  2 - 21
 
-    //  Saved instance state data
-//    private static final String SAVED_MAP_TYPE = "map_type";
-//    private static final String SAVED_ZOOM = "zoom";
+    private static final String ARGS_TRIP = "trip";
 
     private org.osmdroid.views.MapView mMapView;
     private Trip mTrip;
@@ -74,7 +81,7 @@ public class TripReviewMapsFragment extends Fragment {
         Configuration.getInstance().setUserAgentValue(Objects.requireNonNull(getActivity()).getPackageName());
 
         // Initialize the MapView
-        MapUtils.initMapView(getActivity(), mMapView);
+        initMapView(getActivity(), mMapView);
 
         return view;
     }
@@ -98,7 +105,7 @@ public class TripReviewMapsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        MapUtils.initMapView(Objects.requireNonNull(getActivity()), mMapView);
+        initMapView(Objects.requireNonNull(getActivity()), mMapView);
         if (mMapView != null) {
             mMapView.onResume();
             plotTrip();
@@ -121,18 +128,15 @@ public class TripReviewMapsFragment extends Fragment {
         super.onDetach();
     }
 
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//    }
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
-    // We are disabling the options menu in this fragment.  Must also set
-    // setHasOptionsMenu(true); in onCreate()
+
+    /*
+    * We are disabling the options menu in this fragment.  Must also set setHasOptionsMenu(true); in onCreate()
+     */
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.clear();
@@ -144,11 +148,78 @@ public class TripReviewMapsFragment extends Fragment {
     }
 
     /**
+     * Initializes the MapView
+     */
+    private void initMapView(Context context, MapView mapView) {
+        // Set tile source
+        final String[] tileUrlOutdoor = {"https://tile.thunderforest.com/outdoors/"};
+        final ITileSource tileSource =
+                new XYTileSource("Outdoors",
+                        0,
+                        (int) ZOOM_LEVEL,
+                        TILE_SIZE_PIXELS,
+                        ".png?apikey=0fd1dc369a2f49adb3bbb6892ebf3716",
+                        tileUrlOutdoor,
+                        "from thunderforest.com");
+        mapView.setTileSource(tileSource);
+
+        // Add multi-touch capability
+        mapView.setMultiTouchControls(true);
+
+        final float density = context.getResources().getDisplayMetrics().density;
+        TileSystem.setTileSize(Math.round(TILE_SIZE*density));
+
+        /* If true, tiles are scaled to the current DPI of the display. This effectively
+         * makes it easier to read labels, how it may appear pixelated depending on the map source.
+         * If false, tiles are rendered in their real size.
+         */
+        mapView.setTilesScaledToDpi(false);
+
+        /*
+         * Setting an additional scale factor both for ScaledToDpi and standard size
+         * > 1.0 enlarges map display, < 1.0 shrinks map display
+         */
+        mapView.setTilesScaleFactor(SCALE_FACTOR);
+
+        /*
+         * Maximum Zoom Level - we use Integers to store zoom levels so overflow happens at 2^32 - 1,
+         * but we also have a tile size that is typically 2^8, so (32-1)-8-1 = 22
+            Approximate Map Scale 	OSM Zoom Level
+            5M 	                        5
+            2M 	                        8
+            1M 	                        9
+            500k 	                    10
+            250k 	                    11-12
+            50 	                        13-14
+            25k 	                    15
+            8k 	                        16
+        */
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(ZOOM_LEVEL);
+
+    }
+
+    /**
      * Draw trip markers, polyline, etc
      */
     private void plotTrip() {
         List<GeoPoint> geoPoints = MapUtils.getTripGeoPoints(getTripDetails(mTrip.getId()));
-        MapUtils.drawPolyLine(getContext(), mMapView, geoPoints);
+        int size = geoPoints.size();
+
+        // Plot location data
+        if (size > 0) {
+            // Draw trip
+            MapUtils.drawPolyLine(mMapView, geoPoints);
+
+            // Draw starting location marker
+            MapUtils.drawMarker(mMapView, geoPoints.get(0), Objects.requireNonNull(getContext()).getDrawable(R.drawable.marker_default) );
+
+            // Draw ending location marker
+            MapUtils.drawMarker(mMapView, geoPoints.get(size-1), getContext().getDrawable(R.drawable.person) );
+
+            // Zoom in
+            MapUtils.animateTo(mMapView, geoPoints.get(size-1));
+        }
     }
 
     /**
