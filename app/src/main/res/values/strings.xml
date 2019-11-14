@@ -98,7 +98,6 @@
     <string name="txtGpsTotalTime">GPS Total Time</string>
     <string name="textGPSVelocity">GPS Speed</string>
 
-    <string name="textBearingUnits">d</string>
     <string name="textElevationUnits_Metric">m</string>
     <string name="textSpeedUnits_Metric">km/hr</string>
     <string name="textAccuracyUnits_Metric">m</string>

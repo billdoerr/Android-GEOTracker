@@ -74,24 +74,19 @@
                         android:textAlignment="center"
                         android:textSize="18sp"
                         android:textStyle="bold"
+                        android:textColor="@color/colorAccent"
                         android:importantForAutofill="no" />
 
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/cell_border">
+                    android:layout_height="match_parent" >
 
                     <TextView
                         android:id="@+id/textLatitudeLongitude"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/textLatitudeLongitude"
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 
@@ -101,23 +96,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".25"
-                        android:gravity="center_vertical"
-                        android:text="@string/textLatitude"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textLatitude" />
 
                     <TextView
                         android:id="@+id/textLatitudeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".6"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -135,23 +119,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".25"
-                        android:gravity="center_vertical"
-                        android:text="@string/textLongitude"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textLongitude" />
 
                     <TextView
                         android:id="@+id/textLongitudeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".6"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -169,66 +142,15 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".25"
-                        android:gravity="center_vertical"
-                        android:text="@string/textElevation"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textElevationData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".6"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textElevationUnits"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".15"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/cell_border">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".25"
-                        android:gravity="center_vertical"
-                        android:text="@string/textBearing"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textBearing" />
 
                     <TextView
                         android:id="@+id/textBearingData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".6"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".15"
-                        android:text="@string/textBearingUnits"
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
+                        style="@style/TextViewUnits_TrackDetail" />
 
                 </TableRow>
 
@@ -238,32 +160,35 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".25"
-                        android:gravity="center_vertical"
-                        android:text="@string/textSpeed"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textElevation" />
+
+                    <TextView
+                        android:id="@+id/textElevationData"
+                        style="@style/TextViewData_TrackDetail" />
+
+                    <TextView
+                        android:id="@+id/textElevationUnits"
+                        style="@style/TextViewUnits_TrackDetail" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/cell_border">
+
+                    <TextView
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textSpeed" />
 
                     <TextView
                         android:id="@+id/textSpeedData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".6"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                     <TextView
                         android:id="@+id/textSpeedUnits"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".15"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
+                        style="@style/TextViewUnits_TrackDetail" />
 
                 </TableRow>
 
@@ -273,32 +198,16 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".25"
-                        android:gravity="center_vertical"
-                        android:text="@string/textAccuracy"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textAccuracy" />
 
                     <TextView
                         android:id="@+id/textAccuracyData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".6"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                     <TextView
                         android:id="@+id/textAccuracyUnits"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".15"
-                        android:text=""
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
+                        style="@style/TextViewUnits_TrackDetail" />
 
                 </TableRow>
 
@@ -323,23 +232,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:gravity="center_vertical"
-                        android:text="@string/textCurrentTime"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textCurrentTime" />
 
                     <TextView
                         android:id="@+id/textCurrentTimeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 
@@ -349,23 +247,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:gravity="center_vertical"
-                        android:text="@string/textStartTime"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textStartTime" />
 
                     <TextView
                         android:id="@+id/textStartTimeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 
@@ -375,23 +262,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:gravity="center_vertical"
-                        android:text="@string/textEndTime"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textEndTime" />
 
                     <TextView
                         android:id="@+id/textEndTimeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 
@@ -401,23 +277,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:gravity="center_vertical"
-                        android:text="@string/textMovingTime"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textMovingTime" />
 
                     <TextView
                         android:id="@+id/textTrackingTimeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 
@@ -427,23 +292,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:gravity="center_vertical"
-                        android:text="@string/textPausedTime"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textPausedTime" />
 
                     <TextView
                         android:id="@+id/textPausedTimeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 
@@ -453,23 +307,12 @@
                     android:background="@drawable/cell_border">
 
                     <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:gravity="center_vertical"
-                        android:text="@string/textTotalTime"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewLabel_TrackDetail"
+                        android:text="@string/textTotalTime" />
 
                     <TextView
                         android:id="@+id/textTotalTimeData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:text=""
-                        android:textAlignment="center"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        style="@style/TextViewData_TrackDetail" />
 
                 </TableRow>
 

@@ -305,7 +305,11 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void loadFragmentReplace(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
-//        clearBackStack(fm);
+
+        // This prevents fragments from bleeding through
+        clearBackStack(fm);
+
+        // Create fragment
         if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -316,6 +320,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This prevents fragments from bleeding through
+     * @param fm FragmentManager
+     */
     public void clearBackStack(FragmentManager fm) {
         //Here we are clearing back stack fragment entries
         int backStackEntry = fm.getBackStackEntryCount();
@@ -324,16 +332,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 fm.popBackStackImmediate();
             }
         }
-
-//        //Here we are removing all the fragment that are shown here
-//        if (fm.getFragments() != null && fm.getFragments().size() > 0) {
-//            for (int i = 0; i < fm.getFragments().size(); i++) {
-//                Fragment fragment = fm.getFragments().get(i);
-//                if (fragment != null) {
-//                    fm.beginTransaction().remove(fragment).commit();
-//                }
-//            }
-//        }
     }
 
     /**

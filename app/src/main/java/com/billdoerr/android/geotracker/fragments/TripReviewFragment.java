@@ -91,8 +91,8 @@ public class TripReviewFragment extends Fragment {
         TripReviewMapsFragment tripReviewMapsFragment = new TripReviewMapsFragment();
         tripReviewMapsFragment.setArguments(args);
 
-        TrackDetailFragment trackDetailFragment = new TrackDetailFragment();
-        trackDetailFragment.setArguments(args);
+        TrackReviewSummaryFragment trackReviewSummaryFragment = new TrackReviewSummaryFragment();
+        trackReviewSummaryFragment.setArguments(args);
 
         TrackChartAltitudeFragment trackChartAltitudeFragment = new TrackChartAltitudeFragment();
         trackChartAltitudeFragment.setArguments(args);
@@ -105,7 +105,7 @@ public class TripReviewFragment extends Fragment {
 
         // Add fragments to adapter
         adapter.addFragment(tripReviewMapsFragment, getString(R.string.fragment_title_maps));
-        adapter.addFragment(trackDetailFragment, getString(R.string.fragment_tile_track_detail));
+        adapter.addFragment(trackReviewSummaryFragment, getString(R.string.fragment_tile_track_detail));
         adapter.addFragment(trackChartAltitudeFragment, getString(R.string.fragment_title_track_chart_altitude));
         adapter.addFragment(trackChartSpeedFragment, getString(R.string.fragment_title_track_chart_speed));
         adapter.addFragment(routeHistoryChartFragment, getString(R.string.fragment_title_route_history_chart));

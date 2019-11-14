@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="2dp">
+
+        <TextView
+            android:id="@+id/textTripTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+    </TableRow>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:paddingBottom="?attr/actionBarSize" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:textAlignment="center"
+                    android:text="@string/textStartLocation" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    android:id="@+id/textStartLocationData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:textAlignment="center"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:textAlignment="center"
+                    android:text="@string/textEndLocation" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    android:id="@+id/textEndLocationData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:textAlignment="center"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="18sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/textStartTime" />
+
+                <TextView
+                    android:id="@+id/textStartTimeData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/textEndTime" />
+
+                <TextView
+                    android:id="@+id/textEndTimeData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/textMovingTime" />
+
+                <TextView
+                    android:id="@+id/textTrackingTimeData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/textPausedTime" />
+
+                <TextView
+                    android:id="@+id/textPausedTimeData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/textTotalTime" />
+
+                <TextView
+                    android:id="@+id/textTotalTimeData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/txtGpsTotalDistance" />
+
+                <TextView
+                    android:id="@+id/txtTotalDistanceData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/txtGpsTotalTime" />
+
+                <TextView
+                    android:id="@+id/txtGPSTotalTimeData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+
+                <TextView
+                    style="@style/TextViewLabel_TrackReviewSummary"
+                    android:text="@string/textGPSVelocity" />
+
+                <TextView
+                    android:id="@+id/textPaceData"
+                    style="@style/TextViewData_TrackReviewSummary"
+                    android:text="" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/cell_border">
+            </TableRow>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</TableLayout>
+

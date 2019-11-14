@@ -25,20 +25,23 @@ All notable changes to this Android application will be documented in this file.
 - [ ]
 
 
-## [Unreleased]
-### v1.2 (15Nov2019) (BETA)
+## [Released]
+### v1.2 (14Nov2019) (BETA)
 #### Added
 - [x] Have location marker change based on compass direction.
 #### Changed
 - [x] **RESOLVED:**  Try and resolve issue where user must press Back Button on TripReview screen for options menu to display on Routes screen. 
-Undid this change in v1.1 (Disabled BottomNavigationView when navigating to Trip List->Trip Review). Issue solve by using 'getChildFragmentManager()' 
+Reverted back this change in v1.1 (Disabled BottomNavigationView when navigating to Trip List->Trip Review). Issue solve by using 'getChildFragmentManager()' 
 when initializing the PageViewAdapter instead of 'getSupportFragmentManager()'.
 - [x] Enable auto backup which was set to false in previous releases.<br>
         android:allowBackup="true"<br>
         android:fullBackupContent="true"<br>
-- [x] TrackDetailFragment
+- [x] TrackReviewSummaryFragment
     - [x] Add data row:  Pace:  distance/time
-#### Removed
+    - [x] Improve Data UI
+- [x] TrackingFragment
+    - [x] Improve Data UI
+    #### Removed
 - [x] Disabled BottomNavigationView when navigating to Trip List->Trip Review.
 
 

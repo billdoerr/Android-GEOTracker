@@ -28,7 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class TrackDetailFragment extends Fragment {
+public class TrackReviewSummaryFragment extends Fragment {
 
     private static final String ARGS_TRIP = "trip";
 
@@ -64,7 +64,7 @@ public class TrackDetailFragment extends Fragment {
     /**
      * Required empty public constructor
      */
-    public TrackDetailFragment() {
+    public TrackReviewSummaryFragment() {
         // Pass
     }
 
@@ -86,7 +86,7 @@ public class TrackDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_track_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_track_review_summary, container, false);
 
         TextView textTripTitle = view.findViewById(R.id.textTripTitle);
         TextView textStartTime = view.findViewById(R.id.textStartTimeData);
@@ -95,8 +95,8 @@ public class TrackDetailFragment extends Fragment {
         TextView textPausedTime = view.findViewById(R.id.textPausedTimeData);
         TextView textTotalTime = view.findViewById(R.id.textTotalTimeData);
 
-        mTextStartLocation = view.findViewById(R.id.textStartLocation);
-        mTextEndLocation = view.findViewById(R.id.textEndLocation);
+        mTextStartLocation = view.findViewById(R.id.textStartLocationData);
+        mTextEndLocation = view.findViewById(R.id.textEndLocationData);
 
         mTextTotalDistance = view.findViewById(R.id.txtTotalDistanceData);
         mTextGPSTotalTime = view.findViewById(R.id.txtGPSTotalTimeData);
