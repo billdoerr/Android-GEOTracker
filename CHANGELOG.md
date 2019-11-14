@@ -26,7 +26,7 @@ All notable changes to this Android application will be documented in this file.
 
 
 ## [Released]
-### v1.2 (14Nov2019) (BETA)
+### v1.2 (14Nov2019)
 #### Added
 - [x] Have location marker change based on compass direction.
 #### Changed
